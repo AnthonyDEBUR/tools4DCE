@@ -1,0 +1,62 @@
+---
+title: "comment-utiliser-tools4DCE"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{comment-utiliser-tools4DCE}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(tools4DCE)
+```
+
+
+# Réalisation de graphiques
+
+Pour rendre les graphiques lisibles lorsqu'une longue chronique comporte quelques données très éloignées du reste de la gamme de mesure, on remplace ces données par une étiquette localisée au sommet ou à la base du graphique selon que la valeur non affichée est inférieure ou supérieure au reste de la gamme de valeurs.
+
+Pour écrêter les valeurs on fait appel à la fonction filtre_donnees_extremes.
+
+## la fonction filtre_donnees_extremes sert à écrêter les données que l'on ne souhaite pas afficher à l'écran.
+
+Par exemple si on veut remplacer toutes les données inférieures à 3 par 3 et toutes celles supérieures à 9 par 9 :
+```{r}
+filtre_donnees_extremes(seq(1:10), ymin=3, ymax=9)
+```
+## la fonction compte_decimales sert à déterminer combien de chiffres significatifs comporte un nombre.
+Elle sert à déterminer combien de chiffres significatifs il faut conserver sur l'axe des ordonnées dans le graphique final.
+```{r}
+compte_decimales(3.234)
+```
+
+
+## Couleurs des fonds graphiques
+Des palettes standard ont été définies pour :
+### les paramètres DCE avec 3 classes d'état (TB, B, Mo) comme les PSEE
+```{r}
+seuils_TbBMo
+```
+
+### les paramètres DCE avec 5 classes d'état mais avec seuils haut et bas (pH par exemple)
+```{r}
+seuils_Tb2B2Mo2Me2Ma2
+```
+
+### les paramètres DCE avec 5 classes d'état avec seuils haut ou seuils bas uniquement (DBO5 par exemple)
+```{r}
+seuils_TbBMoMeMa
+```
+
+### les paramètres non DCE avec 5 classes de qualité 
+```{r}
+seuils_nonDCE
+```
+
