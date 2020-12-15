@@ -58,4 +58,17 @@ head(ordre_facteurs_qualite)
 Un objet de classe seuil sert à paramétrer les fonds colorer des graphiques. 
 Il précise l'intervalle entre lequel il faut appliquer une classe de qualité et la couleur de la représentation graphique correspondante.
 
+Pour créer un objet de classe seuil on utilise la fonction setSeuils
+
+```{r}
+setSeuils(nom_parametre="parametre test",nom_seuil="AM 25 janv 2010",type_seuil="DCE", code_parametre="1301",support="3",code_unite="27", seuils=tools4DCE::base_seuils%>%subset(NOM=="TEMPERATURE" & SPECIFICITE=="CYPRINICOLE")%>%left_join(couleurs_classes, by=c("CLASSE", "TYPE"))%>%select(SEUILMIN, SEUILMAX, CLASSE, NOM_COULEUR),bornesinfinclue=T, levels_classes=c("TRES BON", "BON", "MOYEN","MEDIOCRE", "MAUVAIS"))
+
+```
+
+Pour créer une liste de seuils prédéfinis à partir des fichiers de données il suffit de taper la commande makeSeuils().
+A ce jour `r length(makeSeuils())` seuils différents sont ainsi définis.
+```{r}
+tmp<-makeSeuils()
+tmp[100]
+```
 

@@ -17,4 +17,6 @@ Suggests:
     knitr,
     rmarkdown
 VignetteBuilder: knitr
-Imports: tidyverse
+Depends: tidyverse, 
+          ggplot2
+
