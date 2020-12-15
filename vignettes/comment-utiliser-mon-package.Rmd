@@ -38,25 +38,24 @@ compte_decimales(3.234)
 ```
 
 
-## Couleurs des fonds graphiques
-Des palettes standard ont été définies pour :
-### les paramètres DCE avec 3 classes d'état (TB, B, Mo) comme les PSEE
+## Couleurs et échelle des fonds graphiques
+Les couleurs et les valeurs des seuils pour les différents paramètres sont listés dans le jeu de données base_seuils
 ```{r}
-seuils_TbBMo
+head(base_seuils)
 ```
 
-### les paramètres DCE avec 5 classes d'état mais avec seuils haut et bas (pH par exemple)
+pour avoir la couleur on croise sur les colonnes TYPE et CLASSE avec la table couleurs_classes
 ```{r}
-seuils_Tb2B2Mo2Me2Ma2
+head(couleurs_classes)
 ```
 
-### les paramètres DCE avec 5 classes d'état avec seuils haut ou seuils bas uniquement (DBO5 par exemple)
+pour classer les levels on utilise la colonne CLASSE de la data.frame ordre_facteurs_qualite
 ```{r}
-seuils_TbBMoMeMa
+head(ordre_facteurs_qualite)
 ```
 
-### les paramètres non DCE avec 5 classes de qualité 
-```{r}
-seuils_nonDCE
-```
+### Génération d'un objet de classe seuil
+Un objet de classe seuil sert à paramétrer les fonds colorer des graphiques. 
+Il précise l'intervalle entre lequel il faut appliquer une classe de qualité et la couleur de la représentation graphique correspondante.
+
 

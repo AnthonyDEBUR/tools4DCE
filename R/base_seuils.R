@@ -1,0 +1,60 @@
+#' base_seuils
+#'
+#' data frame contenant les seuils pour différents paramètres.
+#' les colonnes SUPPORT, FRACTION, PARAMETRE et UNITE correspondent aux codes du \href{https://www.sandre.eaufrance.fr/Rechercher-un-jeu-de-donnees}{référentiel SANDRE}du même nom
+#'
+#'
+#' la colonne nom correspond au nom usuellement utilisé pour le paramètre.
+#'
+#' SEUILMIN et SEUILMAX correspondent aux valeur min et max de la classe de qualité
+#'
+#' CATEGORIE correspond à la classe de qualité
+#'
+#' NOM_SEUIL précise d'où sont tirés les seuils.
+#'
+#' * \href{https://www.legifrance.gouv.fr/loda/id/JORFTEXT000021865259/}{AM. 25/01/2010 = arrêté ministériel du 25 janvier 2020}
+#'
+#' * \href{https://www.legifrance.gouv.fr/loda/id/JORFTEXT000021865259/}{AM. 25/01/2010 avant 2018 = arrêté ministériel du 25 janvier 2020 - version en vigueur avant 2018}
+#'
+#' * \href{https://www.eaufrance.fr/sites/default/files/2019-05/guide-reee-esc-2019-cycle3.pdf}{Guide évaluation ME = Guide d'évaluation de la qualité des eaux / annexe 12}
+#'
+#' * \href{https://rhin-meuse.eaufrance.fr/IMG/pdf/grilles-seq-eau-v2.pdf}{SEQ Eau - usage AEP = Système d'évaluation de la qualité des eaux v2 - usage eau potable}
+#'
+#' * \href{https://eur-lex.europa.eu/legal-content/FR/TXT/?uri=LEGISSUM:co0018}{"Dir. 2006/7/CE - baignade - eau douce" = Directive 2006/7/CE sur les eaux de baignade}
+#'
+#' * "Seuils informatifs" = seuils sans valeur réglementaire, issus de la littérature scientifique ou technique.
+#'
+#' * \href{https://substances.ineris.fr}{"INERIS xxxx" = seuil publié par l'INERIS suivi de l'année de publication}
+#'
+#' * \href{http://www.eau-seine-normandie.fr/docuth%C3%A8que/SDAGE_2016_2021}{"OSPAR" = seuils issus SDAGE AESN en application de la directive OSPAR}
+#'
+#' * "DISTRIBUTION" = quantile des données en base AESN / DSAV en 2018
+#'
+#' * \href{https://www.legifrance.gouv.fr/loda/id/JORFTEXT000000423497}{"Arrêté du 9 août 2006" = arrêté ministériel du 9 août 2006 sur les sédiments}
+#'
+#' CLASSE précise le type de seuil du paramètre
+#'
+#'  * DCE : seuils en application de la Directive Cadre sur l'Eau
+#'
+#'  * NON_DCE : seuils indicatifs, non réglementaires
+#'
+#'  * BAIGNADE_EAU_DOUCE : seuils en application de la directive baignade
+#'
+#'  * BAIGNADE_EAU_DE_MER : seuils en application de la directive baignade
+#'
+#'  * SEUILS_QUALITATIFS : seuils indicatifs destinés à fournir des ordres de grandeur
+#'
+#'  * OSPAR : seuils pris en application de la Directive OSPAR, concerne uniquement le bassin Seine-Normandie.
+#'
+#'
+#' @docType data
+#'
+#' @usage data(base_seuils)
+#'
+#' @keywords datasets
+#'
+#' @examples
+#' head(data(base_seuils))
+"base_seuils"
+
+

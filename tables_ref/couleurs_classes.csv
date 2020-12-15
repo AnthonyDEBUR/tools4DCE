@@ -1,0 +1,46 @@
+TYPE;CLASSE;NOM_COULEUR
+DCE;TRES BON;dodgerblue
+DCE;BON;green1
+DCE;MOYEN;yellow
+DCE;MEDIOCRE;orange
+DCE;MAUVAIS;red
+DCE;INCONNU;grey
+NON_DCE;TRES BON;cadetblue1
+NON_DCE;BON;chartreuse2
+NON_DCE;MOYEN;lightgoldenrod1
+NON_DCE;MEDIOCRE;tan2
+NON_DCE;MAUVAIS;tomato
+NON_DCE;INCONNU;snow4
+BAIGNADE_EAU_DOUCE;EXCELLENTE QUALITE;darkslategray1
+BAIGNADE_EAU_DOUCE;BONNE QUALITE;darkseagreen2
+BAIGNADE_EAU_DOUCE;QUALITE INSUFFISANTE;lightgoldenrod1
+BAIGNADE_EAU_MER;EXCELLENTE QUALITE;darkslategray1
+BAIGNADE_EAU_MER;BONNE QUALITE;darkseagreen2
+BAIGNADE_EAU_MER;QUALITE INSUFFISANTE;lightgoldenrod1
+SEUILS_QUALITATIFS;EAUX USEES NON TRAITEES;burlywood4
+SEUILS_QUALITATIFS;REJET STEP;darkgoldenrod2
+SEUILS_QUALITATIFS;PATURES;chartreuse
+NON_DCE;<NQE moyen;darkseagreen2
+NON_DCE;[NQE moyen - CMA[;lightgoldenrod1
+NON_DCE;> CMA;tomato
+NON_DCE;>NQE moyen;lightgoldenrod1
+DCE;<NQE moyen;green1
+DCE;>NQE moyen;yellow
+DCE;[NQE moyen - CMA[;gold
+DCE;> CMA;red
+DCE;< CMA;green3
+OSPAR;<12 mg NO3/L;dodgerblue
+OSPAR;]12 - 18] mg NO3/L;green1
+OSPAR;]18 - 50] mg NO3/L;yellow
+OSPAR;>50 mg NO3/L;red
+NON_DCE;Top 20%;cadetblue1
+NON_DCE;21-40%;chartreuse2
+NON_DCE;41-60%;lightgoldenrod1
+NON_DCE;61-80%;tan2
+NON_DCE;Pire 20%;tomato
+NON_DCE;<VGE;darkseagreen1
+NON_DCE;>VGE;magenta
+NON_DCE;AEP OK;darkturquoise
+NON_DCE;Restrictions AEP;darkmagenta
+SEDIMENTS;<seuil S1;chartreuse2
+SEDIMENTS;>seuil S1;tomato
