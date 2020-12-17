@@ -51,7 +51,7 @@ graphDCE_points<-function(data,col_dates="DatePrel", col_valeurs="RsAna", col_LQ
   {
     data1$DatePrel<-data1[[col_dates]]%>%as.POSIXct
     data1$RsAna<-data1[[col_valeurs]]
-    if(affiche_LQ){data1$LqAna<-data[,col_LQ]}
+    if(affiche_LQ){data1$LqAna<-data[[col_LQ]]}
     if(is.null(ymaxi) & (auto_ymaxi==T)){ymaxi<-tools4DCE::calcule_ymaxi(data1$RsAna)}
 
     ##### on homogénéise les times zones pour l'ensemble des données (conserver GMT qui évite des bugs de décallage avec scale_x_datetime#####
@@ -241,8 +241,7 @@ graphDCE_points<-function(data,col_dates="DatePrel", col_valeurs="RsAna", col_LQ
     # ajout des indications de limites de LQ si option retenue
     if(affiche_LQ)
     {
-      if(class(data1$LqAna)!=numeric){warning("La colonne des limites de quantification n'est pas au format numeric")}
-      if(any(is.na(data1$LqAna))){warning("Attention certaines analyses ne comportent pas de valeurs de LQ. Ces dernières ont été remplacées par 0")}
+      if(any(is.na(data1$LqAna))){warning("Attention certaines analyses ne comportent pas de valeurs de LQ. Les LQ manquantes ont été remplacées par 0")}
       # on remplace les LQ manquantes par 0
       data1$LqAna<-replace_na(data1$LqAna, 0)
       graph1<-graph1 + geom_ribbon(data=data1, aes(x=DatePrel, ymin=min(seuils1minmax[seuils1minmax>-Inf]), ymax=LqAna),fill="grey30",

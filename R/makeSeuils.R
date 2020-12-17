@@ -21,7 +21,7 @@
 #'
 #' @examples # génère les seuils pour les paramètres 1340, 1301 avec la spécificité non renseignée ou CYPRINICOLE et un type de seuil DCE :
 #' test<-makeSeuils(CdParametre=c("1340", "1301"), specificites=c("", "CYPRINICOLE"), type_seuil = "DCE")
-#' return(test)
+#' print(test)
 #'
 #' @export
 
