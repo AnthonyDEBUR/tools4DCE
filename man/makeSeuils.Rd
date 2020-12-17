@@ -4,7 +4,24 @@
 \alias{makeSeuils}
 \title{makeSeuils}
 \usage{
-makeSeuils()
+makeSeuils(
+  CdParametre = NULL,
+  CdSupport = NULL,
+  CdFraction = NULL,
+  type_seuil = NULL,
+  specificites = NULL
+)
+}
+\arguments{
+\item{CdParametre}{vecteur optionnel de character qui liste les codes paramètres à sélectionner}
+
+\item{CdSupport}{vecteur optionnel de character qui liste les codes support à sélectionner}
+
+\item{CdFraction}{vecteur optionnel de character qui liste les codes fractions à sélectionner}
+
+\item{type_seuil}{vecteur optionnel de character qui liste les types de seuils à afficher ("DCE", "NON_DCE")}
+
+\item{specificites}{vecteur optionnel de character qui liste les spécificités ("SALMONICOLE", "CYPRINICOLE")}
 }
 \value{
 la fonction renvoie une liste d'objets de class seuil
@@ -13,5 +30,15 @@ la fonction renvoie une liste d'objets de class seuil
 Créé automatiquement une liste de seuils à partir des données stockées dans les objets base_seuils, couleurs_classes et ordre_facteurs_qualite
 }
 \examples{
+# crÃ©Ã© l'ensemble des seuils
 makeSeuils()
+
+# liste l'ensemble des parametres disponibles
+lapply(makeSeuils(), function(x) `@`( x , nom_parametre)[[1]])
+
+
+# gÃ©nÃ¨re les seuils pour les paramÃ¨tres 1340, 1301 avec la spÃ©cificitÃ© non renseignÃ©e ou CYPRINICOLE et un type de seuil DCE :
+test<-makeSeuils(CdParametre=c("1340", "1301"), specificites=c("", "CYPRINICOLE"), type_seuil = "DCE")
+return(test)
+
 }

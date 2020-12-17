@@ -61,14 +61,43 @@ Il précise l'intervalle entre lequel il faut appliquer une classe de qualité e
 Pour créer un objet de classe seuil on utilise la fonction setSeuils
 
 ```{r}
-setSeuils(nom_parametre="parametre test",nom_seuil="AM 25 janv 2010",type_seuil="DCE", code_parametre="1301",support="3",code_unite="27", seuils=tools4DCE::base_seuils%>%subset(NOM=="TEMPERATURE" & SPECIFICITE=="CYPRINICOLE")%>%left_join(couleurs_classes, by=c("CLASSE", "TYPE"))%>%select(SEUILMIN, SEUILMAX, CLASSE, NOM_COULEUR),bornesinfinclue=T, levels_classes=c("TRES BON", "BON", "MOYEN","MEDIOCRE", "MAUVAIS"))
+setSeuils(nom_parametre="parametre test",nom_seuil="AM 25 janv 2010",type_seuil="DCE", code_parametre="1301",support="3",code_unite="27", seuils=tools4DCE::base_seuils%>%subset(NOM=="TEMPERATURE" & SPECIFICITE=="CYPRINICOLE")%>%left_join(couleurs_classes, by=c("CLASSE", "TYPE"))%>%select(SEUILMIN, SEUILMAX, CLASSE, NOM_COULEUR)%>%mutate_at("CLASSE", factor),bornesinfinclue=T)
 
 ```
 
 Pour créer une liste de seuils prédéfinis à partir des fichiers de données il suffit de taper la commande makeSeuils().
 A ce jour `r length(makeSeuils())` seuils différents sont ainsi définis.
+On peut se limiter à créer la liste pour un ensemble de codes paramètres en renseignant l'argument CdParametre.
+Idem pour les codes support, fraction, pour les types de seuils (DCE ou NON_DCE), pour les spécificités (ex. SALMONICOLE ou CYPRINICOLE).
+
 ```{r}
 tmp<-makeSeuils()
 tmp[100]
+
+
+test<-makeSeuils(CdParametre=c("1340", "1301"), specificites=c("", "CYPRINICOLE"), type_seuil = "DCE")
+return(test)
 ```
+La liste des paramètres concernés est la suivante :
+```{r}
+lapply(tmp, function(x) `@`( x , nom_parametre)[[1]])%>%unlist%>%sort%>%unique
+```
+# Exemples de graphs en mode points
+
+```{r fig.width=5}
+data0<-data.frame(DatePrel=c("2019-01-01 12:30:00", "2020-05-03 00:00:00","2020-10-25 12:30:00", "2021-07-18 12:30:00")%>%as.POSIXct(tz="Europe/Paris"), RsAna=c(12,35.5,58.3, 42))
+graphDCE_points(data0, seuils=makeSeuils(CdParametre = "1340", type_seuil="DCE"))
+
+```
+
+
+## représentation des points hors gamme de mesure
+
+En cas de points hors de l'échelle, la fonction trace remplace ces points par une étiquette colorée qui reprend la valeur du point manquant affiché de la couleur correspondant à sa classe de qualité.
+
+```{r fig.width=5}
+graphDCE_points(data0, seuils=makeSeuils(CdParametre = "1340", type_seuil="DCE"), ymaxi=55, titre = "Nitrates", bilan_annuel = T, nom_legende = "Classe \nqualité")
+```
+
+
 

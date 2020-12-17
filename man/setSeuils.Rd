@@ -14,7 +14,6 @@ setSeuils(
   code_unite = "",
   seuils,
   bornesinfinclue = T,
-  levels_classes,
   specificites = ""
 )
 }

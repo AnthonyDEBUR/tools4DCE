@@ -1,4 +1,4 @@
-
+library(tidyverse)
 
 # base des seuils par paramètre
 base_seuils <- read.csv2("tables_ref/base_seuils.csv", colClasses = c(rep("character",5),rep("numeric",2), rep("character",5)))
@@ -17,3 +17,9 @@ save(couleurs_classes, file="data/couleurs_classes.RData")
 ordre_facteurs_qualite <- read.csv2("tables_ref/ordre_facteurs_qualite.csv")
 names(ordre_facteurs_qualite)<-"CLASSE"
 save(ordre_facteurs_qualite, file="data/ordre_facteurs_qualite.RData")
+
+# telechargement du referentiel unites sandre
+download.file("https://api.sandre.eaufrance.fr/referentiels/v1/urf.csv?compress=true", "unites.csv.gz", mode="wb", cacheOK = T)
+unites_sandre<-read_delim("unites.csv.gz",delim=";", skip=1)
+file.remove("unites.csv.gz")
+save(unites_sandre, file="data/unites_sandre.RData")
