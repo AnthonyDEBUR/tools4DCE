@@ -86,7 +86,6 @@ graphDCE_points<-function(data,col_dates="DatePrel", col_valeurs="RsAna", col_LQ
     }
     attr(xmini, "tzone") <- "Europe/Paris"
 
-
     ##### échelle du break des dates (quelles dates sont indiquées en abscisse selon la chronique)
     duree_jours<-as.numeric(xmaxi-xmini)
 
