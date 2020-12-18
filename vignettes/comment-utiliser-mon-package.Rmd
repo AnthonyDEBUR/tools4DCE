@@ -61,7 +61,7 @@ Il précise l'intervalle entre lequel il faut appliquer une classe de qualité e
 Pour créer un objet de classe seuil on utilise la fonction setSeuils
 
 ```{r}
-setSeuils(nom_parametre="parametre test",nom_seuil="AM 25 janv 2010",type_seuil="DCE", code_parametre="1301",support="3",code_unite="27", seuils=tools4DCE::base_seuils%>%subset(NOM=="TEMPERATURE" & SPECIFICITE=="CYPRINICOLE")%>%left_join(couleurs_classes, by=c("CLASSE", "TYPE"))%>%select(SEUILMIN, SEUILMAX, CLASSE, NOM_COULEUR)%>%mutate_at("CLASSE", factor),bornesinfinclue=T)
+setSeuils(nom_parametre="parametre test",nom_seuil="AM 25 janv 2010",type_seuil="DCE", code_parametre="1301", synonymes_parametre = "1301",support="3",code_unite="27", seuils=tools4DCE::base_seuils%>%subset(NOM=="TEMPERATURE" & SPECIFICITE=="CYPRINICOLE")%>%left_join(couleurs_classes, by=c("CLASSE", "TYPE"))%>%select(SEUILMIN, SEUILMAX, CLASSE, NOM_COULEUR)%>%mutate_at("CLASSE", factor),bornesinfinclue=T)
 
 ```
 
@@ -85,8 +85,8 @@ lapply(tmp, function(x) `@`( x , nom_parametre)[[1]])%>%unlist%>%sort%>%unique
 # Exemples de graphs en mode points
 
 ```{r fig.width=5}
-data0<-data.frame(DatePrel=c("2019-01-01 12:30:00", "2020-05-03 00:00:00","2020-10-25 12:30:00", "2021-07-18 12:30:00")%>%as.POSIXct(tz="Europe/Paris"), RsAna=c(12,35.5,58.3, 42))
-graphDCE_points(data0, seuils=makeSeuils(CdParametre = "1340", type_seuil="DCE"))
+data0<-data.frame(DatePrel=c("2019-01-01 12:30:00", "2020-05-03 00:00:00","2020-10-25 12:30:00", "2021-07-18 12:30:00")%>%as.POSIXct(tz="Europe/Paris"), RsAna=c(12,35.5,58.3, 42), LqAna=c(3))
+graphDCE_points(data0, seuils=makeSeuils(CdParametre = "1340", type_seuil="DCE"), affiche_LQ = T, ymini = 0)
 
 ```
 
@@ -97,6 +97,17 @@ En cas de points hors de l'échelle, la fonction trace remplace ces points par u
 
 ```{r fig.width=5}
 graphDCE_points(data0, seuils=makeSeuils(CdParametre = "1340", type_seuil="DCE"), ymaxi=55, titre = "Nitrates", bilan_annuel = T, nom_legende = "Classe \nqualité")
+```
+En l'état, la fonction graphDCE_points ne permet pas d'afficher de légende pour l'affichage des LQ.
+Ce manque peut être contourné en combinant la fonction legend_LQ() avec la fonction plot_grid du package cowplot.
+
+```{r}
+
+
+graph<-graphDCE_points(data0, seuils=makeSeuils(CdParametre = "1340", type_seuil="DCE"), affiche_LQ = T, ymini = 0)
+plot_grid(graph, legend_LQ(), rel_heights = c(9,1), ncol=1)
+
+
 ```
 
 

@@ -18,5 +18,5 @@ Suggests:
     rmarkdown
 VignetteBuilder: knitr
 Depends: tidyverse, plyr,scales,
-          ggplot2
+          ggplot2, cowplot
 

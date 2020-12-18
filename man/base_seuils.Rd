@@ -5,7 +5,7 @@
 \alias{base_seuils}
 \title{base_seuils}
 \format{
-An object of class \code{data.frame} with 581 rows and 12 columns.
+An object of class \code{data.frame} with 679 rows and 12 columns.
 }
 \usage{
 data(base_seuils)

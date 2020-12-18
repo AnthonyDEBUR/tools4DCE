@@ -5,7 +5,8 @@
 #' @param nom_parametre = un character qui identifie explicitement le paramètre représenté
 #' @param nom_seuil = un character qui précise l'origine des seuils
 #' @param type_seuil = un character qui désigne type du seuil (DCE ou autre)
-#' @param code_parametre = Code SANDRE du paramètre (optionnel)
+#' @param code_parametre = Code SANDRE du paramètre
+#' @param synonymes_parametre = Code SANDRE des synonymes du paramètre (séparés par |)
 #' @param support = Code SANDRE du support (optionnel)
 #' @param fraction = Code SANDRE de la fraction (optionnel)
 #' @param code_unite = Code SANDRE de l'unité (optionnel)
@@ -18,13 +19,14 @@
 #'
 #' @export
 #'
-setSeuils<-function(nom_parametre, nom_seuil, type_seuil, code_parametre, support="", fraction="", code_unite="", seuils, bornesinfinclue=T, specificites="")
+setSeuils<-function(nom_parametre, nom_seuil, type_seuil, code_parametre, synonymes_parametre, support="", fraction="", code_unite="", seuils, bornesinfinclue=T, specificites="")
 {
   new(Class = "seuil",
       nom_parametre=nom_parametre,
       nom_seuil=nom_seuil,
       type_seuil=type_seuil,
       code_parametre=code_parametre,
+      synonymes_parametre=synonymes_parametre,
       support=support,
       fraction=fraction,
       code_unite=code_unite,

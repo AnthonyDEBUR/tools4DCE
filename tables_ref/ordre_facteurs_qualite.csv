@@ -31,3 +31,6 @@ Pire 20%
 >seuil S1
 AEP OK
 Restrictions AEP
+<seuil eau distribuée
+>seuil eau distribuée et <seuil potabilisation
+>seuil potabilisation

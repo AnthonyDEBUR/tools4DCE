@@ -9,7 +9,8 @@
 #' nom_parametre = Nom du paramètre à représenter graphiquement
 #' nom_seuil= Origine du seuil (arrêté ministériel du 25 janvier 2010, ...)
 #' type_seuil = type du seuil (DCE ou autre)
-#' code_parametre = Code SANDRE du paramètre (optionnel)
+#' code_parametre = Code SANDRE du paramètre
+#' synonymes_parametre = Codes SANDRE du paramètre + de ses synonymes. Les codes sont séparés par |
 #' support = Code SANDRE du support (optionnel)
 #' fraction = Code SANDRE de la fraction (optionnel)
 #' code_unite = Code SANDRE de l'unité (optionnel)
@@ -24,6 +25,7 @@ setClass(Class="seuil",
                                        nom_seuil="character",
                                        type_seuil="character",
                                        code_parametre="character",
+                                       synonymes_parametre="character",
                                        support="character",
                                        fraction="character",
                                        code_unite="character",

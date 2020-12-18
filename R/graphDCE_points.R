@@ -79,14 +79,31 @@ graphDCE_points<-function(data,col_dates="DatePrel", col_valeurs="RsAna", col_LQ
       # on élargi les échelles min et max pour que les premiers points soient totalement dans la zone colorée
       xmini<-xmini-abs(range(data1$DatePrel)[2]-range(data1$DatePrel)[1])*0.05
       xmaxi<-xmaxi+abs(range(data1$DatePrel)[2]-range(data1$DatePrel)[1])*0.05
+      # cas d'un seul point (xmini et xmaxi confondus : on élargi l'échelle de 14 jours)
+      if(xmini==xmaxi){xmini<-xmini-7
+                      xmaxi<-xmaxi+7}
+
     }
     attr(xmini, "tzone") <- "Europe/Paris"
 
 
     ##### échelle du break des dates (quelles dates sont indiquées en abscisse selon la chronique)
     duree_jours<-as.numeric(xmaxi-xmini)
+
+    # durée <= 1 semaine
+    if(duree_jours<=1){break_date_max<-"1 hour"
+    dateformat<-"%d%b%y %Hh"}
+    # durée <= 15 jours
+    else if(duree_jours<=15){break_date_max<-"1 day"
+    dateformat<-"%d%b%y"}
+    # durée <= 31 jours
+    else if(duree_jours<=31){break_date_max<-"2 days"
+    dateformat<-"%d%b%y"}
+    # durée <= 1 an
+    else if(duree_jours<=365){break_date_max<-"1 month"
+    dateformat<-"%d%b%y"}
     # durée <= 1 an 1/2
-    if(duree_jours<=1.5*365){break_date_max<-"1 month"
+    else if(duree_jours<=1.5*365){break_date_max<-"1 month"
     dateformat<-"%d%b%y"}
     # durée entre 1 et 3 ans
     else if(duree_jours%/%365<=3){break_date_max<-"3 months"
@@ -285,7 +302,15 @@ graphDCE_points<-function(data,col_dates="DatePrel", col_valeurs="RsAna", col_LQ
   # si le tableau de données initial est vide alors on renvoi un graph "Pas de données"
 
   if(nrow(data1)==0)
-  {graph1<-ggplot() + annotate("text", label= "PAS DE DONNEES A AFFICHER", x=1, y=1)}
+  {graph1<-ggplot() + annotate("text", label= "PAS DE DONNEES\nA AFFICHER", x=1, y=1)
+
+  if(is.null(titre)){
+    if(!is.null(seuils)){titre<-seuils[[1]]@nom_parametre}else{titre<-""}
+  }
+
+  if(!is.null(seuils)){graph1<-graph1+ggtitle(titre)}
+
+  }
 
 
   # exécution du graph

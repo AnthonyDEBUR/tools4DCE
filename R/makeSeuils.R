@@ -31,6 +31,12 @@ makeSeuils<-function(CdParametre=NULL, CdSupport=NULL, CdFraction=NULL, type_seu
   couleurs_classes<-tools4DCE::couleurs_classes
   ordre_facteurs_qualite<-tools4DCE::ordre_facteurs_qualite
 
+  # on duplique les lignes de base_seuils pour lesquelles il existe des synonymes
+  base_seuils$SYNONYMES<-base_seuils$PARAMETRE
+  base_seuils$PARAMETRE<-gsub(" ","", base_seuils$PARAMETRE) # suppression des éventuels espaces
+  base_seuils<-base_seuils%>%separate(PARAMETRE, sep="\\|", into=paste("PARAMETRE",seq(1:20), sep=""), fill="right")
+  base_seuils<-base_seuils%>%pivot_longer(cols=PARAMETRE1:PARAMETRE20, values_to="PARAMETRE", values_drop_na=T)
+
   # On selectionne uniquement les données qui correspondent à la liste donnée en paramètre de la fonction.
   # si ces paramètres ne sont pas renseigné, alors on créé la liste pour tous les paramètres
   if(!all(is.null(CdParametre))){base_seuils<-base_seuils%>%subset(PARAMETRE %in% CdParametre)}
@@ -53,6 +59,7 @@ makeSeuils<-function(CdParametre=NULL, CdSupport=NULL, CdFraction=NULL, type_seu
                                                    nom_seuil=paste(.x$NOM_SEUIL%>%unique, collapse=" + "),
                                                    type_seuil=first(.x$TYPE),
                                                    code_parametre=first(.x$PARAMETRE),
+                                                   synonymes_parametre=first(.x$SYNONYMES),
                                                    support=first(.x$SUPPORT),
                                                    fraction=first(.x$FRACTION),
                                                    code_unite=first(.x$UNITE),

@@ -9,6 +9,7 @@ setSeuils(
   nom_seuil,
   type_seuil,
   code_parametre,
+  synonymes_parametre,
   support = "",
   fraction = "",
   code_unite = "",
@@ -24,7 +25,9 @@ setSeuils(
 
 \item{type_seuil}{= un character qui désigne type du seuil (DCE ou autre)}
 
-\item{code_parametre}{= Code SANDRE du paramètre (optionnel)}
+\item{code_parametre}{= Code SANDRE du paramètre}
+
+\item{synonymes_parametre}{= Code SANDRE des synonymes du paramètre (séparés par |)}
 
 \item{support}{= Code SANDRE du support (optionnel)}
 
