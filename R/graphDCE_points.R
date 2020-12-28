@@ -80,8 +80,10 @@ graphDCE_points<-function(data,col_dates="DatePrel", col_valeurs="RsAna", col_LQ
       xmini<-xmini-abs(range(data1$DatePrel)[2]-range(data1$DatePrel)[1])*0.05
       xmaxi<-xmaxi+abs(range(data1$DatePrel)[2]-range(data1$DatePrel)[1])*0.05
       # cas d'un seul point (xmini et xmaxi confondus : on élargi l'échelle de 14 jours)
-      if(xmini==xmaxi){xmini<-xmini-7
-                      xmaxi<-xmaxi+7}
+      if(xmini==xmaxi){
+                      xmini<-xmini-3600*24
+                      xmaxi<-xmaxi+3600*24
+                      }
 
     }
     attr(xmini, "tzone") <- "Europe/Paris"
@@ -89,7 +91,7 @@ graphDCE_points<-function(data,col_dates="DatePrel", col_valeurs="RsAna", col_LQ
     ##### échelle du break des dates (quelles dates sont indiquées en abscisse selon la chronique)
     duree_jours<-as.numeric(xmaxi-xmini)
 
-    # durée <= 1 semaine
+    # durée <= 1 jour
     if(duree_jours<=1){break_date_max<-"1 hour"
     dateformat<-"%d%b%y %Hh"}
     # durée <= 15 jours
@@ -101,11 +103,11 @@ graphDCE_points<-function(data,col_dates="DatePrel", col_valeurs="RsAna", col_LQ
     # durée <= 1 an
     else if(duree_jours<=365){break_date_max<-"1 month"
     dateformat<-"%d%b%y"}
-    # durée <= 1 an 1/2
-    else if(duree_jours<=1.5*365){break_date_max<-"1 month"
+    # durée <= 2 ans
+    else if(duree_jours<=2*365){break_date_max<-"3 months"
     dateformat<-"%d%b%y"}
-    # durée entre 1 et 3 ans
-    else if(duree_jours%/%365<=3){break_date_max<-"3 months"
+    # durée entre 2 et 3 ans
+    else if(duree_jours%/%365<=3){break_date_max<-"6 months"
     dateformat<-"%d%b%y"}
     # durée entre 4 et 15 ans
     else if(duree_jours%/%365<=14){break_date_max<-"1 year"
