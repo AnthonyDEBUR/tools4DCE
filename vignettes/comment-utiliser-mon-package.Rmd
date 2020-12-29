@@ -111,4 +111,12 @@ plot_grid(graph, legend_LQ(), rel_heights = c(9,1), ncol=1)
 ```
 
 
+# graphs en barre
+On peut également réaliser des graphiques en barre, par exemple pour faire des bilans annuels
+```{r}
+data<-data.frame(annee=seq(2010,2013), RsAna=c(12,15.5,67,18.3))
+graphDCE_bar(data, seuils=makeSeuils(CdParametre = "1340", type_seuil="DCE"),ymaxi=60)
+
+
+```
 
