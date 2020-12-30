@@ -34,7 +34,7 @@ graphDCE_bar<-function(data,col_annee="annee", col_valeurs="RsAna", ymaxi=NULL,a
   if(!is.null(seuils)){seuils1<-seuils[[1]]@seuils}else{seuils1<-NULL}
 
 
-  if(nrow(data1)>0) # on ne traite les données que si le tableau de données n'est pas vide
+  if((nrow(data1)>0) & (!all(is.na(data1[[col_valeurs]])))) # on ne traite les données que si le tableau de données n'est pas vide
   {
     data1$ANNEE<-data1[[col_annee]]%>%as.character%>%as.numeric()
     data1$RsAna<-data1[[col_valeurs]]
@@ -199,14 +199,14 @@ graph1<-graph1+scale_x_continuous(breaks=Xdo, labels=lblXdo)
 
     # si le tableau de données initial est vide alors on renvoi un graph "Pas de données"
 
-    if(nrow(data1)==0)
+  if((nrow(data1)==0) | (all(is.na(data1[[col_valeurs]]))))
     {graph1<-ggplot() + annotate("text", label= "PAS DE DONNEES\nA AFFICHER", x=1, y=1)
 
     if(is.null(titre)){
       if(!is.null(seuils)){titre<-seuils[[1]]@nom_parametre}else{titre<-""}
     }
 
-    if(!is.null(seuils)){graph1<-graph1+ggtitle(titre)}
+    if(!is.null(seuils)){graph1<-graph1+ggtitle(titre)+theme_void()}
 
     }
 

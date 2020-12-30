@@ -47,7 +47,7 @@ graphDCE_points<-function(data,col_dates="DatePrel", col_valeurs="RsAna", col_LQ
   if(!is.null(seuils)){seuils1<-seuils[[1]]@seuils}else{seuils1<-NULL}
 
 
-  if(nrow(data1)>0) # on ne traite les données que si le tableau de données n'est pas vide
+  if((nrow(data1)>0) & (!all(is.na(data1[[col_valeurs]])))) # on ne traite les données que si le tableau de données n'est pas vide
   {
     data1$DatePrel<-data1[[col_dates]]%>%as.POSIXct
     data1$RsAna<-data1[[col_valeurs]]
@@ -158,7 +158,7 @@ graphDCE_points<-function(data,col_dates="DatePrel", col_valeurs="RsAna", col_LQ
     min_data<-round_any(min(data1$RsAna, na.rm=T)-0.1*rangedata,10^-nb_decim,f=floor)
     max_data<-round_any(max(data1$RsAna, na.rm=T)+0.1*rangedata, 10^-nb_decim,f=ceiling)
     # dans le cas où toutes les valeurs sont positives et min_data<0 alors min_data<-0
-    if(all(sign(data1$RsAna)==1, na.rm=T) & min_data<0){min_data<-0}
+    if((all(sign(data1$RsAna)==1, na.rm=T) & min_data<0)){min_data<-0}
 
     # si ymini et ymaxi non définis alors on zoom le graphique autour de la plage de données disponible
     if(is.null(ymini)){seuils1minmax<-c(min_data,seuils1minmax[seuils1minmax>=min_data])}
@@ -302,14 +302,14 @@ graphDCE_points<-function(data,col_dates="DatePrel", col_valeurs="RsAna", col_LQ
 
   # si le tableau de données initial est vide alors on renvoi un graph "Pas de données"
 
-  if(nrow(data1)==0)
+  if((nrow(data1)==0) | (all(is.na(data1[[col_valeurs]]))))
   {graph1<-ggplot() + annotate("text", label= "PAS DE DONNEES\nA AFFICHER", x=1, y=1)
 
   if(is.null(titre)){
     if(!is.null(seuils)){titre<-seuils[[1]]@nom_parametre}else{titre<-""}
   }
 
-  if(!is.null(seuils)){graph1<-graph1+ggtitle(titre)}
+  if(!is.null(seuils)){graph1<-graph1+ggtitle(titre)+theme_void()}
 
   }
 
