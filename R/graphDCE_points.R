@@ -309,7 +309,9 @@ graphDCE_points<-function(data,col_dates="DatePrel", col_valeurs="RsAna", col_LQ
     if(!is.null(seuils)){titre<-seuils[[1]]@nom_parametre}else{titre<-""}
   }
 
-  if(!is.null(seuils)){graph1<-graph1+ggtitle(titre)+theme_void()}
+  if(!is.null(seuils)){graph1<-graph1+ggtitle(titre)+theme(axis.title=element_blank(),
+                                                             axis.text=element_blank(),
+                                                             axis.ticks=element_blank())}
 
   }
 
