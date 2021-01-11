@@ -124,23 +124,16 @@ graphDCE_points<-function(data,col_dates="DatePrel", col_valeurs="RsAna", col_LQ
 
     # ajout d'une colonne couleur correspondant aux seuils
     # la fonction est ajustée selon si les limites de classes inclue ou pas les bornes inférieures
-    data1$couleur_pt<-rep("", nrow(data1)) # par défaut les étiquettes des valeurs hors gamme sont blanches
 
-    # on ajoute la couleur pour chaque seuil
+    # on ajoute la couleur pour chaque seuil selon la classe de qualité
     if(!is.null(seuils)){
+            data1<-data1%>%mutate(classe_pt=affecte_une_classe(data1$RsAna, seuil=seuils[[1]]))
+            data1<-left_join(data1, seuils[[1]]@seuils%>%select(CLASSE, NOM_COULEUR), by=c("classe_pt"="CLASSE"))
+            names(data1)[names(data1)=="NOM_COULEUR"]<-"couleur_pt"
+            data1$couleur_pt<-replace_na(data1$couleur_pt, "white")
+            }
+    else {data1$couleur_pt<-"white"} # par défaut les étiquettes des valeurs hors gamme sont blanches
 
-      if(seuils[[1]]@bornesinfinclue){
-        f_couleur<-function(x,i){
-          if(!is.na(x)){if(x>=seuils1[i,]$SEUILMIN & x<seuils1[i,]$SEUILMAX){as.character(seuils1[i,]$NOM_COULEUR)}else{""}}else{""}}}
-      else {f_couleur<-function(x,i){if(!(is.na(x))){if(x>seuils1[i,]$SEUILMIN & x<=seuils1[i,]$SEUILMAX){as.character(seuils1[i,]$NOM_COULEUR)}else{""}}else{""}}}
-
-
-      for(i in 1:nrow(seuils1))
-      {
-        tmp<-sapply(data1$RsAna, FUN=function(x)f_couleur(x,i))
-        data1$couleur_pt<-paste0(data1$couleur_pt,tmp)
-      }}
-    if(any(which(data1$couleur_pt==""))){data1[which(data1$couleur_pt==""),]$couleur_pt<-"white"} # les points qui n'ont pas de couleurs sont considérés blancs
 
     # calcul et ajout des bornes min_max du graph
     seuils1minmax<-as.numeric(unique(c(ymini,seuils1$SEUILMIN, seuils1$SEUILMAX, ymaxi)))

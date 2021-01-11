@@ -75,8 +75,8 @@ tmp<-makeSeuils()
 tmp[100]
 
 
-test<-makeSeuils(CdParametre=c("1340", "1301"), specificites=c("", "CYPRINICOLE"), type_seuil = "DCE")
-return(test)
+# test<-makeSeuils(CdParametre=c("1340", "1301"), specificites=c("", "CYPRINICOLE"), type_seuil = "DCE")
+# return(test)
 ```
 La liste des paramètres concernés est la suivante :
 ```{r}
@@ -119,4 +119,46 @@ graphDCE_bar(data, seuils=makeSeuils(CdParametre = "1340", type_seuil="DCE"),yma
 
 
 ```
+# Attribution d'une classe de qualité à des résultats
+La fonction affecte une classe permet d'affecter une classe à un résultat
+```{r}
+affecte_une_classe(c(10,10.1,50, 50.1), seuil=makeSeuils(CdParametre="1340", type_seuil = "DCE"))
+
+
+```
+
+
+
+
+# Bilan sur les taux de quantification
+
+Le package permet de réaliser des graphiques bilans sur les taux de quantification.
+
+```{r}
+donnees<-data.frame(Parametre=rep(letters[1:5], 100), RsAna=sample(0.1:10, 500, replace=TRUE), LqAna=c(0.5,1,2,6))
+donnees<-donnees%>%mutate(RsAna=ifelse(RsAna<LqAna, LqAna, RsAna))
+donnees<-donnees%>%mutate(CdRqAna=ifelse(RsAna>LqAna, "1", ifelse(sample(1:100,5)>10,"10","1")))
+
+seuil<-list(CdParametre=NA, Nom=c(paste0(intToUtf8(8804), "1µg/L"),"1 à 5 µg/L", ">5 µg/L"), Bornes=c(0,1,5,+Inf), include.lowest=T)
+seuils0<-makeSeuils(type_seuil="DCE", CdParametre = "1340")
+
+
+donnees$categorie<-cut(donnees$RsAna, seuil$Bornes, labels=seuil$Nom, include.lowest = seuil$include.lowest, ordered_result = T)
+donnees0<-donnees%>%group_by(Parametre, categorie, CdRqAna)%>%dplyr::summarise(nb = n())%>%mutate(categorie=fct_rev(categorie))
+
+donnees0$etiquette<-paste0(ifelse(donnees0$CdRqAna=="1", paste0(donnees0$categorie), paste0("<LQ avec LQ ", ifelse(substr(donnees0$categorie,1,1)%in%c("<",">", "=", intToUtf8(8804), intToUtf8(2265)), "", "de "), donnees0$categorie)))
+
+levels(donnees$categorie)%>%as.character
+donnees0$etiquette<-factor(donnees0$etiquette)
+
+summary(donnees0)
+
+ggplot(donnees0, aes(x=nb, y=Parametre, fill=categorie, alpha=CdRqAna))+ 
+  geom_bar(position="fill", stat="identity") + scale_alpha_manual(values=c(1,0.20))
+
+
+```
+
+
+
 

@@ -1,10 +1,8 @@
 library(tidyverse)
+library(readxl)
 
 # base des seuils par paramètre
-base_seuils <- read.csv2("tables_ref/base_seuils.csv", colClasses = c(rep("character",5),rep("numeric",2), rep("character",5)))
-
-unique(base_seuils$TYPE)
-
+base_seuils <- read_xlsx("tables_ref/base_seuils.xlsx", col_types =  c(rep("text",5),rep("numeric",2), rep("text",5)))
 save(base_seuils, file="data/base_seuils.RData")
 
 
