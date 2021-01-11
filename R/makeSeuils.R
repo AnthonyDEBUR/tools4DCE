@@ -8,6 +8,7 @@
 #' @param CdParametre vecteur optionnel de character qui liste les codes paramètres à sélectionner
 #' @param CdSupport vecteur optionnel de character qui liste les codes support à sélectionner
 #' @param CdFraction vecteur optionnel de character qui liste les codes fractions à sélectionner
+#' @param CdUnite vecteur optionnel de character qui liste les codes unité à sélectionner
 #' @param type_seuil vecteur optionnel de character qui liste les types de seuils à afficher ("DCE", "NON_DCE")
 #' @param specificites vecteur optionnel de character qui liste les spécificités ("SALMONICOLE", "CYPRINICOLE")
 #'
@@ -20,12 +21,12 @@
 #'
 #'
 #' @examples # génère les seuils pour les paramètres 1340, 1301 avec la spécificité non renseignée ou CYPRINICOLE et un type de seuil DCE :
-#' test<-makeSeuils(CdParametre=c("1340", "1301"), specificites=c("", "CYPRINICOLE"), type_seuil = "DCE")
+#' test<-makeSeuils(CdParametre=c("1340", "1301"), specificites=c(NA, "CYPRINICOLE"), type_seuil = "DCE")
 #' print(test)
 #'
 #' @export
 
-makeSeuils<-function(CdParametre=NULL, CdSupport=NULL, CdFraction=NULL, type_seuil=NULL, specificites=NULL){
+makeSeuils<-function(CdParametre=NULL, CdSupport=NULL, CdFraction=NULL, CdUnite=NULL, type_seuil=NULL, specificites=NULL){
   # chargement des données du package
   base_seuils<-tools4DCE::base_seuils
   couleurs_classes<-tools4DCE::couleurs_classes
@@ -39,11 +40,17 @@ makeSeuils<-function(CdParametre=NULL, CdSupport=NULL, CdFraction=NULL, type_seu
 
   # On selectionne uniquement les données qui correspondent à la liste donnée en paramètre de la fonction.
   # si ces paramètres ne sont pas renseigné, alors on créé la liste pour tous les paramètres
-  if(!all(is.null(CdParametre))){base_seuils<-base_seuils%>%subset(PARAMETRE %in% CdParametre)}
-  if(!all(is.null(CdSupport))){base_seuils<-base_seuils%>%subset(SUPPORT %in% CdSupport)}
-  if(!all(is.null(CdFraction))){base_seuils<-base_seuils%>%subset(FRACTION %in% CdFraction)}
-  if(!all(is.null(type_seuil))){base_seuils<-base_seuils%>%subset(TYPE %in% type_seuil)}
-  if(!all(is.null(specificites))){base_seuils<-base_seuils%>%subset(SPECIFICITE %in% specificites)}
+
+  seuils_demandes<-tibble::tibble(.rows=max(length(CdParametre), length(CdSupport), length(CdFraction), length(CdUnite), length(type_seuil), length(specificites)))
+  if(!is.null(CdParametre)){seuils_demandes<-seuils_demandes%>%mutate(PARAMETRE=CdParametre)}
+  if(!is.null(CdSupport)){seuils_demandes<-seuils_demandes%>%mutate(SUPPORT=CdSupport)}
+  if(!is.null(type_seuil)){seuils_demandes<-seuils_demandes%>%mutate(TYPE=type_seuil)}
+  if(!is.null(specificites)){seuils_demandes<-seuils_demandes%>%mutate(SPECIFICITE=specificites)}
+  if(!is.null(CdFraction)){seuils_demandes<-seuils_demandes%>%mutate(FRACTION=CdFraction)}
+  if(!is.null(CdUnite)){seuils_demandes<-seuils_demandes%>%mutate(UNITE=CdUnite)}
+
+  # jointure uniquement sur les colonnes renseignées
+  if(nrow(seuils_demandes)>0){base_seuils<-inner_join(base_seuils, seuils_demandes, by=names(seuils_demandes), na_matches="na")}
 
   # on ajoute une colonne NOM_COULEUR à la base_seuils
   base_seuils<-base_seuils%>%left_join(couleurs_classes, by=c("CLASSE", "TYPE"))

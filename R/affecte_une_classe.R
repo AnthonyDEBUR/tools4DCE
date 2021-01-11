@@ -4,7 +4,9 @@
 #'
 #' @param x un nombre ou un vecteur de nombres
 #' @param seuil un objet de classe seuil ou une liste de classe seuil de longueur 1
+#'
 #' @return la fonction renvoie un vecteur ou un nombre avec les classes de qualité correspondant aux valeurs en entrée
+#'
 #' @examples seuil<-makeSeuils(CdParametre="1335", type_seuil="DCE")[[1]]
 #' @examples affecte_une_classe(0.6, seuil)
 #' @examples test<-sample(seq(0,0.6, 0.1),10, replace=T)

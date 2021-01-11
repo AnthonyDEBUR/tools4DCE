@@ -8,6 +8,7 @@ makeSeuils(
   CdParametre = NULL,
   CdSupport = NULL,
   CdFraction = NULL,
+  CdUnite = NULL,
   type_seuil = NULL,
   specificites = NULL
 )
@@ -18,6 +19,8 @@ makeSeuils(
 \item{CdSupport}{vecteur optionnel de character qui liste les codes support à sélectionner}
 
 \item{CdFraction}{vecteur optionnel de character qui liste les codes fractions à sélectionner}
+
+\item{CdUnite}{vecteur optionnel de character qui liste les codes unité à sélectionner}
 
 \item{type_seuil}{vecteur optionnel de character qui liste les types de seuils à afficher ("DCE", "NON_DCE")}
 
@@ -38,7 +41,7 @@ lapply(makeSeuils(), function(x) `@`( x , nom_parametre)[[1]])
 
 
 # gÃ©nÃ¨re les seuils pour les paramÃ¨tres 1340, 1301 avec la spÃ©cificitÃ© non renseignÃ©e ou CYPRINICOLE et un type de seuil DCE :
-test<-makeSeuils(CdParametre=c("1340", "1301"), specificites=c("", "CYPRINICOLE"), type_seuil = "DCE")
+test<-makeSeuils(CdParametre=c("1340", "1301"), specificites=c(NA, "CYPRINICOLE"), type_seuil = "DCE")
 print(test)
 
 }
