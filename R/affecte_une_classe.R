@@ -34,22 +34,6 @@ affecte_une_classe<-function(x, seuil){
     )}}
 
 
-  # for(i in 1:length(seuil@seuils$SEUILMIN)){
-  #   sens<-ifelse(seuil@seuils$SEUILMIN[i]>seuil@seuils$SEUILMAX[i], F,T) # permet de résoudre les cas comme le pH où on a un paramètre de type borne_inf_inclue pour pHmin et pHmax
-  #   mini<-min(seuil@seuils$SEUILMIN[i], seuil@seuils$SEUILMAX[i])
-  #   maxi<-max(seuil@seuils$SEUILMIN[i], seuil@seuils$SEUILMAX[i])
-  #
-  #   if(seuil@bornesinfinclue & sens){ifelse(sens,result<-replace(result,((x>mini) & (x<=maxi)),seuil@seuils$CLASSE[i]%>%as.character),
-  #                                           result<-replace(result,((x<=seuil@seuils$SEUILMIN[i]) & (x>seuil@seuils$SEUILMAX[i])),seuil@seuils$CLASSE[i]%>%as.character))
-  #   }
-  #   else{ifelse(sens,
-  #               result<-replace(result,((x>=seuil@seuils$SEUILMIN[i]) & (x<seuil@seuils$SEUILMAX[i])),seuil@seuils$CLASSE[i]%>%as.character),
-  #               result<-replace(result,((x<seuil@seuils$SEUILMIN[i]) & (x>=seuil@seuils$SEUILMAX[i])),seuil@seuils$CLASSE[i]%>%as.character)
-  #   )}}
-  #
-  #
-
-
   # conversion du resultat en factor
   levels_result<-levels(seuil@seuils$CLASSE)
   levels_result<-c(levels_result, if(any(result=="")){""})
