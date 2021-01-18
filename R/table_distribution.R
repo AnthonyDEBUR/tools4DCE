@@ -20,8 +20,7 @@
 #' @export
 table_distribution<-function(donnees, col_Valeur="RsAna", col_CdRq="CdRqAna", seuil){
   # test si le format en entrée est correct
-  if(length(seuil)>1){warning("Plusieurs seuils différents fournis, seule la première valeur de seuil a été utilisée pour attribuer les classes")
-    seuil<-seuil[[1]]}
+  if(length(seuil)>1){stop("Plusieurs seuils différents fournis pour les mêmes données")}
   if("list"%in%class(seuil)){seuil<-seuil[[1]]}
 
   # on affecte les noms de colonnes paramétrées à des noms fixes

@@ -8,8 +8,11 @@ groupe_tableau_distribution(
   donnees,
   col_Valeur = "RsAna",
   col_CdRq = "CdRqAna",
-  col_support = "CdSupport",
+  col_CdParametre = "CdParametre",
+  col_CdSupport = "CdSupport",
   col_CdFraction = "CdFractionAnalysee",
+  col_CdUnite = "CdUniteMesure",
+  col_tri = NULL,
   seuils
 )
 }
@@ -20,7 +23,13 @@ groupe_tableau_distribution(
 
 \item{col_CdRq}{: nom de la colonne avec le code remarque des analyses (par défaut CdRqAna). Les codes correspondent à ceux définis par le SANDRE.}
 
+\item{col_CdParametre}{: nom de la colonne avec le code parametre des analyses (par défaut CdParametre). Les codes correspondent à ceux définis par le SANDRE.}
+
 \item{col_CdFraction}{: nom de la colonne avec les codes SANDRE des fractions analysés (par défaut : CdFractionAnalysee), renseigner NULL si pas de colonne correspondant}
+
+\item{col_CdUnite}{: nom de la colonne avec les codes SANDRE des unités (par défaut : CdUniteMesure), renseigner NULL si pas de colonne correspondant}
+
+\item{col_tri}{: nom optionnel de la colonne complémentaire sur laquelle on veut faire le bilan (en plus des paramètres). Exemple : l'année des données}
 
 \item{seuils}{: liste d'objets de classe seuil}
 
@@ -32,8 +41,11 @@ groupe_tableau_distribution(
 la fonction renvoie un chiffre indiquant le nombre de décimales
 }
 \description{
-fonction pour réaliser grouper les tableaux de distribution
+fonction pour réaliser grouper les tableaux de distribution par paramètre et par un éventuel autre critère optionnel
 }
 \examples{
-compte_decimales(3.234)
+donnees<-data.frame(Parametre=rep(c("1301", "1340", "1335"), 100), RsAna=sample(0.1:100, 300, replace=TRUE), LqAna=c(0.5,1,6))
+donnees<-donnees\%>\%mutate(RsAna=ifelse(RsAna<LqAna, LqAna, RsAna))
+donnees<-donnees\%>\%mutate(CdRqAna=ifelse(RsAna>LqAna, "1", ifelse(sample(1:100,5)>10,"10","1")))
+groupe_tableau_distribution(donnees, makeSeuils(CdParametre=parametres, specificites=c("CYPRINICOLE", rep(NA,2)), type_seuil = "DCE"))
 }

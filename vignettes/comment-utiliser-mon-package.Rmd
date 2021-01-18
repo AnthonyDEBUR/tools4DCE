@@ -7,12 +7,7 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r, include = FALSE}
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>"
-)
-```
+
 
 ```{r setup}
 library(tools4DCE)
@@ -135,11 +130,11 @@ affecte_une_classe(c(10,10.1,50, 50.1), seuil=makeSeuils(CdParametre="1340", typ
 Le package permet de réaliser des graphiques bilans sur les taux de quantification.
 
 ```{r}
-donnees<-data.frame(Parametre=rep(letters[1:5], 100), RsAna=sample(0.1:10, 500, replace=TRUE), LqAna=c(0.5,1,2,6))
+donnees<-data.frame(Parametre=rep(letters[1:5], 100), RsAna=sample(0.1:100, 500, replace=TRUE), LqAna=c(0.5,1,2,6))
 donnees<-donnees%>%mutate(RsAna=ifelse(RsAna<LqAna, LqAna, RsAna))
 donnees<-donnees%>%mutate(CdRqAna=ifelse(RsAna>LqAna, "1", ifelse(sample(1:100,5)>10,"10","1")))
 seuils<-makeSeuils(type_seuil="DCE", CdParametre = "1340")
-
+table_distribution(donnees, seuil=seuils)
 # synthese<-daply(donnees, .(Parametre), function(x){table_distribution(x,seuil=seuils)})
 # do.call("bind_rows", apply(donnees, 1, function(x){table_distribution(x$,seuil=seuils)}))
 # 

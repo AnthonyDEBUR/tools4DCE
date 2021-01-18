@@ -3,6 +3,8 @@
 export(affecte_une_classe)
 export(calcule_ymaxi)
 export(ceiling_dec)
+export(charge_shp_SAGE)
+export(charge_shp_STAQ)
 export(compte_decimales)
 export(filtre_donnees_extremes)
 export(graphDCE_bar)

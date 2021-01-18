@@ -1,0 +1,34 @@
+---
+title: "Utilisation des fonctions cartographiques"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Utilisation des fonctions cartographiques-tools4DCE}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+
+```{r setup}
+library(tools4DCE)
+```
+
+
+# Interrogation des services cartographiques du SANDRE
+La librairie tools4DCE permet d'interroger les services cartographiques du SANDRE.
+Par exemple elle permet d'importer sous R le périmètre géographique d'un ou plusieurs SAGE
+
+```{r}
+SAGE<-charge_shp_SAGE(nom_sage = c("Vilaine", "Iton"), crs=2154)
+plot(SAGE[,2])
+
+```
+
+Elle permet également de récupérer les stations de mesures et les lieux de prélèvements localisées dans un périmètre géographique précis (sans cette précision, l'ensemble des stations définies sous le SANDRE sont téléchargées).
+```{r}
+
+stations<-charge_shp_STAQ(shp_emprise=SAGE)
+plot(stations[,1])
+
+```
+
+

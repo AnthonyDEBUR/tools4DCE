@@ -5,7 +5,7 @@ Authors@R:
     person(given = "Anthony",
            family = "DE BURGHRAVE",
            role = c("aut", "cre"),
-           email = "a.deburghrave@gmail.com",
+           email="a.debur@outlook.fr",
            comment = c(""))
 Description: This package was created to help data visualisation in the french environnement of rivers's data.
 License: GPL-3
@@ -17,6 +17,6 @@ Suggests:
     knitr,
     rmarkdown
 VignetteBuilder: knitr
-Depends: tidyverse, plyr,scales,
-          ggplot2, cowplot
+Depends: tidyverse, plyr,scales,sf,
+          ggplot2, cowplot, httr, ows4R
 
