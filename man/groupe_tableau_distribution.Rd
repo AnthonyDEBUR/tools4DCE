@@ -44,8 +44,10 @@ la fonction renvoie un chiffre indiquant le nombre de décimales
 fonction pour réaliser grouper les tableaux de distribution par paramètre et par un éventuel autre critère optionnel
 }
 \examples{
-donnees<-data.frame(Parametre=rep(c("1301", "1340", "1335"), 100), RsAna=sample(0.1:100, 300, replace=TRUE), LqAna=c(0.5,1,6))
+donnees<-data.frame(parametres=rep(c("1301", "1340", "1335"), 100), RsAna=sample(0.1:100, 300, replace=TRUE), LqAna=c(0.5,1,6))
 donnees<-donnees\%>\%mutate(RsAna=ifelse(RsAna<LqAna, LqAna, RsAna))
 donnees<-donnees\%>\%mutate(CdRqAna=ifelse(RsAna>LqAna, "1", ifelse(sample(1:100,5)>10,"10","1")))
-groupe_tableau_distribution(donnees, makeSeuils(CdParametre=parametres, specificites=c("CYPRINICOLE", rep(NA,2)), type_seuil = "DCE"))
+seuils<-makeSeuils(CdParametre=donnees$parametres\%>\%unique, specificites=c("CYPRINICOLE", rep(NA,2)), type_seuil = "DCE")
+groupe_tableau_distribution(donnees, col_CdParametre="parametres", col_CdSupport=NULL, col_CdFraction=NULL, col_CdUnite=NULL, seuils = seuils)
+
 }

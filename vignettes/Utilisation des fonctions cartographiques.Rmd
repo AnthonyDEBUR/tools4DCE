@@ -2,13 +2,13 @@
 title: "Utilisation des fonctions cartographiques"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Utilisation des fonctions cartographiques-tools4DCE}
+  %\VignetteIndexEntry{Utilisation des fonctions cartographiques}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
 
-```{r setup}
+```{r message=FALSE, warning = FALSE}
 library(tools4DCE)
 ```
 
@@ -28,6 +28,14 @@ Elle permet également de récupérer les stations de mesures et les lieux de pr
 
 stations<-charge_shp_STAQ(shp_emprise=SAGE)
 plot(stations[,1])
+
+```
+On peut de la même façon charger les points de suivis associés aux stations de mesures depuis le SANDRE.
+```{r}
+
+lieux_qual<-charge_shp_lieux_qualite(shp_emprise=SAGE)
+plot(lieux_qual[,1])
+
 
 ```
 

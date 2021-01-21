@@ -6,28 +6,34 @@
 \usage{
 graphDCE_distribution(
   donnees,
-  col_Valeur = "RsAna",
-  col_CdRq = "CdRqAna",
-  seuils
+  titre = "",
+  legende_LQ = c("NON QUANTIFIE", "QUANTIFIE"),
+  affiche_valeurs = T,
+  min_affiche = 0.1
 )
 }
 \arguments{
-\item{donnees}{: dataframe contenant les analyses dont il faut faire le bilan}
+\item{donnees}{: dataframe contenant les analyses dont il faut faire le bilan dans un format du type de celui rendu par la fonction groupe_tableau_distribution}
 
-\item{col_Valeur}{: nom de la colonne avec les résultats d'analyses (par défaut RsAna)}
+\item{titre}{: titre du graphique}
 
-\item{col_CdRq}{: nom de la colonne avec le code remarque des analyses (par défaut CdRqAna). Les codes correspondent à ceux définis par le SANDRE.}
+\item{legende_LQ}{: vecteur de character de longueur 2 qui précise l'étiquette pour les données inférieures et supérieures à la LQ}
 
-\item{seuils}{: liste d'objets de classe seuil}
+\item{affiche_valeurs}{: booléen qui indique d'il faut afficher les valeurs ou pas dans les barres}
 
-\item{col_parametre}{: nom de la colonne par rapport à laquelle faire le bilan (par défaut NomParametre)}
+\item{min_affiche}{: pourcentage minimum à atteindre pour que la valeur soit affiché (ex si min_affiche=0.3, seules le nb de prélèvements représentant au moins 30\% pour une categorie et un paramètre sera affiché)}
 }
 \value{
-la fonction renvoie un chiffre indiquant le nombre de décimales
+la fonction renvoie un objet ggplot avec le graphique de distribution
 }
 \description{
 fonction pour réaliser un graphique bilan de quantifications
 }
 \examples{
-compte_decimales(3.234)
+donnees<-data.frame(parametres=rep(c("1301", "1340", "1335"), 100), RsAna=sample(0.1:100, 300, replace=TRUE), LqAna=c(0.5,1,6))
+donnees<-donnees\%>\%mutate(RsAna=ifelse(RsAna<LqAna, LqAna, RsAna))
+donnees<-donnees\%>\%mutate(CdRqAna=ifelse(RsAna>LqAna, "1", ifelse(sample(1:100,5)>10,"10","1")))
+seuils<-makeSeuils(CdParametre=donnees$parametres\%>\%unique, specificites=c("CYPRINICOLE", rep(NA,2)), type_seuil = "DCE")
+tableau<-groupe_tableau_distribution(donnees, col_CdParametre="parametres", col_CdSupport=NULL, col_CdFraction=NULL, col_CdUnite=NULL, seuils = seuils)
+graphDCE_distribution(tableau)
 }

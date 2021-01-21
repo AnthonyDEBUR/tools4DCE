@@ -34,7 +34,7 @@ table_distribution<-function(donnees, col_Valeur="RsAna", col_CdRq="CdRqAna", se
   donnees<-donnees%>%group_by(CLASSE, CdRqAna)%>%dplyr::summarise(nb = n())
 
   # légende
-  donnees<-donnees%>%mutate(CATEGORIE=if_else(donnees$CdRqAna=="1",donnees$CLASSE%>%as.character,paste0("<LQ et LQ de classe ", donnees$CLASSE)))
+  donnees<-donnees%>%mutate(CATEGORIE=if_else(donnees$CdRqAna%in%c("1"),donnees$CLASSE%>%as.character,paste0("<LQ et LQ de classe ", donnees$CLASSE)))
 
   # couleurs
   donnees<-left_join(donnees, seuil@seuils%>%select(CLASSE, NOM_COULEUR), by=c("CLASSE"))

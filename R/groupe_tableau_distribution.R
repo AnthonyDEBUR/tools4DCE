@@ -16,10 +16,12 @@
 #' @return la fonction renvoie un chiffre indiquant le nombre de décimales
 #'
 #'
-#' @examples donnees<-data.frame(Parametre=rep(c("1301", "1340", "1335"), 100), RsAna=sample(0.1:100, 300, replace=TRUE), LqAna=c(0.5,1,6))
+#' @examples donnees<-data.frame(parametres=rep(c("1301", "1340", "1335"), 100), RsAna=sample(0.1:100, 300, replace=TRUE), LqAna=c(0.5,1,6))
 #' @examples donnees<-donnees%>%mutate(RsAna=ifelse(RsAna<LqAna, LqAna, RsAna))
 #' @examples donnees<-donnees%>%mutate(CdRqAna=ifelse(RsAna>LqAna, "1", ifelse(sample(1:100,5)>10,"10","1")))
-#' @examples groupe_tableau_distribution(donnees, makeSeuils(CdParametre=parametres, specificites=c("CYPRINICOLE", rep(NA,2)), type_seuil = "DCE"))
+#' @examples seuils<-makeSeuils(CdParametre=donnees$parametres%>%unique, specificites=c("CYPRINICOLE", rep(NA,2)), type_seuil = "DCE")
+#' @examples groupe_tableau_distribution(donnees, col_CdParametre="parametres", col_CdSupport=NULL, col_CdFraction=NULL, col_CdUnite=NULL, seuils = seuils)
+#'
 #' @export
 groupe_tableau_distribution<-function(donnees, col_Valeur="RsAna", col_CdRq="CdRqAna",
                                       col_CdParametre="CdParametre",
@@ -90,7 +92,8 @@ for(i in 1:length(seuils))
                       }
 
 }
-
+# On ordonne les résultats par classe de qualité
+    tableau$CATEGORIE<-factor(tableau$CATEGORIE, c(levels(tableau$CLASSE), paste0("<LQ et LQ de classe ", levels(tableau$CLASSE))))
 
   return(tableau)
 
