@@ -36,7 +36,7 @@ tmp[100]
 
 
 test<-makeSeuils(CdParametre=c("1340", "1301"), specificites=c(NA, "CYPRINICOLE"), type_seuil = "DCE")
-return(test)
+print(test)
 ```
 
 La liste de l'ensemble des seuils prédéfinis peut être obtenue de la façon suivante :

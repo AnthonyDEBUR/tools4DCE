@@ -44,6 +44,6 @@ NON_DCE;AEP OK;darkturquoise
 NON_DCE;Restrictions AEP;darkmagenta
 SEDIMENTS;<seuil S1;chartreuse2
 SEDIMENTS;>seuil S1;tomato
-AEP;<seuil eau distribuée;darkturquoise
-AEP;>seuil eau distribuée et <seuil potabilisation;darkorange
+AEP;"[0;seuil distribution]";darkturquoise
+AEP;"]seuil distribution; seuil potabilisation]";darkorange
 AEP;>seuil potabilisation;darkmagenta
