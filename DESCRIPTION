@@ -7,7 +7,7 @@ Authors@R:
            role = c("aut", "cre"),
            email="a.debur@outlook.fr",
            comment = c(""))
-Description: This package was created to help data visualisation in the french environnement of rivers's data.
+Description: This package was created to help data visualisation in the French environnement of rivers's data.
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
