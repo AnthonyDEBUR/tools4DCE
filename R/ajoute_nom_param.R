@@ -13,11 +13,15 @@
 #' @examples ajoute_nom_param(test, col_parametre="CdParametre2")
 #' @export
 
-ajoute_nom_param<-function(x, col_parametre="CdParametre", type_nom="long"){
+ajoute_nom_param <-
+  function(x,
+           col_parametre = "CdParametre",
+           type_nom = "long") {
+    data(parametres_sandre, package = "tools4DCE")
+    colonne <-
+      ifelse(type_nom == "long", "NomParametre", "LbCourtParametre")
+    parametres_sandre <-
+      parametres_sandre %>% select(CdParametre, ends_with(colonne))
 
-  data(parametres_sandre, package="tools4DCE")
-  colonne<-ifelse(type_nom=="long", "NomParametre", "LbCourtParametre")
-  parametres_sandre<-parametres_sandre%>%select(CdParametre, ends_with(colonne))
-
-  return(left_join(x,parametres_sandre, by=setNames("CdParametre", col_parametre)))}
-
+    return(left_join(x, parametres_sandre, by = setNames("CdParametre", col_parametre)))
+  }

@@ -8,30 +8,35 @@
 #' @return la fonction renvoie un objet sf avec l'emprise des SAGE sélectionnés et les attributs correspondants
 #' @examples Vilaine<-charge_shp_SAGE(nom_sage="Vilaine")
 #' @export
-charge_shp_SAGE<-function(nom_sage=NULL, crs=2154){
-
+charge_shp_SAGE <- function(nom_sage = NULL, crs = 2154) {
   # on charge le shp des SAGE de France à partir de l'atlas carto du SANDRE
-  url <-"https://services.sandre.eaufrance.fr/geo/zpl"
+  url <- "https://services.sandre.eaufrance.fr/geo/zpl"
 
   sf_prov <- url %>%
     parse_url() %>%
-    list_merge(query = list(service = "wfs",
-                            version = "1.1.0", # optional
-                            request = "GetFeature",
-                            typeName = "SAGE",
-                            srsname='EPSG:4326',
-                            outputFormat = "application/json; subtype=geojson")) %>%
+    list_merge(
+      query = list(
+        service = "wfs",
+        version = "1.1.0",
+        # optional
+        request = "GetFeature",
+        typeName = "SAGE",
+        srsname = 'EPSG:4326',
+        outputFormat = "application/json; subtype=geojson"
+      )
+    ) %>%
     build_url()
 
-  bel_regions <- read_sf(sf_prov, crs=4326)
+  bel_regions <- read_sf(sf_prov, crs = 4326)
 
   # On se limite aux SAGE sélectionnés
-  if(!is.null(nom_sage)){bel_regions<-bel_regions%>%subset(NomZone%in%nom_sage)}
+  if (!is.null(nom_sage)) {
+    bel_regions <- bel_regions %>% subset(NomZone %in% nom_sage)
+  }
 
   # on reprojette dans le crs d'entrée
-  bel_regions<-st_transform(bel_regions, crs = crs)
+  bel_regions <- st_transform(bel_regions, crs = crs)
 
 
-return(bel_regions)}
-
-
+  return(bel_regions)
+}

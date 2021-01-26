@@ -16,5 +16,3 @@
 #' @examples
 #' head(data(unites_sandre))
 "unites_sandre"
-
-

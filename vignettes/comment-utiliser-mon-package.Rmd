@@ -157,6 +157,7 @@ et de faire une sortie graphique de ce bilan
 graphDCE_distribution(bilan, titre="Bilan par paramètre") 
 
 
+
 ```
 
 # Ajout d'informations à partir du référentiel SANDRE

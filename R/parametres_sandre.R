@@ -13,5 +13,3 @@
 #' @examples head(data(parametres_sandre))
 #'
 "parametres_sandre"
-
-

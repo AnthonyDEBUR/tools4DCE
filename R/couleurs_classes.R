@@ -14,5 +14,3 @@
 #'
 #' @examples head(data(couleurs_classes))
 "couleurs_classes"
-
-

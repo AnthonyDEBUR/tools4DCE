@@ -14,5 +14,3 @@
 #' @examples
 #' head(data(ordre_facteurs_qualite))
 "ordre_facteurs_qualite"
-
-

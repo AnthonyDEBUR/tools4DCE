@@ -11,5 +11,7 @@
 #' @examples ceiling_dec(3.2000,2)
 #' @export
 
-ceiling_dec<-function(x, nb_dec){return(ceiling(x*10^nb_dec)/10^nb_dec)}
-
+ceiling_dec <-
+  function(x, nb_dec) {
+    return(ceiling(x * 10 ^ nb_dec) / 10 ^ nb_dec)
+  }

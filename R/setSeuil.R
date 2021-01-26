@@ -19,23 +19,33 @@
 #'
 #' @export
 #'
-setSeuils<-function(nom_parametre, nom_seuil, type_seuil, code_parametre, synonymes_parametre, support="", fraction="", code_unite="", seuils, bornesinfinclue=T, specificites="")
-{
-  new(Class = "seuil",
-      nom_parametre=nom_parametre,
-      nom_seuil=nom_seuil,
-      type_seuil=type_seuil,
-      code_parametre=code_parametre,
-      synonymes_parametre=synonymes_parametre,
-      support=support,
-      fraction=fraction,
-      code_unite=code_unite,
-      seuils=seuils,
-      bornesinfinclue=bornesinfinclue,
- #     levels_classes=levels_classes,
-      specificites=specificites)
+setSeuils <-
+  function(nom_parametre,
+           nom_seuil,
+           type_seuil,
+           code_parametre,
+           synonymes_parametre,
+           support = "",
+           fraction = "",
+           code_unite = "",
+           seuils,
+           bornesinfinclue = T,
+           specificites = "")
+  {
+    new(
+      Class = "seuil",
+      nom_parametre = nom_parametre,
+      nom_seuil = nom_seuil,
+      type_seuil = type_seuil,
+      code_parametre = code_parametre,
+      synonymes_parametre = synonymes_parametre,
+      support = support,
+      fraction = fraction,
+      code_unite = code_unite,
+      seuils = seuils,
+      bornesinfinclue = bornesinfinclue,
+      #     levels_classes=levels_classes,
+      specificites = specificites
+    )
 
-}
-
-
-
+  }
