@@ -9,7 +9,7 @@
 #'
 #' @examples seuil<-makeSeuils(CdParametre="1335", type_seuil="DCE")[[1]]
 #' @examples affecte_une_classe(0.6, seuil)
-#' @examples test<-sample(seq(0,0.6, 0.1),10, replace=T)
+#' @examples test <- sample(seq(0,0.6, 0.1),10, replace=T)
 #' @examples affecte_une_classe(test, seuil)
 #' @export
 affecte_une_classe<-function(x, seuil){
