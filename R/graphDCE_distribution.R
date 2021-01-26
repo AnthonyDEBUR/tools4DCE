@@ -7,6 +7,7 @@
 #' @param legende_LQ : vecteur de character de longueur 2 qui précise l'étiquette pour les données inférieures et supérieures à la LQ
 #' @param affiche_valeurs : booléen qui indique d'il faut afficher les valeurs ou pas dans les barres
 #' @param min_affiche : pourcentage minimum à atteindre pour que la valeur soit affiché (ex si min_affiche=0.3, seules le nb de prélèvements représentant au moins 30% pour une categorie et un paramètre sera affiché)
+#' @param taille_titre taille police du titre (par défaut 12)
 #' @return la fonction renvoie un objet ggplot avec le graphique de distribution
 #'
 #' @examples donnees<-data.frame(parametres=rep(c("1301", "1340", "1335"), 100), RsAna=sample(0.1:100, 300, replace=TRUE), LqAna=c(0.5,1,6))
@@ -16,7 +17,7 @@
 #' @examples tableau<-groupe_tableau_distribution(donnees, col_CdParametre="parametres", col_CdSupport=NULL, col_CdFraction=NULL, col_CdUnite=NULL, seuils = seuils)
 #' @examples graphDCE_distribution(tableau)
 #' @export
-graphDCE_distribution<-function(donnees, titre="", legende_LQ=c("NON QUANTIFIE", "QUANTIFIE"), affiche_valeurs=T, min_affiche=0.1){
+graphDCE_distribution<-function(donnees, titre="", taille_titre=12, legende_LQ=c("NON QUANTIFIE", "QUANTIFIE"), affiche_valeurs=T, min_affiche=0.1){
 
   # creation d'un tableau de correspondance CATEGORIE - LEGENDE
   cat_leg<-donnees%>%select(CLASSE, NOM_COULEUR)%>%distinct%>%arrange(CLASSE)
@@ -30,7 +31,10 @@ graphDCE_distribution<-function(donnees, titre="", legende_LQ=c("NON QUANTIFIE",
       geom_bar(position="fill", stat="identity") + scale_alpha_manual(values=c(0.20, 1), labels=legende_LQ) +
       scale_fill_manual(labels=cat_leg$CLASSE, values=cat_leg$NOM_COULEUR)+
       scale_x_continuous(labels = scales::percent) +
-      labs(title = titre, x = "", y = "", alpha = "QUANTIFICATION")
+      labs(title = titre, x = "", y = "", alpha = "QUANTIFICATION")+
+      theme(legend.position="bottom", plot.title = element_text(size=taille_titre), legend.box="vertical", legend.margin=margin())
+     # guides(fill=guide_legend(nrow=2,byrow=TRUE))
+
 
     # ajout des étiquettes si demandé
     if(affiche_valeurs){graph<-graph+geom_text(data=donnees%>%subset(nb>min_affiche*total), aes(x=nb, y=parametre, label=nb),stat='identity',position=position_fill(vjust=0.5))
