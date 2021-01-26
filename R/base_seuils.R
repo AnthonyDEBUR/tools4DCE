@@ -32,6 +32,9 @@
 #'
 #' * \href{https://www.legifrance.gouv.fr/loda/id/JORFTEXT000000423497}{"Arrêté du 9 août 2006" = arrêté ministériel du 9 août 2006 sur les sédiments}
 #'
+#'* \href{https://www.legifrance.gouv.fr/loda/id/JORFTEXT000000465574}{"Arrêté du 11 janvier 2007" = Arrêté du 11 janvier 2007 relatif aux limites et références de qualité des eaux brutes et des eaux destinées à la consommation humaine mentionnées aux articles R. 1321-2, R. 1321-3, R. 1321-7 et R. 1321-38 du code de la santé publique}
+#'
+#'
 #' CLASSE précise le type de seuil du paramètre
 #'
 #'  * DCE : seuils en application de la Directive Cadre sur l'Eau
@@ -46,6 +49,8 @@
 #'
 #'  * OSPAR : seuils pris en application de la Directive OSPAR, concerne uniquement le bassin Seine-Normandie.
 #'
+#'  * AEP : seuils applicables pour la production d'eau potable
+#'
 #'
 #' @docType data
 #'
@@ -53,8 +58,7 @@
 #'
 #' @keywords datasets
 #'
-#' @examples
-#' head(data(base_seuils))
+#' @examples head(data(base_seuils))
 "base_seuils"
 
 

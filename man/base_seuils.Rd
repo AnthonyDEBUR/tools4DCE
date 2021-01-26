@@ -33,6 +33,7 @@ NOM_SEUIL précise d'où sont tirés les seuils.
 \item \href{http://www.eau-seine-normandie.fr/docuth\%C3\%A8que/SDAGE_2016_2021}{"OSPAR" = seuils issus SDAGE AESN en application de la directive OSPAR}
 \item "DISTRIBUTION" = quantile des données en base AESN / DSAV en 2018
 \item \href{https://www.legifrance.gouv.fr/loda/id/JORFTEXT000000423497}{"Arrêté du 9 août 2006" = arrêté ministériel du 9 août 2006 sur les sédiments}
+\item \href{https://www.legifrance.gouv.fr/loda/id/JORFTEXT000000465574}{"Arrêté du 11 janvier 2007" = Arrêté du 11 janvier 2007 relatif aux limites et références de qualité des eaux brutes et des eaux destinées à la consommation humaine mentionnées aux articles R. 1321-2, R. 1321-3, R. 1321-7 et R. 1321-38 du code de la santé publique}
 }
 
 CLASSE précise le type de seuil du paramètre
@@ -43,6 +44,7 @@ CLASSE précise le type de seuil du paramètre
 \item BAIGNADE_EAU_DE_MER : seuils en application de la directive baignade
 \item SEUILS_QUALITATIFS : seuils indicatifs destinés à fournir des ordres de grandeur
 \item OSPAR : seuils pris en application de la Directive OSPAR, concerne uniquement le bassin Seine-Normandie.
+\item AEP : seuils applicables pour la production d'eau potable
 }
 }
 \examples{

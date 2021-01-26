@@ -159,4 +159,15 @@ graphDCE_distribution(bilan, titre="Bilan par paramètre")
 
 ```
 
+# Ajout d'informations à partir du référentiel SANDRE
+
+## Ajout du nom de paramètre à partir de codes paramètres
+La fonction ajoute_nom_param permet d'ajouter à une data frame qui contient des codes paramètres SANDRE les noms correspondants
+
+```{r}
+donnees<-data.frame(code=c("1301", "1302", "1303"))
+ajoute_nom_param(donnees, col_parametre="code")
+
+```
+
 
