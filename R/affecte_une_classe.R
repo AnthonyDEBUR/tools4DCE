@@ -13,7 +13,7 @@
 #' @examples affecte_une_classe(test, seuil)
 #' @export
 affecte_une_classe<-function(x, seuil){
-  # test si le format en entrée est correct
+  # teste si le format en entrée est correct
   if(length(seuil)>1){warning("Plusieurs seuils différents fournis, seule la première valeur de seuil a été utilisée pour attribuer les classes")
                         seuil<-seuil[[1]]}
   if("list"%in%class(seuil)){seuil<-seuil[[1]]}
@@ -45,6 +45,7 @@ affecte_une_classe<-function(x, seuil){
   result<-factor(result, levels=levels_result, labels = labels_result)
 
 
-return(result)}
+return(result)
+}
 
 

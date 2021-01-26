@@ -15,8 +15,8 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
 Suggests: 
     knitr,
-    rmarkdown
+    rmarkdown,
+    testthat
 VignetteBuilder: knitr
 Depends: tidyverse, plyr,scales,sf,
           ggplot2, cowplot, httr, ows4R
-

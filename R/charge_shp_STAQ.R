@@ -43,3 +43,4 @@ charge_shp_STAQ<-function(crs=2154, shp_emprise=NULL){
   return(bel_regions)}
 
 
+
