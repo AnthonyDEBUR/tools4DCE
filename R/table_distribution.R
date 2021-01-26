@@ -18,29 +18,47 @@
 #' @examples seuil<-makeSeuils(CdParametre="1340", type_seuil="DCE")
 #' @examples table_distribution(donnees, seuil)
 #' @export
-table_distribution<-function(donnees, col_Valeur="RsAna", col_CdRq="CdRqAna", seuil){
-  # test si le format en entrée est correct
-  if(length(seuil)>1){stop("Plusieurs seuils différents fournis pour les mêmes données")}
-  if("list"%in%class(seuil)){seuil<-seuil[[1]]}
+table_distribution <-
+  function(donnees,
+           col_Valeur = "RsAna",
+           col_CdRq = "CdRqAna",
+           seuil) {
+    # test si le format en entrée est correct
+    if (length(seuil) > 1) {
+      stop("Plusieurs seuils différents fournis pour les mêmes données")
+    }
+    if ("list" %in% class(seuil)) {
+      seuil <- seuil[[1]]
+    }
 
-  # on affecte les noms de colonnes paramétrées à des noms fixes
-  donnees$RsAna<-donnees[[col_Valeur]]
-  donnees$CdRqAna<-donnees[[col_CdRq]]
+    # on affecte les noms de colonnes paramétrées à des noms fixes
+    donnees$RsAna <- donnees[[col_Valeur]]
+    donnees$CdRqAna <- donnees[[col_CdRq]]
 
-  # ajout des classes au tableau de valeur
-  donnees<-donnees%>%mutate(CLASSE=affecte_une_classe(x=donnees$RsAna,seuil=seuil))
+    # ajout des classes au tableau de valeur
+    donnees <-
+      donnees %>% mutate(CLASSE = affecte_une_classe(x = donnees$RsAna, seuil =
+                                                       seuil))
 
-  # tableau de synthèse par classe et LQ
-  donnees<-donnees%>%group_by(CLASSE, CdRqAna)%>%dplyr::summarise(nb = n())
+    # tableau de synthèse par classe et LQ
+    donnees <-
+      donnees %>% group_by(CLASSE, CdRqAna) %>% dplyr::summarise(nb = n())
 
-  # légende
-  donnees<-donnees%>%mutate(CATEGORIE=if_else(donnees$CdRqAna%in%c("1"),donnees$CLASSE%>%as.character,paste0("<LQ et LQ de classe ", donnees$CLASSE)))
+    # légende
+    donnees <-
+      donnees %>% mutate(CATEGORIE = if_else(
+        donnees$CdRqAna %in% c("1"),
+        donnees$CLASSE %>% as.character,
+        paste0("<LQ et LQ de classe ", donnees$CLASSE)
+      ))
 
-  # couleurs
-  donnees<-left_join(donnees, seuil@seuils%>%select(CLASSE, NOM_COULEUR), by=c("CLASSE"))
-  donnees$NOM_COULEUR<-replace_na(donnees$NOM_COULEUR, "white")
-  donnees$ALPHA<-ifelse(donnees$CdRqAna==1, 1,0.2)
+    # couleurs
+    donnees <-
+      left_join(donnees,
+                seuil@seuils %>% select(CLASSE, NOM_COULEUR),
+                by = c("CLASSE"))
+    donnees$NOM_COULEUR <- replace_na(donnees$NOM_COULEUR, "white")
+    donnees$ALPHA <- ifelse(donnees$CdRqAna == 1, 1, 0.2)
 
-  return(donnees)
-}
-
+    return(donnees)
+  }

@@ -60,5 +60,3 @@
 #'
 #' @examples head(data(base_seuils))
 "base_seuils"
-
-

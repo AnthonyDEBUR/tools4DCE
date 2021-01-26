@@ -6,8 +6,11 @@
 #' @return la fonction renvoie un chiffre indiquant le nombre de décimales
 #' @examples compte_decimales(3.234)
 #' @export
-compte_decimales<-function(x){x<-nchar(strsplit(as.character(x), "\\.")[[1]][2])
-if(is.na(x)){x<-0}
-return(x)}
-
-
+compte_decimales <-
+  function(x) {
+    x <- nchar(strsplit(as.character(x), "\\.")[[1]][2])
+    if (is.na(x)) {
+      x <- 0
+    }
+    return(x)
+  }

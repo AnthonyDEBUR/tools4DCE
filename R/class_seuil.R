@@ -20,33 +20,59 @@
 #'
 #'
 
-setClass(Class="seuil",
-         representation=representation(nom_parametre="character",
-                                       nom_seuil="character",
-                                       type_seuil="character",
-                                       code_parametre="character",
-                                       synonymes_parametre="character",
-                                       support="character",
-                                       fraction="character",
-                                       code_unite="character",
-                                       seuils="data.frame",
-                                       bornesinfinclue="logical",
-                                       #levels_classes="vector",
-                                       specificites="character"),
-         validity=function(object){
-           if(!all(c("CLASSE", "SEUILMIN", "SEUILMAX", "NOM_COULEUR") %in%names(object@seuils))){stop('La dataframe seuils doit comporter les noms de colonnes "CLASSE", "SEUILMIN", "SEUILMAX", "NOM_COULEUR"')}else{}
-           if(!is.factor(object@seuils$CLASSE)){stop("les classes de qualité dans la colonne CLASSE de la dataframe seuils doivent être de type factor")}else{}
-           if(!is.numeric(object@seuils$SEUILMIN)){stop("les seuils dans la colonne SEUILMIN de la dataframe seuils doivent être de type numeric")}else{}
-           if(!is.numeric(object@seuils$SEUILMAX)){stop("les seuils dans la colonne SEUILMAX de la dataframe seuils doivent être de type numeric")}else{}
-           if(!all(object@seuils$NOM_COULEUR%in%colors())){stop("les couleurs dans la colonne NOM_COULEUR de la dataframe seuils doivent correspondre à des noms de couleur valides")}else{}
-           if(!is.logical(object@bornesinfinclue)){stop("bornesinfinclue doit être de type logical")}else{}
-       #    if(!all(object@seuils$CLASSE %in% object@levels_classes)){stop(paste0("Les classes définies dans le vecteur levels_classes ne correspondent pas à celles définis dans la data frame seuils"))}else{}
+setClass(
+  Class = "seuil",
+  representation = representation(
+    nom_parametre = "character",
+    nom_seuil = "character",
+    type_seuil = "character",
+    code_parametre = "character",
+    synonymes_parametre = "character",
+    support = "character",
+    fraction = "character",
+    code_unite = "character",
+    seuils = "data.frame",
+    bornesinfinclue = "logical",
+    #levels_classes="vector",
+    specificites = "character"
+  ),
+  validity = function(object) {
+    if (!all(c("CLASSE", "SEUILMIN", "SEUILMAX", "NOM_COULEUR") %in% names(object@seuils))) {
+      stop(
+        'La dataframe seuils doit comporter les noms de colonnes "CLASSE", "SEUILMIN", "SEUILMAX", "NOM_COULEUR"'
+      )
+    } else{
+    }
+    if (!is.factor(object@seuils$CLASSE)) {
+      stop(
+        "les classes de qualité dans la colonne CLASSE de la dataframe seuils doivent être de type factor"
+      )
+    } else{
+    }
+    if (!is.numeric(object@seuils$SEUILMIN)) {
+      stop(
+        "les seuils dans la colonne SEUILMIN de la dataframe seuils doivent être de type numeric"
+      )
+    } else{
+    }
+    if (!is.numeric(object@seuils$SEUILMAX)) {
+      stop(
+        "les seuils dans la colonne SEUILMAX de la dataframe seuils doivent être de type numeric"
+      )
+    } else{
+    }
+    if (!all(object@seuils$NOM_COULEUR %in% colors())) {
+      stop(
+        "les couleurs dans la colonne NOM_COULEUR de la dataframe seuils doivent correspondre à des noms de couleur valides"
+      )
+    } else{
+    }
+    if (!is.logical(object@bornesinfinclue)) {
+      stop("bornesinfinclue doit être de type logical")
+    } else{
+    }
+    #    if(!all(object@seuils$CLASSE %in% object@levels_classes)){stop(paste0("Les classes définies dans le vecteur levels_classes ne correspondent pas à celles définis dans la data frame seuils"))}else{}
 
-         }
+  }
 
-         )
-
-
-
-
-
+)

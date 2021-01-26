@@ -15,14 +15,19 @@
 #'
 #' @export
 #'
-calcule_ymaxi<-function(donnees)
+calcule_ymaxi <- function(donnees)
 {
-  ymaxi<-max(donnees, na.rm=T)*1.2
-  if(length(donnees)>10){
-    quantile_val<-quantile(donnees,c(0.1,0.9), na.rm=T)
-    if(!any(is.na(quantile_val))){ymaxi<-min((4*(quantile_val[2]-quantile_val[1])+quantile_val[2]),ymaxi)
-    ymaxi<-tools4DCE::ceiling_dec(ymaxi, max(sapply(donnees,tools4DCE::compte_decimales),na.rm=T))}
+  ymaxi <- max(donnees, na.rm = T) * 1.2
+  if (length(donnees) > 10) {
+    quantile_val <- quantile(donnees, c(0.1, 0.9), na.rm = T)
+    if (!any(is.na(quantile_val))) {
+      ymaxi <-
+        min((4 * (quantile_val[2] - quantile_val[1]) + quantile_val[2]), ymaxi)
+      ymaxi <-
+        tools4DCE::ceiling_dec(ymaxi, max(sapply(
+          donnees, tools4DCE::compte_decimales
+        ), na.rm = T))
+    }
   }
   return(ymaxi)
 }
-
