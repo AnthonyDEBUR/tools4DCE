@@ -1,27 +1,25 @@
 #' filtre_donnees_extremes
 #'
 #' filtre les donnees extremes qui n'apparaitront pas parmi les points des graphs
-#' pour cela on ecrete les valeurs entrant en remplacant les valeurs inférieures à ymin ou supérieures à ymax par ymin ou ymax
+#' pour cela on ecrete les valeurs entrant en remplacant les valeurs inférieures à xmin ou supérieures à xmax par xmin ou xmax
 #'
 #' @param x un vecteur numerique
-#' @param ymin un nombre
-#' @param ymax un nombre
+#' @param xmin un nombre
+#' @param xmax un nombre
 #' @return la fonction renvoie un vescteur avec les données extrèmes remplacées par ymin ou ymax.
 #'
-#' @examples filtre_donnees_extremes(seq(1:10), ymin=3, ymax=9)
+#' @examples filtre_donnees_extremes(seq(1:10), xmin=3, xmax=9)
 #' @export
-filtre_donnees_extremes <- function(x, ymin, ymax) {
-  if (!is.na(ymin)) {
-    x[x < ymin] <- ymin
+filtre_donnees_extremes <- function(x, xmin = NA, xmax =NA) {
+  if (!is.na(xmin)) {
+    x[x < xmin] <- xmin
   }
-  if (!is.na(ymin)) {
-    x[x > ymax] <- ymax
+  if (!is.na(xmax)) {
+    x[x > xmax] <- xmax
   }
-  if (is.na(ymin) &
-      is.na(ymax)) {
-    return("Au moins une valeur entre ymin et ymax doit etre renseignee")
-  } else{
+  if (is.na(xmin) &
+      is.na(xmax)) {
+    stop("Au moins une valeur entre ymin et ymax doit etre renseignee")
+  } 
     return(x)
-  }
-
 }
