@@ -38,10 +38,10 @@ affecte_une_classe <- function(x, seuil) {
         sens,
         result <-
           replace(result, ((x > mini) &
-                             (x <= maxi)), seuil@seuils$CLASSE[i] %>% as.character),
+                             (x <= maxi)), seuil@seuils$CLASSE[i] %>% as.character()),
         result <-
           replace(result, ((x >= mini) &
-                             (x < maxi)), seuil@seuils$CLASSE[i] %>% as.character)
+                             (x < maxi)), seuil@seuils$CLASSE[i] %>% as.character())
       )
     }
     else{
