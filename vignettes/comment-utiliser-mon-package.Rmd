@@ -9,7 +9,7 @@ vignette: >
 
 
 
-```{r setup}
+```{r setup, echo =TRUE, warnings= FALSE}
 library(tools4DCE)
 ```
 
@@ -23,12 +23,12 @@ Pour écrêter les valeurs on fait appel à la fonction filtre_donnees_extremes.
 ## la fonction filtre_donnees_extremes sert à écrêter les données que l'on ne souhaite pas afficher à l'écran.
 
 Par exemple si on veut remplacer toutes les données inférieures à 3 par 3 et toutes celles supérieures à 9 par 9 :
-```{r}
-filtre_donnees_extremes(seq(1:10), ymin=3, ymax=9)
+```{r ecretage, echo = TRUE}
+filtre_donnees_extremes(x=seq(1:10), xmin=3, xmax=9)
 ```
 ## la fonction compte_decimales sert à déterminer combien de chiffres significatifs comporte un nombre.
 Elle sert à déterminer combien de chiffres significatifs il faut conserver sur l'axe des ordonnées dans le graphique final.
-```{r}
+```{r decimales, echo = TRUE}
 compte_decimales(3.234)
 ```
 
@@ -41,12 +41,12 @@ head(base_seuils)
 
 pour avoir la couleur on croise sur les colonnes TYPE et CLASSE avec la table couleurs_classes
 ```{r}
-head(couleurs_classes)
+kable(head(couleurs_classes))
 ```
 
 pour classer les levels on utilise la colonne CLASSE de la data.frame ordre_facteurs_qualite
 ```{r}
-head(ordre_facteurs_qualite)
+kable(head(ordre_facteurs_qualite))
 ```
 
 ### Génération d'un objet de classe seuil
