@@ -20,6 +20,6 @@ fonction pour affecter une classe de qualité à des résultats
 \examples{
 seuil<-makeSeuils(CdParametre="1335", type_seuil="DCE")[[1]]
 affecte_une_classe(0.6, seuil)
-test<-sample(seq(0,0.6, 0.1),10, replace=T)
+test <- sample(seq(0,0.6, 0.1),10, replace=T)
 affecte_une_classe(test, seuil)
 }

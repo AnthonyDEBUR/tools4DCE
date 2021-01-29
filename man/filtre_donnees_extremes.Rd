@@ -4,22 +4,22 @@
 \alias{filtre_donnees_extremes}
 \title{filtre_donnees_extremes}
 \usage{
-filtre_donnees_extremes(x, ymin, ymax)
+filtre_donnees_extremes(x, xmin = NA, xmax = NA)
 }
 \arguments{
 \item{x}{un vecteur numerique}
 
-\item{ymin}{un nombre}
+\item{xmin}{un nombre}
 
-\item{ymax}{un nombre}
+\item{xmax}{un nombre}
 }
 \value{
 la fonction renvoie un vescteur avec les données extrèmes remplacées par ymin ou ymax.
 }
 \description{
 filtre les donnees extremes qui n'apparaitront pas parmi les points des graphs
-pour cela on ecrete les valeurs entrant en remplacant les valeurs inférieures à ymin ou supérieures à ymax par ymin ou ymax
+pour cela on ecrete les valeurs entrant en remplacant les valeurs inférieures à xmin ou supérieures à xmax par xmin ou xmax
 }
 \examples{
-filtre_donnees_extremes(seq(1:10), ymin=3, ymax=9)
+filtre_donnees_extremes(seq(1:10), xmin=3, xmax=9)
 }
