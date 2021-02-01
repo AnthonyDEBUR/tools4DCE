@@ -1,9 +1,10 @@
-#' graphDCE_bar
+#' graphDCE_boxplot
 #'
-#' fonction pour afficher les graphiques des paramètres en couleurs (mode histogramme)
+#' fonction pour afficher les graphiques des paramètres en couleurs (mode boxplot).
+#' Utilisé par exemple pour visualiser les mois avec les plus hautes concentrations.
 #'
 #' @param data tableau de données (dataframe)
-#' @param col_annee nom de la colonne qui contient les années. Par défaut : "annee" formats character ou numeric
+#' @param col_mois nom de la colonne qui contient les mois. Par défaut : "mois" formats character ou numeric
 #' @param col_valeurs nom de la colonne qui contient les valeurs d'analyses.Par défaut : "RsAna"
 #' @param seuils objet de classe seuil (factultatif)
 #' @param nom_legende titre de la légende (si absent et si seuils et renseigné, la légende par défaut sera le slot nom_seuil de la légende, si seuil n'est pas renseigné, la légende sera "Légende")
@@ -20,14 +21,15 @@
 #'
 #' @return la fonction renvoie un graphique de classe ggplot
 #'
-#' @examples data<-data.frame(annee=seq(2010,2013), RsAna=c(12,15.5,67,18.3))
-#' @examples graphDCE_bar(data, seuils=makeSeuils(CdParametre = "1340", type_seuil="DCE"))
+#' @examples data0<-data.frame(DatePrel=Sys.Date() + sort(sample(1:2000, 100)), RsAna=c(round(runif(100,0,100), 0)), LqAna=c(3))
+#' @examples data0$mois<-format(data0$DatePrel, "%m")%>%factor
+#' @examples graphDCE_boxplot(data0, seuils=makeSeuils(CdParametre = "1340", type_seuil="DCE"), affiche_LQ = T, ymini = 0)
 #'
 #' @export
 #'
-graphDCE_bar <-
+graphDCE_boxplot <-
   function(data,
-           col_annee = "annee",
+           col_mois = "mois",
            col_valeurs = "RsAna",
            ymaxi = NULL,
            auto_ymaxi = TRUE,
@@ -54,16 +56,13 @@ graphDCE_bar <-
         (!all(is.na(data1[[col_valeurs]]))))
       # on ne traite les données que si le tableau de données n'est pas vide
     {
-      data1$ANNEE <- data1[[col_annee]] %>% as.character %>% as.numeric()
+      if(is.factor(data1$mois)){Xdo<-levels(data1$mois)}else{Xdo<-unique(data1$mois)%>%sort}
+      data1$mois <- data1[[col_mois]] %>% as.character
       data1$RsAna <- data1[[col_valeurs]]
       if (is.null(ymaxi) &
           (auto_ymaxi == T)) {
         ymaxi <- tools4DCE::calcule_ymaxi(data1$RsAna)
       }
-
-      # séquence débutant au min des années avec données - 1 et se terminant au max des années avec données + 1 (pour déborder les applats de couleurs avant et après les années min/max)
-      Xdo <- seq((min(data1$ANNEE) - 1), (max(data1$ANNEE) + 1))
-
 
       # ajout du nom de la légende en automatique si cette dernière n'est pas renseignée
       if (is.null(nom_legende))
@@ -287,8 +286,8 @@ graphDCE_bar <-
           graph1 + geom_rect(
             data = seuils1,
             aes(
-              xmin = min(Xdo),
-              xmax = max(Xdo),
+              xmin=min(as.numeric(Xdo))-0.5,
+              xmax=max(as.numeric(Xdo))+0.5,
               ymin = SEUILMIN,
               ymax = SEUILMAX,
               fill = CLASSE
@@ -311,19 +310,17 @@ graphDCE_bar <-
                                                                                    Inf]))
         )
 
-      # ajout des étiquettes sur les barres (x)
-      lblXdo <- c("", Xdo[2:(length(Xdo) - 1)], "")
-      graph1 <- graph1 + scale_x_continuous(breaks = Xdo, labels = lblXdo)
+      # ajout des étiquettes sur les boxplot (x)
+      graph1 <- graph1 + scale_x_discrete(labels = Xdo)
 
-      # ajout des barres
+      # ajout des boxplot
       graph1 <-
-        graph1 + geom_bar(
+        graph1 + geom_boxplot(
           data = data1,
-          aes(x = ANNEE, y = RsAna),
-          stat = "identity",
+          aes(x = mois, y = RsAna),
           colour = "black",
           alpha = 0.2,
-          width = 1
+          width = 0.9
         )
 
 
@@ -333,7 +330,7 @@ graphDCE_bar <-
           graph1 + geom_label(
             data = depassSUP,
             aes(
-              x = ANNEE,
+              x = mois,
               y = max(seuils1minmax[seuils1minmax < Inf]),
               label = RsAna
             ),
@@ -347,7 +344,7 @@ graphDCE_bar <-
           graph1 + geom_label(
             data = depassINF,
             aes(
-              x = ANNEE,
+              x = mois,
               y = min(seuils1minmax[seuils1minmax > -Inf]),
               label = RsAna
             ),
