@@ -9,9 +9,10 @@
 #' @param seuils objet de classe seuil (factultatif)
 #' @param nom_legende titre de la légende (si absent et si seuils et renseigné, la légende par défaut sera le slot nom_seuil de la légende, si seuil n'est pas renseigné, la légende sera "Légende")
 #' @param affiche_legende booléen indiquant s'il faut afficher la légende (par défaut TRUE)
-#' @param titre titre du graphique (si absent et si seuils et renseigné, la légende par défaut sera le slot nom_parametre)
+#' @param titre titre du graphique (si absent et si seuils et renseigné, la légende par défaut sera distribution suivi de la valeur du  le slot nom_parametre)
 #' @param taille_titre taille police du titre (par défaut 12)
 #' @param unite unité du paramètre (par défaut si seuils est renseigné : le label SANDRE correspondant au slot code_unite du paramètre seuils)
+#' @param xlab étiquette de l'axe des abscisses (vide par défaut)
 #' @param ymaxi force l'échelle des valeurs (si non précisé, échelle automatique de ggplot2)
 #' @param auto_ymaxi booléen. Si le paramètre vaut TRUE et que ymaxi n'est pas renseigné alors ce dernier est calculé automatiquement de manière à rendre le graph aussi lisible que possible
 #' @param lignes vecteur permettant d'ajouter des lignes horizontales au graphique. ex c(10, 25)
@@ -35,6 +36,7 @@ graphDCE_boxplot <-
            auto_ymaxi = TRUE,
            seuils = NULL,
            unite = NULL,
+           xlab="",
            titre = NULL,
            taille_titre = 12,
            affiche_legende = T,
@@ -95,7 +97,7 @@ graphDCE_boxplot <-
       # si seuils est également null alors on affecte une étiquette vide à unité
       if (is.null(titre)) {
         if (!is.null(seuils)) {
-          titre <- seuils[[1]]@nom_parametre
+          titre <- paste0("Distribution : ",seuils[[1]]@nom_parametre)
         }
       }
 
@@ -286,8 +288,8 @@ graphDCE_boxplot <-
           graph1 + geom_rect(
             data = seuils1,
             aes(
-              xmin=min(as.numeric(Xdo))-0.5,
-              xmax=max(as.numeric(Xdo))+0.5,
+              xmin=min(as.numeric(Xdo))-0.7,
+              xmax=max(as.numeric(Xdo))+0.7,
               ymin = SEUILMIN,
               ymax = SEUILMAX,
               fill = CLASSE
@@ -360,7 +362,7 @@ graphDCE_boxplot <-
         graph1 <-
           graph1 + ggtitle(titre) + theme(plot.title = element_text(size = taille_titre))
       }
-      graph1 <- graph1 + xlab('') + ylab(unite)
+      graph1 <- graph1 + xlab(xlab) + ylab(unite)
 
       # ajout des lignes au niveau des seuils1
       if (length(lignes) > 0) {

@@ -12,6 +12,7 @@ graphDCE_boxplot(
   auto_ymaxi = TRUE,
   seuils = NULL,
   unite = NULL,
+  xlab = "",
   titre = NULL,
   taille_titre = 12,
   affiche_legende = T,
@@ -36,7 +37,9 @@ graphDCE_boxplot(
 
 \item{unite}{unité du paramètre (par défaut si seuils est renseigné : le label SANDRE correspondant au slot code_unite du paramètre seuils)}
 
-\item{titre}{titre du graphique (si absent et si seuils et renseigné, la légende par défaut sera le slot nom_parametre)}
+\item{xlab}{étiquette de l'axe des abscisses (vide par défaut)}
+
+\item{titre}{titre du graphique (si absent et si seuils et renseigné, la légende par défaut sera distribution suivi de la valeur du  le slot nom_parametre)}
 
 \item{taille_titre}{taille police du titre (par défaut 12)}
 
