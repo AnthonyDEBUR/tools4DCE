@@ -36,7 +36,7 @@ graphDCE_boxplot <-
            auto_ymaxi = TRUE,
            seuils = NULL,
            unite = NULL,
-           xlab="",
+           xlab = "",
            titre = NULL,
            taille_titre = 12,
            affiche_legende = T,
@@ -45,7 +45,6 @@ graphDCE_boxplot <-
            lignes = NULL,
            alpha = 0.8)
   {
-    data1 <- data.frame(data)
     ymini <- 0
     if (!is.null(seuils)) {
       seuils1 <- seuils[[1]]@seuils
@@ -54,16 +53,21 @@ graphDCE_boxplot <-
     }
 
 
-    if ((nrow(data1) > 0) &
-        (!all(is.na(data1[[col_valeurs]]))))
+    if ((nrow(data) > 0) &
+        (!all(is.na(data[[col_valeurs]]))))
       # on ne traite les données que si le tableau de données n'est pas vide
     {
-      if(is.factor(data1$mois)){Xdo<-levels(data1$mois)}else{Xdo<-unique(data1$mois)%>%sort}
-      data1$mois <- data1[[col_mois]] %>% as.character
-      data1$RsAna <- data1[[col_valeurs]]
+      data$mois <- data[[col_mois]]
+      if (is.factor(data$mois)) {
+        Xdo <- levels(data$mois)
+      } else{
+        Xdo <- unique(data$mois) %>% sort
+      }
+      data$mois <- data$mois %>% as.character %>% factor(levels = Xdo)
+      data$RsAna <- data[[col_valeurs]]
       if (is.null(ymaxi) &
           (auto_ymaxi == T)) {
-        ymaxi <- tools4DCE::calcule_ymaxi(data1$RsAna)
+        ymaxi <- tools4DCE::calcule_ymaxi(data$RsAna)
       }
 
       # ajout du nom de la légende en automatique si cette dernière n'est pas renseignée
@@ -85,7 +89,7 @@ graphDCE_boxplot <-
         if (!is.null(seuils)) {
           unite <-
             tools4DCE::unites_sandre[tools4DCE::unites_sandre$`Code de l'unité de référence` ==
-                                       seuils[[1]]@code_unite, ]$`Symbole de l'unité de référence`[1]
+                                       seuils[[1]]@code_unite,]$`Symbole de l'unité de référence`[1]
         }
         else {
           unite <- ""
@@ -97,23 +101,23 @@ graphDCE_boxplot <-
       # si seuils est également null alors on affecte une étiquette vide à unité
       if (is.null(titre)) {
         if (!is.null(seuils)) {
-          titre <- paste0("Distribution : ",seuils[[1]]@nom_parametre)
+          titre <- paste0("Distribution : ", seuils[[1]]@nom_parametre)
         }
       }
 
       # ajout d'une colonne couleur correspondant aux seuils
       # la fonction est ajustée selon si les limites de classes inclue ou pas les bornes inférieures
-      data1$couleur_pt <-
-        rep("", nrow(data1)) # par défaut les étiquettes des valeurs hors gamme sont blanches
+      data$couleur_pt <-
+        rep("", nrow(data)) # par défaut les étiquettes des valeurs hors gamme sont blanches
 
       # on ajoute la couleur pour chaque seuil
       if (!is.null(seuils)) {
         if (seuils[[1]]@bornesinfinclue) {
           f_couleur <- function(x, i) {
             if (!is.na(x)) {
-              if (x >= seuils1[i, ]$SEUILMIN &
-                  x < seuils1[i, ]$SEUILMAX) {
-                as.character(seuils1[i, ]$NOM_COULEUR)
+              if (x >= seuils1[i,]$SEUILMIN &
+                  x < seuils1[i,]$SEUILMAX) {
+                as.character(seuils1[i,]$NOM_COULEUR)
               } else{
                 ""
               }
@@ -126,9 +130,9 @@ graphDCE_boxplot <-
           f_couleur <-
             function(x, i) {
               if (!(is.na(x))) {
-                if (x > seuils1[i, ]$SEUILMIN &
-                    x <= seuils1[i, ]$SEUILMAX) {
-                  as.character(seuils1[i, ]$NOM_COULEUR)
+                if (x > seuils1[i,]$SEUILMIN &
+                    x <= seuils1[i,]$SEUILMAX) {
+                  as.character(seuils1[i,]$NOM_COULEUR)
                 } else{
                   ""
                 }
@@ -142,15 +146,15 @@ graphDCE_boxplot <-
         for (i in 1:nrow(seuils1))
         {
           tmp <- sapply(
-            data1$RsAna,
+            data$RsAna,
             FUN = function(x)
               f_couleur(x, i)
           )
-          data1$couleur_pt <- paste0(data1$couleur_pt, tmp)
+          data$couleur_pt <- paste0(data$couleur_pt, tmp)
         }
       }
-      if (any(which(data1$couleur_pt == ""))) {
-        data1[which(data1$couleur_pt == ""), ]$couleur_pt <-
+      if (any(which(data$couleur_pt == ""))) {
+        data[which(data$couleur_pt == ""),]$couleur_pt <-
           "white"
       } # les points qui n'ont pas de couleurs sont considérés blancs
 
@@ -163,40 +167,43 @@ graphDCE_boxplot <-
       # calcul du nb de décimales max dans les seuils1 (à défaut dans les données) pour choisir le nb de décimales à afficher dans légende
       if (!is.null(seuils1))
       {
-        nb_decim <- max(sapply(seuils1$SEUILMIN, compte_decimales), na.rm = T)
+        nb_decim <-
+          max(sapply(seuils1$SEUILMIN, compte_decimales), na.rm = T)
       }
       else
       {
-        nb_decim <- max(sapply(data1$RsAna, compte_decimales), na.rm = T)
+        nb_decim <- max(sapply(data$RsAna, compte_decimales), na.rm = T)
       }
       # calcul du RANGE entre min et max des données ainsi que des bornes mini des valeurs et maxi des valeurs +/- x%
       rangedata <-
-        abs(max(data1$RsAna, na.rm = T) - min(data1$RsAna, na.rm = T))
+        abs(max(data$RsAna, na.rm = T) - min(data$RsAna, na.rm = T))
       # if(rangedata==0 & !is.null(seuils1)){rangedata<-range.default(seuils1[,c("SEUILMIN", "SEUILMAX")], na.rm=T, finite=T)[2]-range.default(seuils1[,c("SEUILMIN", "SEUILMAX")], na.rm=T, finite=T)[1]} # si toutes les valeurs de données sont égales alors on retient la valeur entre les seuils1 comme range
       if (rangedata == 0 &
           !is.null(seuils1)) {
         rangedata <-
-          abs(max(jitter(data1$RsAna), na.rm = T) - min(data1$RsAna, na.rm = T))
+          abs(max(jitter(data$RsAna), na.rm = T) - min(data$RsAna, na.rm = T))
       } # si toutes les valeurs de données sont égales alors on calcul un range autour des valeurs mesurées en ajoutant un bruit artificiel dans le calcul du range (jitter)
       # calcul des valeurs min -5% du range et max +5% du range pour avoir l'échelle affichée si les paramètres ymini ou ymaxi ne sont pas renseignés
       min_data <-
-        round_any(min(data1$RsAna, na.rm = T) - 0.1 * rangedata, 10 ^ -nb_decim, f =
+        round_any(min(data$RsAna, na.rm = T) - 0.1 * rangedata, 10 ^ -nb_decim, f =
                     floor)
       max_data <-
-        round_any(max(data1$RsAna, na.rm = T) + 0.1 * rangedata, 10 ^ -nb_decim, f =
+        round_any(max(data$RsAna, na.rm = T) + 0.1 * rangedata, 10 ^ -nb_decim, f =
                     ceiling)
       # dans le cas où toutes les valeurs sont positives et min_data<0 alors min_data<-0
-      if (all(sign(data1$RsAna) == 1, na.rm = T) &
+      if (all(sign(data$RsAna) == 1, na.rm = T) &
           min_data < 0) {
         min_data <- 0
       }
 
       # si ymini et ymaxi non définis alors on zoom le graphique autour de la plage de données disponible
       if (is.null(ymini)) {
-        seuils1minmax <- c(min_data, seuils1minmax[seuils1minmax >= min_data])
+        seuils1minmax <-
+          c(min_data, seuils1minmax[seuils1minmax >= min_data])
       }
       if (is.null(ymaxi)) {
-        seuils1minmax <- c(seuils1minmax[seuils1minmax <= max_data], max_data)
+        seuils1minmax <-
+          c(seuils1minmax[seuils1minmax <= max_data], max_data)
       }
 
       # on ne conserve que les seuils1 d'affichage entre ymini et ymaxi
@@ -215,24 +222,24 @@ graphDCE_boxplot <-
         # les couleurs sont en character et non facteurs
         seuils1$NOM_COULEUR <- as.character(seuils1$NOM_COULEUR)
         # on corrige le tableau de couleurs pour l'adapter aux min-max
-        if (nrow(seuils1[seuils1$SEUILMIN < min(seuils1minmax, na.rm = T), ]) >
+        if (nrow(seuils1[seuils1$SEUILMIN < min(seuils1minmax, na.rm = T),]) >
             0) {
-          seuils1[seuils1$SEUILMIN < min(seuils1minmax, na.rm = T), ]$SEUILMIN <-
+          seuils1[seuils1$SEUILMIN < min(seuils1minmax, na.rm = T),]$SEUILMIN <-
             min(seuils1minmax, na.rm = T)
         }
-        if (nrow(seuils1[seuils1$SEUILMAX < min(seuils1minmax, na.rm = T), ]) >
+        if (nrow(seuils1[seuils1$SEUILMAX < min(seuils1minmax, na.rm = T),]) >
             0) {
-          seuils1[seuils1$SEUILMAX < min(seuils1minmax, na.rm = T), ]$SEUILMAX <-
+          seuils1[seuils1$SEUILMAX < min(seuils1minmax, na.rm = T),]$SEUILMAX <-
             min(seuils1minmax, na.rm = T)
         }
-        if (nrow(seuils1[seuils1$SEUILMIN > max(seuils1minmax, na.rm = T), ]) >
+        if (nrow(seuils1[seuils1$SEUILMIN > max(seuils1minmax, na.rm = T),]) >
             0) {
-          seuils1[seuils1$SEUILMIN > max(seuils1minmax, na.rm = T), ]$SEUILMIN <-
+          seuils1[seuils1$SEUILMIN > max(seuils1minmax, na.rm = T),]$SEUILMIN <-
             max(seuils1minmax, na.rm = T)
         }
-        if (nrow(seuils1[seuils1$SEUILMAX > max(seuils1minmax, na.rm = T), ]) >
+        if (nrow(seuils1[seuils1$SEUILMAX > max(seuils1minmax, na.rm = T),]) >
             0) {
-          seuils1[seuils1$SEUILMAX > max(seuils1minmax, na.rm = T), ]$SEUILMAX <-
+          seuils1[seuils1$SEUILMAX > max(seuils1minmax, na.rm = T),]$SEUILMAX <-
             max(seuils1minmax, na.rm = T)
         }
 
@@ -253,26 +260,27 @@ graphDCE_boxplot <-
         }
         couleurs <- paste0("c(", couleurs, ")")
         # suppression des classes de qualité avec les seuils1 min et max égaux
-        seuils1 <- seuils1[which(seuils1$SEUILMIN != seuils1$SEUILMAX), ]
+        seuils1 <-
+          seuils1[which(seuils1$SEUILMIN != seuils1$SEUILMAX),]
       }
 
       # table des valeurs hors range qui seront étiquettées. Pour ces valeurs on remplace la valeur par le max (ou min) de l'échelle (pour afficher un point)
-      data1$depassementSUP <-
-        ifelse(data1$RsAna > max(seuils1minmax, na.rm = T),
+      data$depassementSUP <-
+        ifelse(data$RsAna > max(seuils1minmax, na.rm = T),
                max(seuils1minmax[seuils1minmax < Inf], na.rm = T) ,
                NA)
-      data1$depassementINF <-
-        ifelse(data1$RsAna < min(seuils1minmax, na.rm = T),
+      data$depassementINF <-
+        ifelse(data$RsAna < min(seuils1minmax, na.rm = T),
                min(seuils1minmax[seuils1minmax > -Inf], na.rm = T),
                NA)
-      if (any(!is.na(data1$depassementSUP))) {
-        depassSUP <- subset(data1,!is.na(depassementSUP))
-        data1[which(!is.na(data1$depassementSUP)), ]$RsAna <-
+      if (any(!is.na(data$depassementSUP))) {
+        depassSUP <- subset(data, !is.na(depassementSUP))
+        data[which(!is.na(data$depassementSUP)),]$RsAna <-
           max(seuils1minmax[seuils1minmax < Inf], na.rm = T)
       }
-      if (any(!is.na(data1$depassementINF))) {
-        depassINF <- subset(data1,!is.na(depassementINF))
-        data1[which(!is.na(data1$depassementINF)), ]$RsAna <-
+      if (any(!is.na(data$depassementINF))) {
+        depassINF <- subset(data, !is.na(depassementINF))
+        data[which(!is.na(data$depassementINF)),]$RsAna <-
           min(seuils1minmax[seuils1minmax > -Inf], na.rm = T)
       }
 
@@ -288,8 +296,8 @@ graphDCE_boxplot <-
           graph1 + geom_rect(
             data = seuils1,
             aes(
-              xmin=min(as.numeric(Xdo))-0.7,
-              xmax=max(as.numeric(Xdo))+0.7,
+              xmin = min(as.numeric(Xdo)) - 0.7,
+              xmax = max(as.numeric(Xdo)) + 0.7,
               ymin = SEUILMIN,
               ymax = SEUILMAX,
               fill = CLASSE
@@ -313,21 +321,21 @@ graphDCE_boxplot <-
         )
 
       # ajout des étiquettes sur les boxplot (x)
-      graph1 <- graph1 + scale_x_discrete(labels = Xdo)
+      graph1 <- graph1 + scale_x_discrete(labels = Xdo, drop = FALSE)
 
       # ajout des boxplot
       graph1 <-
         graph1 + geom_boxplot(
-          data = data1,
+          data = data,
           aes(x = mois, y = RsAna),
           colour = "black",
-          alpha = 0.2,
+          alpha = 0.5,
           width = 0.9
         )
 
 
       # ajout des indications de valeurs hors plage de données
-      if (any(!is.na(data1$depassementSUP))) {
+      if (any(!is.na(data$depassementSUP))) {
         graph1 <-
           graph1 + geom_label(
             data = depassSUP,
@@ -341,7 +349,7 @@ graphDCE_boxplot <-
             vjust = "top"
           )
       }
-      if (any(!is.na(data1$depassementINF))) {
+      if (any(!is.na(data$depassementINF))) {
         graph1 <-
           graph1 + geom_label(
             data = depassINF,
@@ -366,7 +374,8 @@ graphDCE_boxplot <-
 
       # ajout des lignes au niveau des seuils1
       if (length(lignes) > 0) {
-        graph1 <- graph1 + geom_hline(yintercept = lignes, linetype = "dashed")
+        graph1 <-
+          graph1 + geom_hline(yintercept = lignes, linetype = "dashed")
       }
 
 
@@ -388,7 +397,7 @@ graphDCE_boxplot <-
 
     # si le tableau de données initial est vide alors on renvoi un graph "Pas de données"
 
-    if ((nrow(data1) == 0) | (all(is.na(data1[[col_valeurs]]))))
+    if ((nrow(data) == 0) | (all(is.na(data[[col_valeurs]]))))
     {
       graph1 <-
         ggplot() + annotate("text",
