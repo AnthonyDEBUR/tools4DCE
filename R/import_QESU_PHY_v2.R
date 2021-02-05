@@ -1,4 +1,4 @@
-#' import_QUESU_PHY_v2
+#' import_QESU_PHY_v2
 #'
 #' fonction pour importer un objet xml de type QUESU_PHY_V2 sous forme d'objet R
 #'
@@ -9,7 +9,7 @@
 #' @examples x<-"C:\\Users\\anthony.deburghrave\\OneDrive - EPTB Vilaine\\Documents\\R_Anthony\\données qualité hors naiades\\04208570.xml"
 #' @examples import_QUESU_PHY_v2(x)
 #' @export
-import_QUESU_PHY_v2 <- function(x) {
+import_QESU_PHY_v2 <- function(x) {
   # lecture et tests sur fichier d'entrée
   if (file_ext(x) != "xml") {
     stop("le fichier d'entrée n'est pas de type xml")
