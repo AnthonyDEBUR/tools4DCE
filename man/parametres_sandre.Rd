@@ -5,7 +5,7 @@
 \alias{parametres_sandre}
 \title{parametres_sandre}
 \format{
-An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 5627 rows and 936 columns.
+An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 5629 rows and 936 columns.
 }
 \source{
 \url{https://api.sandre.eaufrance.fr/referentiels/v1/par.csv?outputSchema=SANDREv4&compress=true}

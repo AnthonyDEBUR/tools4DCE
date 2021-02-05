@@ -38,10 +38,13 @@ import_QESU_PHY_v2 <- function(x) {
       valeurs <- divs[i] %>% xml_children()
 
       # recuperation des caracteristiques du prelevement
-      DatePrel <- valeurs[grep("<DatePrel>", valeurs)] %>% xml_contents()
+      DatePrel <-
+        valeurs[grep("<DatePrel>", valeurs)] %>% xml_contents()
       DatePrel <- DatePrel[1] %>% as.character() %>% as.Date
-      HeurePrel <- valeurs[grep("<HeurePrel>", valeurs)] %>% xml_contents()
-      HeurePrel <- HeurePrel[1] %>% as.character() %>% substr(12, 19)
+      HeurePrel <-
+        valeurs[grep("<HeurePrel>", valeurs)] %>% xml_contents()
+      HeurePrel <-
+        HeurePrel[1] %>% as.character() %>% substr(12, 19)
       if (length(HeurePrel) == 0) {
         HeurePrel <- NA
       }
@@ -69,9 +72,18 @@ import_QESU_PHY_v2 <- function(x) {
       if (length(CdPointEauxSurf) == 0) {
         CdPointEauxSurf <- NA
       }
-      CdRdd <-
+      CdRdd1 <-
         valeurs[grep("<CodeSandreRdd>", valeurs)] %>% xml_contents() %>% xml_contents()
-      CdRdd <- CdRdd[1] %>% as.character
+      if (length(CdRdd1) > 0) {
+        for (k in 1:length(CdRdd1)) {
+          CdRdd0 <- CdRdd1[k] %>% as.character
+          ifelse(k == 1,
+                 CdRdd <- CdRdd0,
+                 CdRdd <- paste0(CdRdd, "/", CdRdd0))
+        }
+      }
+
+
       if (length(CdRdd) == 0) {
         CdRdd <- NA
       }
@@ -108,9 +120,9 @@ import_QESU_PHY_v2 <- function(x) {
       }
       CdMethode <-
         valeurs[grep("<CdMethode>", valeurs)]
-      CdMethode <-CdMethode[1]%>% xml_contents()
+      CdMethode <- CdMethode[1] %>% xml_contents()
       CdMethode <-
-        CdMethode[grep("<CdMethode>", CdMethode)]%>%xml_contents()%>%xml_contents()
+        CdMethode[grep("<CdMethode>", CdMethode)] %>% xml_contents() %>% xml_contents()
       CdMethode <- CdMethode[1] %>% as.character
       if (length(CdMethode) == 0) {
         CdMethode <- NA
@@ -123,7 +135,8 @@ import_QESU_PHY_v2 <- function(x) {
       }
       HeureFinPrel <-
         valeurs[grep("<HeureFinPrel>", valeurs)] %>% xml_contents()
-      HeureFinPrel <- HeureFinPrel[1] %>% as.character() %>% substr(12, 19)
+      HeureFinPrel <-
+        HeureFinPrel[1] %>% as.character() %>% substr(12, 19)
       if (length(HeureFinPrel) == 0) {
         HeureFinPrel <- NA
       }
@@ -142,7 +155,8 @@ import_QESU_PHY_v2 <- function(x) {
       }
       ProfondeurPrel <-
         valeurs[grep("<ProfondeurPrel>", valeurs)] %>% xml_contents()
-      ProfondeurPrel <- ProfondeurPrel[1] %>% as.character() %>% as.numeric
+      ProfondeurPrel <-
+        ProfondeurPrel[1] %>% as.character() %>% as.numeric
       if (length(ProfondeurPrel) == 0) {
         ProfondeurPrel <- NA
       }
@@ -152,7 +166,8 @@ import_QESU_PHY_v2 <- function(x) {
       if (length(CdDifficultePrel) == 0) {
         CdDifficultePrel <- NA
       }
-      AgrePrel <- valeurs[grep("<AgrePrel>", valeurs)] %>% xml_contents()
+      AgrePrel <-
+        valeurs[grep("<AgrePrel>", valeurs)] %>% xml_contents()
       AgrePrel <- AgrePrel[1] %>% as.character()
       if (length(AgrePrel) == 0) {
         AgrePrel <- NA
@@ -164,7 +179,8 @@ import_QESU_PHY_v2 <- function(x) {
         CdFinalitePrel <- NA
       }
 
-      CdAccredPrel<- valeurs[grep("<AccredPrel>", valeurs)] %>% xml_contents()
+      CdAccredPrel <-
+        valeurs[grep("<AccredPrel>", valeurs)] %>% xml_contents()
       CdAccredPrel <- CdAccredPrel[1] %>% as.character()
       if (length(CdAccredPrel) == 0) {
         CdAccredPrel <- NA
@@ -199,13 +215,14 @@ import_QESU_PHY_v2 <- function(x) {
         !exists("operations_global"),
         operations_global <-
           ajout_operations,
-        operations_global <- bind_rows(ajout_operations, operations_global)
+        operations_global <-
+          bind_rows(ajout_operations, operations_global)
       )
 
 
       # on extrait les résultats d'analyses
       Analyses <- valeurs[grep("<Analyse>", valeurs)]
-      lit_analyses<-function(Analys)
+      lit_analyses <- function(Analys)
       {
         # valeurs2 <- Analyses[j] %>% xml_children()
         valeurs2 <- Analys %>% xml_children()
@@ -215,7 +232,8 @@ import_QESU_PHY_v2 <- function(x) {
         if (length(CdFractionAnalysee) == 0) {
           CdFractionAnalysee <- NA
         }
-        DateAna <- valeurs2[grep("<DateAna>", valeurs2)] %>% xml_contents()
+        DateAna <-
+          valeurs2[grep("<DateAna>", valeurs2)] %>% xml_contents()
         DateAna <- DateAna[1] %>% as.character %>% as.Date
         if (length(DateAna) == 0) {
           DateAna <- NA
@@ -232,7 +250,8 @@ import_QESU_PHY_v2 <- function(x) {
         if (length(CdParametre) == 0) {
           CdParametre <- NA
         }
-        RsAna <- valeurs2[grep("<RsAna>", valeurs2)] %>% xml_contents()
+        RsAna <-
+          valeurs2[grep("<RsAna>", valeurs2)] %>% xml_contents()
         RsAna <- RsAna[1] %>% as.character %>% as.numeric
         if (length(RsAna) == 0) {
           RsAna <- NA
@@ -243,7 +262,8 @@ import_QESU_PHY_v2 <- function(x) {
         if (length(CdUniteMesure) == 0) {
           CdUniteMesure <- NA
         }
-        CdRqAna <- valeurs2[grep("<RqAna>", valeurs2)] %>% xml_contents()
+        CdRqAna <-
+          valeurs2[grep("<RqAna>", valeurs2)] %>% xml_contents()
         CdRqAna <- CdRqAna[1] %>% as.character
         if (length(CdRqAna) == 0) {
           CdRqAna <- NA
@@ -256,7 +276,8 @@ import_QESU_PHY_v2 <- function(x) {
         }
         ProfondeurPrel <-
           valeurs2[grep("<ProfondeurPrel>", valeurs2)] %>% xml_contents()
-        ProfondeurPrel <- ProfondeurPrel[1] %>% as.character %>% as.numeric
+        ProfondeurPrel <-
+          ProfondeurPrel[1] %>% as.character %>% as.numeric
         if (length(ProfondeurPrel) == 0) {
           ProfondeurPrel <- NA
         }
@@ -266,17 +287,20 @@ import_QESU_PHY_v2 <- function(x) {
         if (length(CdDifficulteAna) == 0) {
           CdDifficulteAna <- NA
         }
-        LdAna <- valeurs2[grep("<LDAna>", valeurs2)] %>% xml_contents()
+        LdAna <-
+          valeurs2[grep("<LDAna>", valeurs2)] %>% xml_contents()
         LdAna <- LdAna[1] %>% as.character %>% as.numeric
         if (length(LdAna) == 0) {
           LdAna <- NA
         }
-        LqAna <- valeurs2[grep("<LQAna>", valeurs2)] %>% xml_contents()
+        LqAna <-
+          valeurs2[grep("<LQAna>", valeurs2)] %>% xml_contents()
         LqAna <- LqAna[1] %>% as.character %>% as.numeric
         if (length(LqAna) == 0) {
           LqAna <- NA
         }
-        LsAna <- valeurs2[grep("<LSAna>", valeurs2)] %>% xml_contents()
+        LsAna <-
+          valeurs2[grep("<LSAna>", valeurs2)] %>% xml_contents()
         LsAna <- LsAna[1] %>% as.character %>% as.numeric
         if (length(LsAna) == 0) {
           LsAna <- NA
@@ -289,7 +313,8 @@ import_QESU_PHY_v2 <- function(x) {
         }
         CdMetFractionnement <-
           valeurs2[grep("<MetFractionnement>", valeurs2)] %>% xml_contents() %>% xml_contents()
-        CdMetFractionnement <- CdMetFractionnement[1] %>% as.character
+        CdMetFractionnement <-
+          CdMetFractionnement[1] %>% as.character
         if (length(CdMetFractionnement) == 0) {
           CdMetFractionnement <- NA
         }
@@ -301,13 +326,15 @@ import_QESU_PHY_v2 <- function(x) {
         }
         RdtExtraction <-
           valeurs2[grep("<RdtExtraction>", valeurs2)] %>% xml_contents()
-        RdtExtraction <- RdtExtraction[1] %>% as.character %>% as.numeric
+        RdtExtraction <-
+          RdtExtraction[1] %>% as.character %>% as.numeric
         if (length(RdtExtraction) == 0) {
           RdtExtraction <- NA
         }
         CdMethodeExtraction <-
           valeurs2[grep("<MetExtraction>", valeurs2)] %>% xml_contents() %>% xml_contents()
-        CdMethodeExtraction <- CdMethodeExtraction[1] %>% as.character
+        CdMethodeExtraction <-
+          CdMethodeExtraction[1] %>% as.character
         if (length(CdMethodeExtraction) == 0) {
           CdMethodeExtraction <- NA
         }
@@ -394,23 +421,24 @@ import_QESU_PHY_v2 <- function(x) {
         return(ajout_analyses)
 
       }
-      output<-lapply(Analyses, lit_analyses)
+      output <- lapply(Analyses, lit_analyses)
 
       # enregistrement des conditions environnementales
-      ajout_analyses<-do.call(rbind, output)
+      ajout_analyses <- do.call(rbind, output)
 
-        ifelse(
-          !exists("analyses_global"),
-          analyses_global <-
-            ajout_analyses,
-          analyses_global <- bind_rows(analyses_global, ajout_analyses)
+      ifelse(
+        !exists("analyses_global"),
+        analyses_global <-
+          ajout_analyses,
+        analyses_global <-
+          bind_rows(analyses_global, ajout_analyses)
 
       )
 
       # on extrait les résultats de conditions environnementales
       Cond_Env <- valeurs[grep("<MesureEnvironnementale>", valeurs)]
 
-      output<-lapply(Cond_Env, function(j){
+      output <- lapply(Cond_Env, function(j) {
         valeurs2 <- j %>% xml_children()
         CdParametreEnv <-
           valeurs2[grep("<ParametreEnv>", valeurs2)] %>% xml_contents() %>% xml_contents()
@@ -422,7 +450,7 @@ import_QESU_PHY_v2 <- function(x) {
           valeurs2[grep("<RsParEnv>", valeurs2)] %>% xml_contents()
         RsParEnv <- RsParEnv[1] %>% as.character %>% as.numeric
         if (length(RsParEnv) == 0) {
-          RsParEnv<-NA
+          RsParEnv <- NA
         }
         CdUniteMesure <-
           valeurs2[grep("<CdUniteReference>", valeurs2)] %>% xml_contents() %>% xml_contents()
@@ -462,7 +490,8 @@ import_QESU_PHY_v2 <- function(x) {
         }
         HeureParEnv <-
           valeurs2[grep("<HeureParEnv>", valeurs2)] %>% xml_contents()
-        HeureParEnv <- HeureParEnv[1] %>% as.character %>% substr(12, 19)
+        HeureParEnv <-
+          HeureParEnv[1] %>% as.character %>% substr(12, 19)
         if (length(HeureParEnv) == 0) {
           HeureParEnv <- NA
         }
@@ -505,20 +534,21 @@ import_QESU_PHY_v2 <- function(x) {
             CdProducteur = CdProducteur,
             CdPreleveur = CdPreleveur
           )
-      return(ajout_cond_env)
+        return(ajout_cond_env)
 
       })
 
       # enregistrement des conditions environnementales
-      ajout_cond_env<-do.call(rbind, output)
+      ajout_cond_env <- do.call(rbind, output)
       ifelse(
         !exists("cond_env_global"),
         cond_env_global <-
           ajout_cond_env,
-        cond_env_global <- bind_rows(cond_env_global, ajout_cond_env)
+        cond_env_global <-
+          bind_rows(cond_env_global, ajout_cond_env)
       )
 
-}
+    }
 
 
   }
