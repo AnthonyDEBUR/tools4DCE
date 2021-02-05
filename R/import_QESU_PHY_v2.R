@@ -7,7 +7,7 @@
 #' @return la fonction renvoie une liste de data.frame avec les résultats contenus dans le fichier
 #'
 #' @examples x<-"C:\\Users\\anthony.deburghrave\\OneDrive - EPTB Vilaine\\Documents\\R_Anthony\\données qualité hors naiades\\04208570.xml"
-#' @examples import_QUESU_PHY_v2(x)
+#' @examples import_QESU_PHY_v2(x)
 #' @export
 import_QESU_PHY_v2 <- function(x) {
   # lecture et tests sur fichier d'entrée
@@ -193,7 +193,7 @@ import_QESU_PHY_v2 <- function(x) {
         )
 
       ifelse(
-        !exists(operations_global),
+        !exists("operations_global"),
         operations_global <-
           ajout_operations,
         operations_global <- bind_rows(ajout_operations, operations_global)
