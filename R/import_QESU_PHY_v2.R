@@ -161,6 +161,12 @@ import_QESU_PHY_v2 <- function(x) {
         CdFinalitePrel <- NA
       }
 
+      CdAccredPrel<- valeurs[grep("<AccredPrel>", valeurs)] %>% xml_contents()
+      CdAccredPrel <- CdAccredPrel[1] %>% as.character()
+      if (length(CdAccredPrel) == 0) {
+        CdAccredPrel <- NA
+      }
+
 
       # sauvegarde de la table operations
       ajout_operations <-
