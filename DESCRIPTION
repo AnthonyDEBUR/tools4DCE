@@ -22,9 +22,10 @@ Depends:
     plyr,
     scales,
     sf,
-    ggplot2,
     cowplot,
     httr,
+    tools,
+    xml2,
     ows4R,
     R (>= 2.10)
 
