@@ -21,7 +21,7 @@ import_QESU_PHY_v2 <- function(x) {
 
   # extraction des résultats
   divs <- file %>%  xml_child(2) %>% xml_contents()
-
+i<-101
   for (i in 1:length(divs))
   {
     print(paste0("Traitement ligne ", i, " sur ", length(divs)))
@@ -107,7 +107,10 @@ import_QESU_PHY_v2 <- function(x) {
         ProjectPrel <- NA
       }
       CdMethode <-
-        valeurs[grep("<Methode>", valeurs)] %>% xml_contents() %>% xml_contents()
+        valeurs[grep("<CdMethode>", valeurs)]
+      CdMethode <-CdMethode[1]%>% xml_contents()
+      CdMethode <-
+        CdMethode[grep("<CdMethode>", CdMethode)]%>%xml_contents()%>%xml_contents()
       CdMethode <- CdMethode[1] %>% as.character
       if (length(CdMethode) == 0) {
         CdMethode <- NA
@@ -421,7 +424,7 @@ import_QESU_PHY_v2 <- function(x) {
           valeurs2[grep("<RsParEnv>", valeurs2)] %>% xml_contents()
         RsParEnv <- RsParEnv[1] %>% as.character %>% as.numeric
         if (length(RsParEnv) == 0) {
-          RsParEnv
+          RsParEnv<-NA
         }
         CdUniteMesure <-
           valeurs2[grep("<CdUniteReference>", valeurs2)] %>% xml_contents() %>% xml_contents()
