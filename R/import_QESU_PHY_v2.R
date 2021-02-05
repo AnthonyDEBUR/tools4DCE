@@ -21,7 +21,7 @@ import_QESU_PHY_v2 <- function(x) {
 
   # extraction des résultats
   divs <- file %>%  xml_child(2) %>% xml_contents()
-i<-101
+
   for (i in 1:length(divs))
   {
     print(paste0("Traitement ligne ", i, " sur ", length(divs)))
@@ -205,11 +205,10 @@ i<-101
 
       # on extrait les résultats d'analyses
       Analyses <- valeurs[grep("<Analyse>", valeurs)]
-      nb_analyse <- length(Analyses)
-      for (j in 1:nb_analyse)
+      lit_analyses<-function(Analys)
       {
-        print(paste0("******** import analyse ", j, " sur ", nb_analyse))
-        valeurs2 <- Analyses[j] %>% xml_children()
+        # valeurs2 <- Analyses[j] %>% xml_children()
+        valeurs2 <- Analys %>% xml_children()
         CdFractionAnalysee <-
           valeurs2[grep("<CdFractionAnalysee>", valeurs2)] %>% xml_contents() %>% xml_contents()
         CdFractionAnalysee <- CdFractionAnalysee[1] %>% as.character
@@ -392,28 +391,27 @@ i<-101
             CdPreleveur = CdPreleveur,
             CdLaboratoire = CdLaboratoire
           )
+        return(ajout_analyses)
+
+      }
+      output<-lapply(Analyses, lit_analyses)
+
+      # enregistrement des conditions environnementales
+      ajout_analyses<-do.call(rbind, output)
+
         ifelse(
           !exists("analyses_global"),
           analyses_global <-
             ajout_analyses,
           analyses_global <- bind_rows(analyses_global, ajout_analyses)
-        )
 
-      }
-
+      )
 
       # on extrait les résultats de conditions environnementales
       Cond_Env <- valeurs[grep("<MesureEnvironnementale>", valeurs)]
-      nb_condenv <- length(Cond_Env)
-      for (j in 1:nb_condenv)
-      {
-        print(paste0(
-          "******** import condition environnementale ",
-          j,
-          " sur ",
-          nb_condenv
-        ))
-        valeurs2 <- Cond_Env[j] %>% xml_children()
+
+      output<-lapply(Cond_Env, function(j){
+        valeurs2 <- j %>% xml_children()
         CdParametreEnv <-
           valeurs2[grep("<ParametreEnv>", valeurs2)] %>% xml_contents() %>% xml_contents()
         CdParametreEnv <- CdParametreEnv[1] %>% as.character
@@ -507,20 +505,20 @@ i<-101
             CdProducteur = CdProducteur,
             CdPreleveur = CdPreleveur
           )
-        ifelse(
-          !exists("cond_env_global"),
-          cond_env_global <-
-            ajout_cond_env,
-          cond_env_global <- bind_rows(cond_env_global, ajout_cond_env)
-        )
+      return(ajout_cond_env)
 
-      }
+      })
 
+      # enregistrement des conditions environnementales
+      ajout_cond_env<-do.call(rbind, output)
+      ifelse(
+        !exists("cond_env_global"),
+        cond_env_global <-
+          ajout_cond_env,
+        cond_env_global <- bind_rows(cond_env_global, ajout_cond_env)
+      )
 
-
-
-    }
-
+}
 
 
   }
