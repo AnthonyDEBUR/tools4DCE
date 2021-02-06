@@ -19,7 +19,7 @@ filtre_donnees_extremes <- function(x, xmin = NA, xmax =NA) {
   }
   if (is.na(xmin) &
       is.na(xmax)) {
-    stop("Au moins une valeur entre ymin et ymax doit etre renseignee")
+    stop("Au moins une valeur entre xmin et xmax doit etre renseignee")
   } 
     return(x)
 }
