@@ -108,34 +108,26 @@ makeSeuils <-
     base_seuils$CLASSE <-
       factor(base_seuils$CLASSE, levels = ordre_facteurs_qualite[, "CLASSE"])
 
-    # on groupe la liste des différents seuils à traiter
-    base_seuils <-
-      base_seuils %>% group_by(SUPPORT, FRACTION, PARAMETRE, UNITE, SPECIFICITE, TYPE)
-
-    # on créé un seuil par groupe
-    liste_seuils <-
-      base_seuils %>% group_map(
-        ~ setSeuils(
-          nom_parametre = first(.x$NOM),
-          nom_seuil = paste(.x$NOM_SEUIL %>%
-                              unique, collapse = " + "),
-          type_seuil = first(.x$TYPE),
-          code_parametre = first(.x$PARAMETRE),
-          synonymes_parametre =
-            first(.x$SYNONYMES),
-          support = first(.x$SUPPORT),
-          fraction = first(.x$FRACTION),
-          code_unite = first(.x$UNITE),
-          seuils = .x %>% select(SEUILMIN, SEUILMAX, CLASSE, NOM_COULEUR) %>%
-            droplevels(),
-          bornesinfinclue = ifelse(first(.x$TYPE_BORNE) ==
-                                     "BORNE_INF_INCLUE", T, F),
-          # levels_classes=ordre_facteurs_qualite$CLASSE[ordre_facteurs_qualite$CLASSE %in% .x$CLASSE],
-          # levels_classes=ordre_facteurs_qualite$CLASSE,
-          specificites = first(.x$SPECIFICITE)
-        ),
-        .keep = T
-      )
-
+	# on applique deux types d'arguments à la fonction setSeuils
+  # les arguments NOM, NOM_SEUIL, TYPE, sont passés un par un
+  # au premier passage le premier NOM, le premier seuil....
+  # il faut aussi passer le tableau (qui lui reste le même) dans MoreArg
+	mapply(setSeuils,
+					nom_parametre = base_seuils$NOM,
+					nom_seuil = base_seuils$NOM_SEUIL,
+					type_seuil = base_seuils$TYPE,
+					code_parametre = base_seuils$PARAMETRE,
+					synonymes_parametre =
+							base_seuils$SYNONYMES,
+					support = base_seuils$SUPPORT,
+					fraction = base_seuils$FRACTION,
+					code_unite = base_seuils$UNITE,
+					bornesinfinclue = ifelse(base_seuils$TYPE_BORNE =="BORNE_INF_INCLUE", T, F),
+					specificites = base_seuils$SPECIFICITE,
+					MoreArgs = list(seuils = data.frame(base_seuils %>% select(SEUILMIN, SEUILMAX, CLASSE, NOM_COULEUR)))
+			)
+			
+	
+     return(liste_seuils[[1]])
 
   }
