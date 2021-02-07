@@ -19,6 +19,7 @@
 #' @param col_station nom de la colonne qui renseigne sur où se trouve les différentes stations. Par défaut CdStationMesureEauxSurface
 #' @param col_unite nom de la colonne avec les unités/ Par défaut CdUniteMesure
 #' @param valeur_inf_LQ stratégie à appliquer pour les valeurs inférieures à LQ. Par défaut "0" : on remplace les valeurs inférieures à la LQ par 0. Autre possibilité : "LQ/2" : on remplace les valeurs inférieures à LQ par LQ/2. "LQ" : on remplace les valeurs inférieures à LQ par LQ.
+#' @param resultat_seul booléen. Si il vaut TRUE, la fonction ne renvoie que la colonne somme pesticides. Si il vaut false, la fonction renvoie une colonne par paramètre pris en compte
 #'
 #' @return la fonction renvoie une dataframe avec les informations sur la station, la date, l'unité et la valeur de la somme des pesticides ainsi qu'une colonne avec chaque pesticide constituant la somme.
 #'
@@ -28,7 +29,7 @@
 #' @export
 calcule_somme_pesticides <- function(data, liste_pesticides=NULL, col_parametre="CdParametre", col_date="DatePrel", col_valeur="RsAna",
                                      col_CdRq="CdRqAna", col_LQ="LqAna", col_station="CdStationMesureEauxSurface", col_unite="CdUniteMesure",
-                                     valeur_inf_LQ="0") {
+                                     valeur_inf_LQ="0", resultat_seul=T) {
   # teste si le format en entrée est correct
   if (!valeur_inf_LQ%in%c("0", "LQ/2","LQ")) {
     stop(
@@ -47,6 +48,7 @@ calcule_somme_pesticides <- function(data, liste_pesticides=NULL, col_parametre=
 
   # si liste des pesticides n'est pas nulle, on ne retient que les pesticides de la liste
   if(!is.null(liste_pesticides)){data1<-data1%>%subset(CdParametre%in%liste_pesticides)}
+  if(is.null(liste_pesticides)){liste_pesticides<-data1$CdParametre%>%unique()}
 
   # si la liste des données est nulle, on renvoie un message d'erreur
   if(nrow(data1)==0){stop("Aucune donnée pesticides parmi le tableau de données.")}
@@ -96,6 +98,7 @@ calcule_somme_pesticides <- function(data, liste_pesticides=NULL, col_parametre=
 
   # cas du mecoprop
   #  Mécoprop (1214) > Mécoprop-P (2084)
+  if("1214"%in%liste_pesticides){if(is.null(data2$par_1214)){data2 <- data2 %>% mutate(par_1214 = NA)}}
   if (!is.null(data2$par_1214)) {
     if (is.null(data2$par_2084)) {
       data2 <- data2 %>% mutate(par_2084 = 0)
@@ -111,34 +114,95 @@ calcule_somme_pesticides <- function(data, liste_pesticides=NULL, col_parametre=
 
   }
 
-
-  #' - Somme des Hexachlorocyclohexanes
-  #' - Somme Heptachlore époxyde cis/trans
-
-
-
-
-
-
-
-
-
-
-
+# fonction pour sommer les paramètres individuels qui sont groupés dans un paramètre somme
+  remplace_somme<-function(code_somme, vecteur_codes_a_sommer)
+  {
+    # si le paramètre est dans la liste des pesticides
+    if(code_somme%in%liste_pesticides){if(is.null(eval(parse(text=paste0("data2$par_",code_somme))))){data2 <- data2 %>% mutate("par_{code_somme}" := NA)}}
+    if (!is.null(eval(parse(text=paste0("data2$par_",code_somme))))) {
+      for(z in 1:length(vecteur_codes_a_sommer))
+      {
+        if (is.null(eval(parse(text=paste0("data2$par_", vecteur_codes_a_sommer[z]))))) {
+          data2 <- data2 %>% mutate("par_{vecteur_codes_a_sommer[z]}" :=  0)
+        }
+        }
 
 
+      cc<-paste("par_", vecteur_codes_a_sommer, sep="")
+
+     # on somme les sous-composantes
+      data2$par_somme_tmp <-
+        rowSums(data2[, cc], na.rm = TRUE)
+      # on prend le max entre la somme des sous-composantes et la substance somme
+      data2$par_somme_tmp <-
+        apply(data2[, c("par_somme_tmp", paste0("par_",code_somme))], 1, function(x) {
+          max(x, na.rm = T)
+        })
+      # on remplace le paramètre substance somme s'il n'est pas renseigné
+      data2 <-
+        data2 %>% mutate("par_{code_somme}":=ifelse(is.na(eval(parse(text=paste0("data2$par_", code_somme)))),data2$par_somme_tmp,eval(parse(text=paste0("data2$par_", code_somme)))))
+      # on supprime les colonnes des paramètres individuels
+      data2<-data2%>%select(-(cc))%>%select(-par_somme_tmp)
+    }
+    return(data2)
+  }
 
 
+  # Somme des Hexachlorocyclohexanes (5537) = Hexachlorocyclohexane alpha (1200)
+  # + bêta (1201) + delta (1202) + gamma (1203)
+  data2<-remplace_somme(code_somme="5537", vecteur_codes_a_sommer=c("1200", "1201", "1202", "1203"))
 
+ # Somme Heptachlore époxyde cis/trans (1198) = Heptachlore époxyde cis (1748)  + trans (1749)
+  data2<-remplace_somme(code_somme="1198", vecteur_codes_a_sommer=c("1748", "1749"))
 
+# Somme du DDE 44' et de la dieldrine
+  data2<-remplace_somme(code_somme="6500", vecteur_codes_a_sommer=c("1146", "1173"))
 
+  # Somme des metabolites des dithiocarbamates (6235) = Ethylenethiouree (5648) + Ethyluree (5484) + Propylene thiouree (6214)
+  data2<-remplace_somme(code_somme="6235", vecteur_codes_a_sommer=c("5648", "5484", "6214"))
 
+  # Somme de Ethylamine + Diméthylamine (	7887) = Ethylamine (6993) + Diméthylamine (2773)
+  data2<-remplace_somme(code_somme="7887", vecteur_codes_a_sommer=c("6993", "2773"))
 
+  # Somme du Fenvalerate RR et Esfenvalerate SS (6613) = Fenvalerate RR 6606 + Esfenvalerate SS 6608
+  data2<-remplace_somme(code_somme="6613", vecteur_codes_a_sommer=c("6606", "6608"))
 
+# Somme des chloroanilines (m+p) 5502	= Chloroaniline-4 1591 + Chloroaniline-3 1592
+  data2<-remplace_somme(code_somme="5502", vecteur_codes_a_sommer=c("1591", "1592"))
 
+# Somme Acétochlore ESA + Alachlore ESA (7750) = Acétochlore ESA 6856 + Alachlore ESA 6800
+  data2<-remplace_somme(code_somme="7750", vecteur_codes_a_sommer=c("6856", "6800"))
+
+# Somme du DDD 44' et du DDT 24'6496 = DDD 44' 1144 + DDT 24' 1147
+  data2<-remplace_somme(code_somme="6496", vecteur_codes_a_sommer=c("1144", "1147"))
+
+  # Somme Metacresol, Orthocresol et Paracrésol 6341 = ortho-crésol 1640 + méta-crésol 1639 + para-crésol 1638
+  data2<-remplace_somme(code_somme="6341", vecteur_codes_a_sommer=c("1640", "1639", "1638"))
+
+# Somme parathion ethyl+methyl 6947	= parathion éthyl 1232 + parathion methyl 1233
+  data2<-remplace_somme(code_somme="6947", vecteur_codes_a_sommer=c("1232", "1233"))
+
+# Somme du DDD 24', DDE 24', DDT 24', DDT 44' 7170 =  DDD 24' 1143 + DDE 24' 1145 + DDT 24' 1147 + DDT 44' 1148
+  data2<-remplace_somme(code_somme="7170", vecteur_codes_a_sommer=c("1143", "1145", "1147", "1148"))
+
+# Somme du DDDpp', DDEpp', DDTop', DDTpp' 7146 = DDDpp' 1144 + DDEpp' 1146 + DDTop' 1147 + DDTpp' 1148
+  data2<-remplace_somme(code_somme="7146", vecteur_codes_a_sommer=c("1144", "1146", "1147", "1148"))
+
+# Somme de l'Alachlor OXA et de l'Acetochlor OXA 8101	= Alachlor OXA 6855 + Acetochlor OXA 6862
+  data2<-remplace_somme(code_somme="8101", vecteur_codes_a_sommer=c("6855", "6862"))
+
+# calcul de la somme de pesticides
+  data2<-data2%>%mutate(somme_pesticides=select(.,starts_with('par_'))%>% rowSums(na.rm=T))
+
+# si option resultat_seul, on supprime toutes les colonens intermédiares
+if(resultat_seul){data2<-data2[,c("CdStationMesure", "DatePrel", "somme_pesticides")]}
+
+#  analyses <- readRDS("~/R_Anthony/Naiades/bdd_locale/analyses.rds")
 #   data<-analyses%>%subset(CdSupport=="3")
 #   liste_pesticides<-liste_pest_2020_ARS56$CdParametre
-# liste_pesticides<-c(liste_pesticides, "2974", "8070", "8071")
+# liste_pesticides<-c(liste_pesticides, "2974", "8070", "8071", "1200", "1201", "1202", "1203", "5537", "1198", "1748", "1749")
 
-  return(result)
+  return(data2)
 }
+
+
