@@ -46,6 +46,10 @@ calcule_somme_pesticides <- function(data, liste_pesticides=NULL, col_parametre=
   data1$CdStationMesure<-data[[col_station]]
   data1$CdUniteMesure<-data[[col_unite]]
 
+  # s'il existe le paramètre somme des pesticides (code SANDRE 6276) dans le jeu de données, on supprime ces lignes car on va recalculer le paramètre
+  data1<-data1%>%subset(CdParametre!="6276")
+
+
   # si liste des pesticides n'est pas nulle, on ne retient que les pesticides de la liste
   if(!is.null(liste_pesticides)){data1<-data1%>%subset(CdParametre%in%liste_pesticides)}
   if(is.null(liste_pesticides)){liste_pesticides<-data1$CdParametre%>%unique()}
@@ -192,10 +196,14 @@ calcule_somme_pesticides <- function(data, liste_pesticides=NULL, col_parametre=
   data2<-remplace_somme(code_somme="8101", vecteur_codes_a_sommer=c("6855", "6862"))
 
 # calcul de la somme de pesticides
-  data2<-data2%>%mutate(somme_pesticides=select(.,starts_with('par_'))%>% rowSums(na.rm=T))
+  data2<-data2%>%mutate(par_6276=select(.,starts_with('par_'))%>% rowSums(na.rm=T))
 
 # si option resultat_seul, on supprime toutes les colonens intermédiares
-if(resultat_seul){data2<-data2[,c("CdStationMesure", "DatePrel", "somme_pesticides")]}
+if(resultat_seul){data2<-data2[,c("CdStationMesure", "DatePrel", "par_6276")]}
+
+# on remet le tableau de resultat au format long pour faciliter les aggrégations avec les autres données et l'usage des ggplot
+data2<-data2%>%pivot_longer(names_to='CdParametre', cols=starts_with('par_'), names_prefix="par_", values_to="RsAna", values_drop_na=T)
+
 
 #  analyses <- readRDS("~/R_Anthony/Naiades/bdd_locale/analyses.rds")
 #   data<-analyses%>%subset(CdSupport=="3")

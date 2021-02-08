@@ -2,6 +2,7 @@
 
 export(affecte_une_classe)
 export(ajoute_nom_param)
+export(calcule_somme_pesticides)
 export(calcule_ymaxi)
 export(ceiling_dec)
 export(charge_shp_SAGE)
