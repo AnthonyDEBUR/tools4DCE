@@ -73,6 +73,15 @@ calcule_somme_pesticides <-
     # si liste des pesticides n'est pas nulle, on ne retient que les pesticides de la liste
     if (!is.null(liste_pesticides)) {
       data1 <- data1 %>% subset(CdParametre %in% liste_pesticides)
+      if (nrow(data) != nrow(data1)) {
+        warning(
+          paste0(
+            "Attention ",
+            nrow(data) - nrow(data1),
+            " lignes de donnees ne correspondent pas a des pesticides de la liste. Ces lignes ont ete ignorees dans le calcul de la somme des pesticides."
+          )
+        )
+      }
     }
     if (is.null(liste_pesticides)) {
       liste_pesticides <- data1$CdParametre %>% unique()
@@ -120,19 +129,19 @@ calcule_somme_pesticides <-
     # cas du métolachlore
     #  Métolachlore total (1221) > S-Métolachlore (2974) > Métolachlore énantiomère S (8070) +  Métolachlore énantiomère R (8071)
     if (any(c("1221", "2974") %in% liste_pesticides)) {
-      if (is.null(data2$par_1221)) {
-        data2 <- data2 %>% mutate(par_1221 = NA)
+      if (!("par_1221" %in% names(data2))) {
+        data2 <- data2 %>% add_column(par_1221 = NA)
       }
     }
-    if (!is.null(data2$par_1221)) {
-      if (is.null(data2$par_2974)) {
-        data2 <- data2 %>% mutate(par_2974 = 0)
+    if ("par_1221" %in% names(data2)) {
+      if (!("par_2974" %in% names(data2))) {
+        data2 <- data2 %>% add_column(par_2974 = 0)
       }
-      if (is.null(data2$par_8070)) {
-        data2 <- data2 %>% mutate(par_8070 = 0)
+      if (!("par_8070" %in% names(data2))) {
+        data2 <- data2 %>% add_column(par_8070 = 0)
       }
-      if (is.null(data2$par_8071)) {
-        data2 <- data2 %>% mutate(par_8071 = 0)
+      if (!("par_8071" %in% names(data2))) {
+        data2 <- data2 %>% add_column(par_8071 = 0)
       }
       # on somme les 2 énantiomères
       data2$par_80708071 <-
@@ -140,7 +149,7 @@ calcule_somme_pesticides <-
       # on prend le max entre les 2 énantiomères et le S-métolachlore
       data2$par_80708071 <-
         apply(data2[, c("par_80708071", "par_2974")], 1, function(x) {
-          max(x, na.rm = T)
+          ifelse(all(is.na(x)), NA , max(x, na.rm = T))
         })
       # on remplace le paramètre Métolachlore total s'il n'est pas renseigné
       data2 <-
@@ -154,19 +163,20 @@ calcule_somme_pesticides <-
     # cas du mecoprop
     #  Mécoprop (1214) > Mécoprop-P (2084)
     if ("1214" %in% liste_pesticides) {
-      if (is.null(data2$par_1214)) {
-        data2 <- data2 %>% mutate(par_1214 = NA)
+      if (!("par_1214" %in% names(data2))) {
+        data2 <- data2 %>% add_column(par_1214 = NA)
       }
     }
-    if (!is.null(data2$par_1214)) {
-      if (is.null(data2$par_2084)) {
-        data2 <- data2 %>% mutate(par_2084 = 0)
+    if ("par_1214" %in% names(data2)) {
+      if (!("par_2084" %in% names(data2))) {
+        data2 <- data2 %>% add_column(par_2084 = 0)
       }
 
       # on prend le max entre l'énantiomère et la molécule totale
       data2$par_1214 <-
         apply(data2[, c("par_1214", "par_2084")], 1, function(x) {
-          max(x, na.rm = T)
+          ifelse(all(is.na(x)), NA , max(x, na.rm = T))
+
         })
       # on supprime les colonnes hors Mécoprop
       data2 <- data2 %>% select(-par_2084)
@@ -178,21 +188,17 @@ calcule_somme_pesticides <-
     {
       # si le paramètre est dans la liste des pesticides
       if (code_somme %in% liste_pesticides) {
-        if (is.null(eval(parse(text = paste0(
-          "data2$par_", code_somme
-        ))))) {
-          data2 <- data2 %>% mutate("par_{code_somme}" := NA)
+        if (!(paste0("par_", code_somme) %in% names(data2))) {
+          data2 <- data2 %>% add_column("par_{code_somme}" := NA)
         }
-      }
-      if (!is.null(eval(parse(text = paste0(
-        "data2$par_", code_somme
-      ))))) {
-        for (z in 1:length(vecteur_codes_a_sommer))
-        {
-          if (is.null(eval(parse(
-            text = paste0("data2$par_", vecteur_codes_a_sommer[z])
-          )))) {
-            data2 <- data2 %>% mutate("par_{vecteur_codes_a_sommer[z]}" :=  0)
+
+        if (paste0("par_", code_somme) %in% names(data2)) {
+          for (z in 1:length(vecteur_codes_a_sommer))
+          {
+            if (!(paste0("par_", vecteur_codes_a_sommer[z]) %in% names(data2))) {
+              data2 <-
+                data2 %>% add_column("par_{vecteur_codes_a_sommer[z]}" :=  0)
+            }
           }
         }
 
@@ -205,7 +211,7 @@ calcule_somme_pesticides <-
         # on prend le max entre la somme des sous-composantes et la substance somme
         data2$par_somme_tmp <-
           apply(data2[, c("par_somme_tmp", paste0("par_", code_somme))], 1, function(x) {
-            max(x, na.rm = T)
+            ifelse(all(is.na(x)), NA , max(x, na.rm = T))
           })
         # on remplace le paramètre substance somme s'il n'est pas renseigné
         data2 <-
@@ -214,9 +220,11 @@ calcule_somme_pesticides <-
           )), data2$par_somme_tmp, eval(parse(
             text = paste0("data2$par_", code_somme)
           ))))
+
+
         # on supprime les colonnes des paramètres individuels
         data2 <-
-          data2 %>% select(-(cc)) %>% select(-par_somme_tmp)
+          data2 %>% select(-all_of(cc)) %>% select(-par_somme_tmp)
       }
       return(data2)
     }
@@ -311,12 +319,15 @@ calcule_somme_pesticides <-
     # si option resultat_seul, on supprime toutes les colonnes intermédiaires
     if (resultat_seul) {
       data2 <-
-        data2[, c("CdStationMesureEauxSurface", "DatePrel", "CdUniteMesure", "par_6276")]
+        data2[, c("CdStationMesureEauxSurface",
+                  "DatePrel",
+                  "CdUniteMesure",
+                  "par_6276")]
 
-      data2$CdSupport<-"3"
-      data2$CdFractionAnalysee<-"23"
-      data2$CdRqAna<-ifelse(data2$par_6276==0, "10", "1")
-      data2$LqAna<-0
+      data2$CdSupport <- "3"
+      data2$CdFractionAnalysee <- "23"
+      data2$CdRqAna <- ifelse(data2$par_6276 == 0, "10", "1")
+      data2$LqAna <- 0
 
     }
 
