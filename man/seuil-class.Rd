@@ -3,9 +3,9 @@
 \docType{class}
 \name{seuil-class}
 \alias{seuil-class}
-\title{class seuil}
+\title{class Seuil}
 \description{
-Définition des objets de classe seuils
+Définition des objets de classe seuil
 }
 \details{
 Ces objets précisent les limites de chaque classe de qualité

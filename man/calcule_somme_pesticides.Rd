@@ -54,6 +54,18 @@ paramètres incluant d'autres paramètres :
 \item mecoprop
 \item Somme des Hexachlorocyclohexanes
 \item Somme Heptachlore époxyde cis/trans
+\item Somme du DDE 44' et de la dieldrine
+\item Somme des metabolites des dithiocarbamates (6235) = Ethylenethiouree (5648) + Ethyluree (5484) + Propylene thiouree (6214)
+\item Somme de Ethylamine + Diméthylamine (	7887) = Ethylamine (6993) + Diméthylamine (2773)
+\item Somme du Fenvalerate RR et Esfenvalerate SS (6613) = Fenvalerate RR 6606 + Esfenvalerate SS 6608
+\item Somme des chloroanilines (m+p) 5502	= Chloroaniline-4 1591 + Chloroaniline-3 1592
+\item Somme Acétochlore ESA + Alachlore ESA (7750) = Acétochlore ESA 6856 + Alachlore ESA 6800
+\item Somme du DDD 44' et du DDT 24'6496 = DDD 44' 1144 + DDT 24' 1147
+\item Somme Metacresol, Orthocresol et Paracrésol 6341 = ortho-crésol 1640 + méta-crésol 1639 + para-crésol 1638
+\item Somme parathion ethyl+methyl 6947	= parathion éthyl 1232 + parathion methyl 1233
+\item Somme du DDD 24', DDE 24', DDT 24', DDT 44' 7170 =  DDD 24' 1143 + DDE 24' 1145 + DDT 24' 1147 + DDT 44' 1148
+\item Somme du DDDpp', DDEpp', DDTop', DDTpp' 7146 = DDDpp' 1144 + DDEpp' 1146 + DDTop' 1147 + DDTpp' 1148
+\item Somme de l'Alachlor OXA et de l'Acetochlor OXA 8101	= Alachlor OXA 6855 + Acetochlor OXA 6862
 }
 }
 \examples{

@@ -8,6 +8,7 @@
 #' @export
 compte_decimales <-
   function(x) {
+	if (!is.numeric(x)) stop("x should be a numeric")
     x <- nchar(strsplit(as.character(x), "\\.")[[1]][2])
     if (is.na(x)) {
       x <- 0

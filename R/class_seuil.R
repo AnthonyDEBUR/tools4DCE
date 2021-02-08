@@ -1,6 +1,6 @@
-#' class seuil
+#' class Seuil
 #'
-#'Définition des objets de classe seuils
+#'Définition des objets de classe seuil
 #'
 #'Ces objets précisent les limites de chaque classe de qualité
 #'
@@ -39,7 +39,7 @@ setClass(
   validity = function(object) {
     if (!all(c("CLASSE", "SEUILMIN", "SEUILMAX", "NOM_COULEUR") %in% names(object@seuils))) {
       stop(
-        'La dataframe seuils doit comporter les noms de colonnes "CLASSE", "SEUILMIN", "SEUILMAX", "NOM_COULEUR"'
+        'Le dataframe seuils doit comporter les noms de colonnes "CLASSE", "SEUILMIN", "SEUILMAX", "NOM_COULEUR"'
       )
     } else{
     }
@@ -76,3 +76,4 @@ setClass(
   }
 
 )
+

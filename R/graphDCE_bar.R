@@ -20,7 +20,7 @@
 #'
 #' @return la fonction renvoie un graphique de classe ggplot
 #'
-#' @examples data<-data.frame(annee=seq(2010,2013), RsAna=c(12,15.5,67,18.3))
+#' @examples data <- data.frame(annee=seq(2010,2013), RsAna=c(12,15.5,67,18.3))
 #' @examples graphDCE_bar(data, seuils=makeSeuils(CdParametre = "1340", type_seuil="DCE"))
 #'
 #' @export
@@ -43,6 +43,7 @@ graphDCE_bar <-
   {
     data1 <- data.frame(data)
     ymini <- 0
+		
     if (!is.null(seuils)) {
       seuils1 <- seuils[[1]]@seuils
     } else{
