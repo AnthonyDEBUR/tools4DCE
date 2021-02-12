@@ -93,4 +93,23 @@ graphDCE_boxplot(data1, seuils = seuil1)
 
 ```
 
+# Bilan des quantifications
+
+Les fonctions suivantes permettent de faire le bilan, par exemple, sur les pesticides quantifiés sous forme de tableau.
+
+```{r}
+donnees<-data.frame(parametres=rep(c("1301", "1340", "1335"), 100), RsAna=sample(0.1:100, 300, replace=TRUE), LqAna=c(0.5,1,6))
+donnees<-donnees%>%mutate(RsAna=ifelse(RsAna<LqAna, LqAna, RsAna))
+donnees<-donnees%>%mutate(CdRqAna=ifelse(RsAna>LqAna, "1", ifelse(sample(1:100,5)>10,"10","1")))
+seuils<-makeSeuils(CdParametre=donnees$parametres%>%unique, specificites=c("CYPRINICOLE", rep(NA,2)), type_seuil = "DCE")
+tableau<-groupe_tableau_distribution(donnees, col_CdParametre="parametres", col_CdSupport=NULL, col_CdFraction=NULL, col_CdUnite=NULL, seuils = seuils)
+return(tableau)
+
+```
+
+Ces tableaux peuvent être mis sous forme graphique
+```{r fig.width=8}
+graphDCE_distribution(tableau)
+```
+
 

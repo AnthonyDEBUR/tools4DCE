@@ -41,12 +41,12 @@ head(base_seuils)
 
 pour avoir la couleur on croise sur les colonnes TYPE et CLASSE avec la table couleurs_classes
 ```{r}
-kable(head(couleurs_classes))
+head(couleurs_classes)
 ```
 
 pour classer les levels on utilise la colonne CLASSE de la data.frame ordre_facteurs_qualite
 ```{r}
-kable(head(ordre_facteurs_qualite))
+head(ordre_facteurs_qualite)
 ```
 
 ### Génération d'un objet de classe seuil
@@ -171,4 +171,56 @@ ajoute_nom_param(donnees, col_parametre="code")
 
 ```
 
+# Chargement de données
+
+Le package tools4DCE offre plusieurs fonctions pour charger des données de qualité des eaux.
+
+##  Exports Naïades physicochimique
+
+Le site http://www.naiades.eaufrance.fr/acces-donnees#/physicochimie permet d'exporter sous forme de fichiers .zip des résultats physicochimiques.
+
+Le chargement de ces données se fait via la commande 
+resultats<-importe_Naiades_PC("export.zip")
+
+Il est possible de restreindre les résultats à une emprise géographique limitée en passant en option un objet sf de l'emprise d'intérêt.
+
+Exemple : 
+shp<-charge_shp_SAGE("Vilaine")
+resultats<-importe_Naiades_PC("export.zip", shp)
+
+Les données sont stockées sous forme de liste de data.frame.
+
+      resultats[["analyses"]] contient les analyses,
+      resultats[["cond_env"]] contient les conditions environnementales relevées lors des analyses
+      resultats[["operations"]] contient le descriptif des opérations
+      resultats[["CdRqAna"]] contient la signification des divers codes remarques
+      resultats[["CdUniteMesure"]] contient la table de correspondance code sandre / nom de l'unité
+      resultats[["CdInsituAna"]] contient la table de correspondance code sandre / nom des codes analyses in situ
+      resultats[["CdAccreAna"]] contient la table de correspondance code sandre / nom des codes accréditation de l'analyse
+      resultats[["CdStatutAna"]] contient la table de correspondance code sandre / nom du statut de l'analyse
+      resultats[["CdDifficulteAna"]] contient la table de correspondance code sandre / nom des codes de difficulté d'analyses
+      resultats[["CdProducteur"]] contient la table de correspondance code sandre / nom des producteurs de données
+      
+## Fichiers QESU PHY V2
+
+Le package permet l'import de fichiers xml au format QESU_PC_v2 tel que défini par le SANDRE
+
+Exemple : 
+Resultats<-import_QESU_PHY_v2("fichier.xml")
+
+Les résultats sont stockés dans un data.frame avec des noms de colonne identiques à ceux des imports Naïades
+
+# Outils pesticides
+
+Le programme contient des outils pour travailler avec les pesticides.
+
+```{r}
+data<-data.frame(DatePrel=Sys.Date() + rep(sort(sample(1:500, 10)),3), RsAna=c(round(runif(60,0,0.5), 2)), LqAna=c(0.1), CdStationMesureEauxSurface=c("A","B","C"), CdParametre=c("1200","1201"), CdUniteMesure="133")
+data$CdRqAna<-ifelse(data$RsAna>=data$LqAna, "1","10")
+calcule_somme_pesticides(data)
+```
+
+
+
+   
 
