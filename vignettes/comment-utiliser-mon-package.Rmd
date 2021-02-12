@@ -214,13 +214,23 @@ Les résultats sont stockés dans un data.frame avec des noms de colonne identiq
 
 Le programme contient des outils pour travailler avec les pesticides.
 
+## Calculer la somme de pesticides
+La fonction calcule_somme_pesticides permet de calculer, pour chaque prélèvement, la somme des pesticides (dont la liste des codes SANDRE peut être passée en option).
+Elle rend les résultats sous forme d'un tableau dont les colonnes sont compatibles avec l'utilisation des fonctions graphiques ou autre.
+
 ```{r}
-data<-data.frame(DatePrel=Sys.Date() + rep(sort(sample(1:500, 10)),3), RsAna=c(round(runif(60,0,0.5), 2)), LqAna=c(0.1), CdStationMesureEauxSurface=c("A","B","C"), CdParametre=c("1200","1201"), CdUniteMesure="133")
+data<-data.frame(DatePrel=Sys.Date() + rep(sort(sample(1:500, 10)),3), RsAna=c(round(runif(60,0,0.8), 2)), LqAna=c(0.1), CdStationMesureEauxSurface=c("A","B","C"), CdParametre=c("1200","1201"), CdUniteMesure="133")
 data$CdRqAna<-ifelse(data$RsAna>=data$LqAna, "1","10")
 calcule_somme_pesticides(data)
 ```
 
 
+```{r fig.width=10}
+
+graphDCE_points(calcule_somme_pesticides(data), seuils=makeSeuils(CdParametre="6276", type_seuil="AEP"), separ_stations = "CdStationMesureEauxSurface", ymini=0)
+
+
+```
 
    
 
