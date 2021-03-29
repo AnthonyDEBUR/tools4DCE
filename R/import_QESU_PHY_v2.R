@@ -553,7 +553,11 @@ import_QESU_PHY_v2 <- function(x) {
 
   }
 
+<<<<<<< HEAD
   if(!exists("cond_env_global")){cond_env_global<-NULL}
+=======
+  if(!exists("cond_env_global"){cond_env_global<-NULL})
+>>>>>>> 4877561de4d4640df3973c7d2df88a236883c28a
 
 
   return(
