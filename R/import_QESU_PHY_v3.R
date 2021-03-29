@@ -1,21 +1,21 @@
-#' import_QESU_PHY_v2
+#' import_QESU_PHY_v3
 #'
-#' fonction pour importer un objet xml de type QUESU_PHY_V2 sous forme d'objet R
+#' fonction pour importer un objet xml de type QUESU_PHY_V3 sous forme d'objet R
 #'
-#' @param x un fichier xml conforme au scénario d'échange QUESU_PHY_v2 du SANDRE
+#' @param x un fichier xml conforme au scénario d'échange QUESU_PHY_v3 du SANDRE
 #'
 #' @return la fonction renvoie une liste de data.frame avec les résultats contenus dans le fichier
 #'
 #' @examples x<-"C:\\Users\\anthony.deburghrave\\OneDrive - EPTB Vilaine\\Documents\\R_Anthony\\données qualité hors naiades\\04208570.xml"
 #' @examples import_QESU_PHY_v2(x)
 #' @export
-import_QESU_PHY_v2 <- function(x) {
+import_QESU_PHY_v3 <- function(x) {
   # lecture et tests sur fichier d'entrée
   if (file_ext(x) != "xml") {
     stop("le fichier d'entrée n'est pas de type xml")
   }
   file <- read_xml(x)
-  if (xml_ns(file)[1] != "http://xml.sandre.eaufrance.fr/scenario/quesu/2") {
+  if (xml_ns(file)[1] != "http://xml.sandre.eaufrance.fr/scenario/quesu/3") {
     stop("le scénario du fichier n'est pas de type QUESU_PHY_V2")
   }
 
@@ -28,13 +28,13 @@ import_QESU_PHY_v2 <- function(x) {
 
     # extraction de la station de mesure
     if (any(grepl("CdStationMesureEauxSurface", divs[i]))) {
-      CdStationMesureEauxSurface <- divs[i] %>% xml_contents()
+      CdStationMesureEauxSurface <- divs[i] %>% xml_contents() %>% xml_contents()
       CdStationMesureEauxSurface <-
         CdStationMesureEauxSurface[1] %>% as.character()
     }
 
     # noeuds prelevement
-    if (grepl("PrelevementsPhysicoChimie", divs[i])) {
+    if (grepl("OperationPrel", divs[i])) {
       valeurs <- divs[i] %>% xml_children()
 
       # recuperation des caracteristiques du prelevement
@@ -437,119 +437,119 @@ import_QESU_PHY_v2 <- function(x) {
 
       # on extrait les résultats de conditions environnementales
       Cond_Env <- valeurs[grep("<MesureEnvironnementale>", valeurs)]
-      if (length(Cond_Env) > 0) {
-        output <- lapply(Cond_Env, function(j) {
-          valeurs2 <- j %>% xml_children()
-          CdParametreEnv <-
-            valeurs2[grep("<ParametreEnv>", valeurs2)] %>% xml_contents() %>% xml_contents()
-          CdParametreEnv <- CdParametreEnv[1] %>% as.character
-          if (length(CdParametreEnv) == 0) {
-            CdParametreEnv <- NA
-          }
-          RsParEnv <-
-            valeurs2[grep("<RsParEnv>", valeurs2)] %>% xml_contents()
-          RsParEnv <- RsParEnv[1] %>% as.character %>% as.numeric
-          if (length(RsParEnv) == 0) {
-            RsParEnv <- NA
-          }
-          CdUniteMesure <-
-            valeurs2[grep("<CdUniteReference>", valeurs2)] %>% xml_contents() %>% xml_contents()
-          CdUniteMesure <- CdUniteMesure[1] %>% as.character
-          if (length(CdUniteMesure) == 0) {
-            CdUniteMesure <- NA
-          }
-          CdRqParEn <-
-            valeurs2[grep("<RqParEn>", valeurs2)] %>% xml_contents()
-          CdRqParEn <- CdRqParEn[1] %>% as.character
-          if (length(CdRqParEn) == 0) {
-            CdRqParEn <- NA
-          }
-          CdStatutParEn <-
-            valeurs2[grep("<StatutParEn>", valeurs2)] %>% xml_contents()
-          CdStatutParEn <- CdStatutParEn[1] %>% as.character
-          if (length(CdStatutParEn) == 0) {
-            CdStatutParEn <- NA
-          }
-          CdQualParEnv <-
-            valeurs2[grep("<QualParEnv>", valeurs2)] %>% xml_contents()
-          CdQualParEnv <- CdQualParEnv[1] %>% as.character
-          if (length(CdQualParEnv) == 0) {
-            CdQualParEnv <- "0"
-          }
-          ComParEnv <-
-            valeurs2[grep("<ComParEnv>", valeurs2)] %>% xml_contents()
-          ComParEnv <- ComParEnv[1] %>% as.character
-          if (length(ComParEnv) == 0) {
-            ComParEnv <- ""
-          }
-          DateParEnv <-
-            valeurs2[grep("<DateParEnv>", valeurs2)] %>% xml_contents()
-          DateParEnv <- DateParEnv[1] %>% as.character %>% as.Date
-          if (length(DateParEnv) == 0) {
-            DateParEnv <- NA
-          }
-          HeureParEnv <-
-            valeurs2[grep("<HeureParEnv>", valeurs2)] %>% xml_contents()
-          HeureParEnv <-
-            HeureParEnv[1] %>% as.character %>% substr(12, 19)
-          if (length(HeureParEnv) == 0) {
-            HeureParEnv <- NA
-          }
-          CdMethodeParEnv <-
-            valeurs2[grep("<Methode>", valeurs2)] %>% xml_contents() %>% xml_contents()
-          CdMethodeParEnv <- CdMethodeParEnv[1] %>% as.character
-          if (length(CdMethodeParEnv) == 0) {
-            CdMethodeParEnv <- NA
-          }
-          CdProducteur <-
-            valeurs2[grep("<Producteur>", valeurs2)] %>% xml_contents() %>% xml_contents()
-          CdProducteur <- CdProducteur[1] %>% as.character
-          if (length(CdProducteur) == 0) {
-            CdProducteur <- ""
-          }
-          CdPreleveur <-
-            valeurs2[grep("<Preleveur>", valeurs2)] %>% xml_contents() %>% xml_contents()
-          CdPreleveur <- CdPreleveur[1] %>% as.character
-          if (length(CdPreleveur) == 0) {
-            CdPreleveur <- ""
-          }
+
+      output <- lapply(Cond_Env, function(j) {
+        valeurs2 <- j %>% xml_children()
+        CdParametreEnv <-
+          valeurs2[grep("<ParametreEnv>", valeurs2)] %>% xml_contents() %>% xml_contents()
+        CdParametreEnv <- CdParametreEnv[1] %>% as.character
+        if (length(CdParametreEnv) == 0) {
+          CdParametreEnv <- NA
+        }
+        RsParEnv <-
+          valeurs2[grep("<RsParEnv>", valeurs2)] %>% xml_contents()
+        RsParEnv <- RsParEnv[1] %>% as.character %>% as.numeric
+        if (length(RsParEnv) == 0) {
+          RsParEnv <- NA
+        }
+        CdUniteMesure <-
+          valeurs2[grep("<CdUniteReference>", valeurs2)] %>% xml_contents() %>% xml_contents()
+        CdUniteMesure <- CdUniteMesure[1] %>% as.character
+        if (length(CdUniteMesure) == 0) {
+          CdUniteMesure <- NA
+        }
+        CdRqParEn <-
+          valeurs2[grep("<RqParEn>", valeurs2)] %>% xml_contents()
+        CdRqParEn <- CdRqParEn[1] %>% as.character
+        if (length(CdRqParEn) == 0) {
+          CdRqParEn <- NA
+        }
+        CdStatutParEn <-
+          valeurs2[grep("<StatutParEn>", valeurs2)] %>% xml_contents()
+        CdStatutParEn <- CdStatutParEn[1] %>% as.character
+        if (length(CdStatutParEn) == 0) {
+          CdStatutParEn <- NA
+        }
+        CdQualParEnv <-
+          valeurs2[grep("<QualParEnv>", valeurs2)] %>% xml_contents()
+        CdQualParEnv <- CdQualParEnv[1] %>% as.character
+        if (length(CdQualParEnv) == 0) {
+          CdQualParEnv <- "0"
+        }
+        ComParEnv <-
+          valeurs2[grep("<ComParEnv>", valeurs2)] %>% xml_contents()
+        ComParEnv <- ComParEnv[1] %>% as.character
+        if (length(ComParEnv) == 0) {
+          ComParEnv <- ""
+        }
+        DateParEnv <-
+          valeurs2[grep("<DateParEnv>", valeurs2)] %>% xml_contents()
+        DateParEnv <- DateParEnv[1] %>% as.character %>% as.Date
+        if (length(DateParEnv) == 0) {
+          DateParEnv <- NA
+        }
+        HeureParEnv <-
+          valeurs2[grep("<HeureParEnv>", valeurs2)] %>% xml_contents()
+        HeureParEnv <-
+          HeureParEnv[1] %>% as.character %>% substr(12, 19)
+        if (length(HeureParEnv) == 0) {
+          HeureParEnv <- NA
+        }
+        CdMethodeParEnv <-
+          valeurs2[grep("<Methode>", valeurs2)] %>% xml_contents() %>% xml_contents()
+        CdMethodeParEnv <- CdMethodeParEnv[1] %>% as.character
+        if (length(CdMethodeParEnv) == 0) {
+          CdMethodeParEnv <- NA
+        }
+        CdProducteur <-
+          valeurs2[grep("<Producteur>", valeurs2)] %>% xml_contents() %>% xml_contents()
+        CdProducteur <- CdProducteur[1] %>% as.character
+        if (length(CdProducteur) == 0) {
+          CdProducteur <- ""
+        }
+        CdPreleveur <-
+          valeurs2[grep("<Preleveur>", valeurs2)] %>% xml_contents() %>% xml_contents()
+        CdPreleveur <- CdPreleveur[1] %>% as.character
+        if (length(CdPreleveur) == 0) {
+          CdPreleveur <- ""
+        }
 
 
-          # creation de la ligne à ajouter à la table Cond_Env
-          ajout_cond_env <-
-            data.frame(
-              CdStationMesureEauxSurface = CdStationMesureEauxSurface,
-              CdPrelevement = CdPrelevement,
-              DatePrel = DatePrel,
-              CdParametreEnv = CdParametreEnv,
-              RsParEnv = RsParEnv,
-              CdUniteMesure = CdUniteMesure,
-              CdRqParEn = CdRqParEn,
-              CdStatutParEn = CdStatutParEn,
-              CdQualParEnv = CdQualParEnv,
-              ComParEnv = ComParEnv,
-              DateParEnv = DateParEnv,
-              HeureParEnv = HeureParEnv,
-              CdMethodeParEnv = CdMethodeParEnv,
-              CdProducteur = CdProducteur,
-              CdPreleveur = CdPreleveur
-            )
-          return(ajout_cond_env)
+        # creation de la ligne à ajouter à la table Cond_Env
+        ajout_cond_env <-
+          data.frame(
+            CdStationMesureEauxSurface = CdStationMesureEauxSurface,
+            CdPrelevement = CdPrelevement,
+            DatePrel = DatePrel,
+            CdParametreEnv = CdParametreEnv,
+            RsParEnv = RsParEnv,
+            CdUniteMesure = CdUniteMesure,
+            CdRqParEn = CdRqParEn,
+            CdStatutParEn = CdStatutParEn,
+            CdQualParEnv = CdQualParEnv,
+            ComParEnv = ComParEnv,
+            DateParEnv = DateParEnv,
+            HeureParEnv = HeureParEnv,
+            CdMethodeParEnv = CdMethodeParEnv,
+            CdProducteur = CdProducteur,
+            CdPreleveur = CdPreleveur
+          )
+        return(ajout_cond_env)
 
-        })
+      })
 
-        # enregistrement des conditions environnementales
-        ajout_cond_env <- do.call(rbind, output)
-        ifelse(
-          !exists("cond_env_global"),
-          cond_env_global <-
-            ajout_cond_env,
-          cond_env_global <-
-            bind_rows(cond_env_global, ajout_cond_env)
-        )
+      # enregistrement des conditions environnementales
+      ajout_cond_env <- do.call(rbind, output)
+      ifelse(
+        !exists("cond_env_global"),
+        cond_env_global <-
+          ajout_cond_env,
+        cond_env_global <-
+          bind_rows(cond_env_global, ajout_cond_env)
+      )
 
-      }
     }
+
 
   }
 

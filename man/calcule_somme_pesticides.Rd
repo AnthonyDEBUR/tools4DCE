@@ -69,7 +69,7 @@ paramètres incluant d'autres paramètres :
 }
 }
 \examples{
-data<-data.frame(DatePrel=Sys.Date() + rep(sort(sample(1:500, 10)),3), RsAna=c(round(runif(60,0,0.5), 2)), LqAna=c(0.1), CdStationMesureEauxSurface=c("A","B","C"), CdParametre=c("1200","1201"))
+data<-data.frame(DatePrel=Sys.Date() + rep(sort(sample(1:500, 10)),3), RsAna=c(round(runif(60,0,0.5), 2)), LqAna=c(0.1), CdStationMesureEauxSurface=c("A","B","C"), CdParametre=c("1200","1201"), CdUniteMesure="133")
 data$CdRqAna<-ifelse(data$RsAna>=data$LqAna, "1","10")
 calcule_somme_pesticides(data)
 }

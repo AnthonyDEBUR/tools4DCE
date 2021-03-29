@@ -210,6 +210,16 @@ Resultats<-import_QESU_PHY_v2("fichier.xml")
 
 Les résultats sont stockés dans un data.frame avec des noms de colonne identiques à ceux des imports Naïades
 
+## Fichiers QESU PHY V3
+
+Le package permet l'import de fichiers xml au format QESU_PC_v3 tel que défini par le SANDRE
+
+Exemple : 
+Resultats<-import_QESU_PHY_v3("fichier.xml")
+
+Les résultats sont stockés dans un data.frame avec des noms de colonne identiques à ceux des imports Naïades
+
+
 # Outils pesticides
 
 Le programme contient des outils pour travailler avec les pesticides.
