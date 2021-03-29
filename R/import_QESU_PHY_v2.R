@@ -553,6 +553,9 @@ import_QESU_PHY_v2 <- function(x) {
 
   }
 
+  if(!exists("cond_env_global")){cond_env_global<-NULL}
+
+
   return(
     list(
       analyses = analyses_global,
