@@ -22,7 +22,7 @@ import_QESU_PHY_v3 <- function(x) {
   # pour chaque station
   for (z in 2:length(file %>% xml_children()))
   {
-    print("station" ,z, " sur ", length(file %>% xml_children()))
+    print(paste0("station" ,z, " sur ", length(file %>% xml_children())))
 
     # extraction des résultats
     divs <- file %>%  xml_child(z) %>% xml_contents()
