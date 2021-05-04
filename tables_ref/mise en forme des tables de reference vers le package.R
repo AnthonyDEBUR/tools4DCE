@@ -37,7 +37,8 @@ download.file(
   mode = "wb",
   cacheOK = T
 )
-parametres_sandre <- read_delim("param.csv.gz", delim = ";", skip = 1)
+parametres_sandre <-
+  read_delim("param.csv.gz", delim = ";", skip = 1)
 parametres_sandre$CdParametre <-
   as.character(parametres_sandre$CdParametre)
 # suppression des colonnes remplies de NA
