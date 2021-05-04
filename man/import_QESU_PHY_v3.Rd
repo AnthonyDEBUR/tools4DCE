@@ -16,6 +16,6 @@ la fonction renvoie une liste de data.frame avec les résultats contenus dans le
 fonction pour importer un objet xml de type QUESU_PHY_V3 sous forme d'objet R
 }
 \examples{
-x<-"C:\\\\Users\\\\anthony.deburghrave\\\\OneDrive - EPTB Vilaine\\\\Documents\\\\R_Anthony\\\\donnÃ©es qualitÃ© hors naiades\\\\04208570.xml"
-import_QESU_PHY_v2(x)
+x<-"C:\\\\Users\\\\anthony.deburghrave\\\\OneDrive - EPTB Vilaine\\\\Documents\\\\R_Anthony\\\\tools4DCE\\\\exemples xml\\\\QUESU3_EPTB_VILAINE_2020-11-04 v2.xml"
+import_QESU_PHY_v3(x)
 }

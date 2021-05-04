@@ -40,6 +40,12 @@ donnees_oeb$SEUILMAX<-donnees_oeb$SEUILMAX%>%as.character()
 donnees_oeb<-donnees_oeb%>%select(NOM,SUPPORT,	FRACTION,	PARAMETRE,	UNITE,	SEUILMIN,	SEUILMAX,
                      CLASSE,	NOM_SEUIL,	TYPE,	TYPE_BORNE,	SPECIFICITE)
 
+# cas particulier des substances les + toxiques qui ont un seuil 0.1 remplacé par 0.03 µg/L
+# Aldrine, dieldrine, heptachlore, Heptachlorépoxyde (par substance individuelle)
+donnees_oeb[donnees_oeb$PARAMETRE%in%c("1103", "1173", "1197", "1748", "1749") & donnees_oeb$SEUILMIN=="0.1", ]$SEUILMIN<-"0.03"
+donnees_oeb[donnees_oeb$PARAMETRE%in%c("1103", "1173", "1197", "1748", "1749") & donnees_oeb$SEUILMAX=="0.1", ]$SEUILMAX<-"0.03"
+
+
 write.xlsx(donnees_oeb, "tables_ref/base_seuils_oeb.xlsx")
 
 
