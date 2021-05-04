@@ -1,6 +1,7 @@
 library(tidyverse)
 library(readxl)
 library(devtools)
+library(stringi)
 
 # base des seuils par paramètre
 base_seuils <-
@@ -28,6 +29,9 @@ download.file(
 )
 unites_sandre <- read_delim("unites.csv.gz", delim = ";", skip = 1)
 file.remove("unites.csv.gz")
+
+colnames(unites_sandre)<-stringi::stri_trans_general(colnames(unites_sandre), "Latin-ASCII")
+
 save(unites_sandre, file = "data/unites_sandre.RData")
 
 # telechargement du referentiel paramètres sandre
@@ -46,5 +50,4 @@ parametres_sandre <-
   Filter(function(x)
     ! all(is.na(x)), parametres_sandre)
 file.remove("param.csv.gz")
-# usethis::use_data(parametres_sandre, overwrite=T)
 save(parametres_sandre, file = "data/parametres_sandre.RData")

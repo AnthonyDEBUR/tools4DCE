@@ -71,7 +71,7 @@ tmp[100]
 
 
 test<-makeSeuils(CdParametre=c("1340", "1301"), specificites=c(NA, "CYPRINICOLE"), type_seuil = "DCE")
-return(test)
+print(test)
 ```
 La liste des paramètres concernés est la suivante :
 ```{r}
@@ -208,7 +208,7 @@ Le package permet l'import de fichiers xml au format QESU_PC_v2 tel que défini 
 Exemple : 
 Resultats<-import_QESU_PHY_v2("fichier.xml")
 
-Les résultats sont stockés dans un data.frame avec des noms de colonne identiques à ceux des imports Naïades
+Les résultats sont stockés dans une liste de data.frame avec des noms de colonne identiques à ceux des imports Naïades
 
 ## Fichiers QESU PHY V3
 
@@ -217,7 +217,7 @@ Le package permet l'import de fichiers xml au format QESU_PC_v3 tel que défini 
 Exemple : 
 Resultats<-import_QESU_PHY_v3("fichier.xml")
 
-Les résultats sont stockés dans un data.frame avec des noms de colonne identiques à ceux des imports Naïades
+Les résultats sont stockés dans une liste de  data.frame avec des noms de colonne identiques à ceux des imports Naïades
 
 
 # Outils pesticides
