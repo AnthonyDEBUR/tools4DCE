@@ -48,6 +48,6 @@ CLASSE précise le type de seuil du paramètre
 }
 }
 \examples{
-head(data(base_seuils))
+str(data(base_seuils))
 }
 \keyword{datasets}

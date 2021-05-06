@@ -10,7 +10,6 @@ graphDCE_bar(
   col_valeurs = "RsAna",
   ymaxi = NULL,
   auto_ymaxi = TRUE,
-  seuils = NULL,
   unite = NULL,
   titre = NULL,
   taille_titre = 12,
@@ -32,8 +31,6 @@ graphDCE_bar(
 
 \item{auto_ymaxi}{booléen. Si le paramètre vaut TRUE et que ymaxi n'est pas renseigné alors ce dernier est calculé automatiquement de manière à rendre le graph aussi lisible que possible}
 
-\item{seuils}{objet de classe seuil (factultatif)}
-
 \item{unite}{unité du paramètre (par défaut si seuils est renseigné : le label SANDRE correspondant au slot code_unite du paramètre seuils)}
 
 \item{titre}{titre du graphique (si absent et si seuils et renseigné, la légende par défaut sera le slot nom_parametre)}
@@ -49,6 +46,8 @@ graphDCE_bar(
 \item{lignes}{vecteur permettant d'ajouter des lignes horizontales au graphique. ex c(10, 25)}
 
 \item{alpha}{transparence des applats de couleurs}
+
+\item{seuils}{objet de classe seuil (factultatif)}
 }
 \value{
 la fonction renvoie un graphique de classe ggplot

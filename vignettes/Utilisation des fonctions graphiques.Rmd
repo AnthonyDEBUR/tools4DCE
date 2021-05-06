@@ -16,13 +16,6 @@ library(tools4DCE)
 Le package tools4DCE a créé des objets S4 de classe seuils.
 Ces objets affectent à un ensemble paramètre, support, fraction, unités définis par leurs codes SANDRE, des classes de qualité ainsi que l'ordre et la couleur des classes de qualité.
 
-## Génération d'un objet de classe seuil
-Pour créer un objet de classe seuil on utilise la fonction setSeuils
-
-```{r}
-setSeuils(nom_parametre="parametre test",nom_seuil="AM 25 janv 2010",type_seuil="DCE", code_parametre="1301", synonymes_parametre = "1301",support="3",code_unite="27", seuils=tools4DCE::base_seuils%>%subset(NOM=="TEMPERATURE" & SPECIFICITE=="CYPRINICOLE")%>%left_join(couleurs_classes, by=c("CLASSE", "TYPE"))%>%select(SEUILMIN, SEUILMAX, CLASSE, NOM_COULEUR)%>%mutate_at("CLASSE", factor),bornesinfinclue=T)
-
-```
 
 ## Classes seuils prédéfinies
 Pour créer une liste de seuils prédéfinis à partir des fichiers de données il suffit de taper la commande makeSeuils().

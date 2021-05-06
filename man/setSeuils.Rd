@@ -15,7 +15,9 @@ setSeuils(
   code_unite = "",
   seuils,
   bornesinfinclue = T,
-  specificites = ""
+  specificites = "",
+  id_,
+  base_seuils_color
 )
 }
 \arguments{
@@ -40,6 +42,10 @@ setSeuils(
 \item{bornesinfinclue}{= booléen. Si vrai la classe de qualité couvrira l'intervalle [SEUILMIN, SEUILMAX\link{, si faux elle couvrira }SEUIL_MIN,SEUIL_MAX]}
 
 \item{specificites}{= typologie particulière à laquelle s'applique le seuil}
+
+\item{id_}{= l'identifiant unique de la combinaison PARAMETRE TYPE  SPECIFICITE dans base_seuils_color}
+
+\item{base_seuils_color}{= un object base_seuils transformé par makeSeuils pour inclure les couleurs}
 }
 \value{
 la fonction renvoie un objet de class seuil

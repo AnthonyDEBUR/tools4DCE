@@ -89,10 +89,15 @@ makeSeuils <-
     if (!is.null(CdUnite)) {
       seuils_demandes <- seuils_demandes %>% mutate(UNITE = CdUnite)
     }
-		seuils_demandes$id <- 1:nrow(seuils_demandes)
+
+
+    if (nrow(seuils_demandes) == 0){seuils_demandes<-base_seuils}
+
 
     # jointure uniquement sur les colonnes renseignées
-    if (nrow(seuils_demandes) > 0) {
+    #if (nrow(seuils_demandes) > 0) {
+      seuils_demandes$id <- 1:nrow(seuils_demandes)
+
       base_seuils <-
         inner_join(
           base_seuils,
@@ -100,11 +105,14 @@ makeSeuils <-
           by = colnames(seuils_demandes)[colnames(seuils_demandes)!="id"],
           na_matches = "na"
         )
-    }
-		
-		# les lignes sont répétées dans le tableau initial ici on ne veut qu'une ligne par élément du tableau 
+ #   }
+
+
+
+
+		# les lignes sont répétées dans le tableau initial ici on ne veut qu'une ligne par élément du tableau
     # seuils_demandes, les colonnes choisies ne sont pas répétées
-		base_seuils_paronly <- base_seuils %>% 
+		base_seuils_paronly <- base_seuils %>%
 				select(NOM, SUPPORT, FRACTION, UNITE,  NOM_SEUIL, TYPE, TYPE_BORNE, SPECIFICITE, SYNONYMES, PARAMETRE, id) %>%
 				distinct()
 		if(nrow(base_seuils_paronly)!=nrow(seuils_demandes)) stop("Erreur interne, base_seuils_paronly et seuils_demandes doivent avoir le même nombre de lignes")
@@ -119,7 +127,7 @@ base_seuils_color <-
 
 
 
-		
+
 	# on applique deux types d'arguments à la fonction setSeuils
   # les arguments NOM, NOM_SEUIL, TYPE, sont passés un par un
   # au premier passage le premier NOM, le premier seuil....
@@ -139,10 +147,10 @@ liste_seuils <- mapply(setSeuils,
 					id_=base_seuils_paronly$id,
 					MoreArgs = list(base_seuils_color=base_seuils_color)
 			)
-			
-			
-			
-	
+
+
+
+
      return(liste_seuils)
 
   }
