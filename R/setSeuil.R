@@ -42,7 +42,8 @@ setSeuils <-
 		seuil <- base_seuils_color %>% filter(id==id_) %>%  
 				select(SEUILMIN, SEUILMAX, CLASSE, NOM_COULEUR) %>%
 				data.frame()
-	 
+		seuil$CLASSE <-
+				factor(seuil$CLASSE, levels = ordre_facteurs_qualite[, "CLASSE"]) %>% droplevels()
     new(
       Class = "seuil",
       nom_parametre = nom_parametre,

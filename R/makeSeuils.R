@@ -33,6 +33,7 @@ makeSeuils <-
            CdUnite = NULL,
            type_seuil = NULL,
            specificites = NULL) {
+		 #browser()
     # chargement des données du package
     base_seuils <- tools4DCE::base_seuils
     couleurs_classes <- tools4DCE::couleurs_classes
@@ -115,8 +116,7 @@ base_seuils_color <-
 		base_seuils_color %>% left_join(couleurs_classes, by = c("CLASSE", "TYPE"))
 
     # ajout des levels pour les classes de la base seuil
-base_seuils_color$CLASSE <-
-      factor(base_seuils_color$CLASSE, levels = ordre_facteurs_qualite[, "CLASSE"])
+
 
 
 		

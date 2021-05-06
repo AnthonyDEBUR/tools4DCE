@@ -60,6 +60,7 @@ graphDCE_points <-
            separ_stations = NULL,
            alpha = 0.8)
   {
+		#browser()
     data1 <- data.frame(data)
     if (!is.null(seuils)) {
       seuils1 <- seuils[[1]]@seuils
