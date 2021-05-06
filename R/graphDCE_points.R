@@ -388,6 +388,7 @@ graphDCE_points <-
           unite <- ""
         }
       }
+			 #browser()
 
       ##### Cas du titre de graphique #####
       # si le titre n'est pas renseigné mais que le seuil est renseigné alors on renseigne le titre à partir de l'information contenue dans l'objet seuil
