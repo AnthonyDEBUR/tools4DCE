@@ -60,6 +60,7 @@ graphDCE_points <-
            separ_stations = NULL,
            alpha = 0.8)
   {
+		#browser()
     data1 <- data.frame(data)
     if (!is.null(seuils)) {
       seuils1 <- seuils[[1]]@seuils
@@ -388,6 +389,7 @@ graphDCE_points <-
           unite <- ""
         }
       }
+			 #browser()
 
       ##### Cas du titre de graphique #####
       # si le titre n'est pas renseigné mais que le seuil est renseigné alors on renseigne le titre à partir de l'information contenue dans l'objet seuil

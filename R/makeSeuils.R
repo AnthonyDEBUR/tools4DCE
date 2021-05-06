@@ -33,6 +33,7 @@ makeSeuils <-
            CdUnite = NULL,
            type_seuil = NULL,
            specificites = NULL) {
+		 #browser()
     # chargement des données du package
     base_seuils <- tools4DCE::base_seuils
     couleurs_classes <- tools4DCE::couleurs_classes
@@ -88,6 +89,7 @@ makeSeuils <-
     if (!is.null(CdUnite)) {
       seuils_demandes <- seuils_demandes %>% mutate(UNITE = CdUnite)
     }
+		seuils_demandes$id <- 1:nrow(seuils_demandes)
 
     # jointure uniquement sur les colonnes renseignées
     if (nrow(seuils_demandes) > 0) {
@@ -95,39 +97,52 @@ makeSeuils <-
         inner_join(
           base_seuils,
           seuils_demandes,
-          by = names(seuils_demandes),
+          by = colnames(seuils_demandes)[colnames(seuils_demandes)!="id"],
           na_matches = "na"
         )
     }
+		
+		# les lignes sont répétées dans le tableau initial ici on ne veut qu'une ligne par élément du tableau 
+    # seuils_demandes, les colonnes choisies ne sont pas répétées
+		base_seuils_paronly <- base_seuils %>% 
+				select(NOM, SUPPORT, FRACTION, UNITE,  NOM_SEUIL, TYPE, TYPE_BORNE, SPECIFICITE, SYNONYMES, PARAMETRE, id) %>%
+				distinct()
+		if(nrow(base_seuils_paronly)!=nrow(seuils_demandes)) stop("Erreur interne, base_seuils_paronly et seuils_demandes doivent avoir le même nombre de lignes")
 
+		# je renomme cet object pour le distinguer de base_seuils, il inclut les couleurs
+		base_seuils_color <- base_seuils
     # on ajoute une colonne NOM_COULEUR à la base_seuils
-    base_seuils <-
-      base_seuils %>% left_join(couleurs_classes, by = c("CLASSE", "TYPE"))
+base_seuils_color <-
+		base_seuils_color %>% left_join(couleurs_classes, by = c("CLASSE", "TYPE"))
 
     # ajout des levels pour les classes de la base seuil
-    base_seuils$CLASSE <-
-      factor(base_seuils$CLASSE, levels = ordre_facteurs_qualite[, "CLASSE"])
 
+
+
+		
 	# on applique deux types d'arguments à la fonction setSeuils
   # les arguments NOM, NOM_SEUIL, TYPE, sont passés un par un
   # au premier passage le premier NOM, le premier seuil....
   # il faut aussi passer le tableau (qui lui reste le même) dans MoreArg
-	mapply(setSeuils,
-					nom_parametre = base_seuils$NOM,
-					nom_seuil = base_seuils$NOM_SEUIL,
-					type_seuil = base_seuils$TYPE,
-					code_parametre = base_seuils$PARAMETRE,
+liste_seuils <- mapply(setSeuils,
+					nom_parametre = base_seuils_paronly$NOM,
+					nom_seuil = base_seuils_paronly$NOM_SEUIL,
+					type_seuil = base_seuils_paronly$TYPE,
+					code_parametre = base_seuils_paronly$PARAMETRE,
 					synonymes_parametre =
-							base_seuils$SYNONYMES,
-					support = base_seuils$SUPPORT,
-					fraction = base_seuils$FRACTION,
-					code_unite = base_seuils$UNITE,
-					bornesinfinclue = ifelse(base_seuils$TYPE_BORNE =="BORNE_INF_INCLUE", T, F),
-					specificites = base_seuils$SPECIFICITE,
-					MoreArgs = list(seuils = data.frame(base_seuils %>% select(SEUILMIN, SEUILMAX, CLASSE, NOM_COULEUR)))
+							base_seuils_paronly$SYNONYMES,
+					support = base_seuils_paronly$SUPPORT,
+					fraction = base_seuils_paronly$FRACTION,
+					code_unite = base_seuils_paronly$UNITE,
+					bornesinfinclue = ifelse(base_seuils_paronly$TYPE_BORNE =="BORNE_INF_INCLUE", T, F),
+					specificites = base_seuils_paronly$SPECIFICITE,
+					id_=base_seuils_paronly$id,
+					MoreArgs = list(base_seuils_color=base_seuils_color)
 			)
 			
+			
+			
 	
-     return(liste_seuils[[1]])
+     return(liste_seuils)
 
   }

@@ -58,5 +58,5 @@
 #'
 #' @keywords datasets
 #'
-#' @examples head(data(base_seuils))
+#' @examples str(data(base_seuils))
 "base_seuils"
