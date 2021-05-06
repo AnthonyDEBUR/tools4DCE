@@ -130,6 +130,7 @@ groupe_tableau_distribution <-
     }
 
     # on calcule le tableau de distribution pour chaque paramètre (et on les fusionne)
+    tableau<-data.frame()
     for (i in 1:length(seuils))
     {
       donnees0 <- donnees %>% subset(indice_seuil123456 == i)
@@ -146,9 +147,8 @@ groupe_tableau_distribution <-
             code_unite =
               seuils[[i]]@code_unite
           )
-        ifelse(i == 1,
-               tableau <- tableau0,
-               tableau <- bind_rows(tableau0, tableau))
+
+               tableau <- bind_rows(tableau0, tableau)
       }
 
     }

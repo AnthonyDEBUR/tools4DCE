@@ -1,0 +1,46 @@
+---
+title: "Démonstration tools4DCE"
+author: "Anthony DE BURGHRAVE"
+date: "15/03/2021"
+output: powerpoint_presentation
+---
+
+```{r setup, include=FALSE, echo=F}
+knitr::opts_chunk$set(echo = T, warning=F)
+library(tools4DCE)
+
+
+
+```
+
+## chargement de données exportées depuis Naïades (zip)
+
+```{r echo=T}
+donnees<-import_Naiades_PC("export Naiades bzh 2019.zip")
+
+analyses<-donnees[["analyses"]]
+stations<-donnees[["operations"]]%>%select("CdStationMesureEauxSurface", "CoordXPrel", "CoordYPrel")%>%distinct()
+
+names(analyses)
+
+```
+
+## Chargement depuis le SANDRE du shape avec le périmètre du SAGE de la Vilaine
+
+```{r}
+SAGE <- charge_shp_SAGE(nom_sage = c("Vilaine"), crs=2154)
+plot(SAGE[,2])
+```
+
+## On filtre les données localisées sur le territoire du SAGE
+
+Pour celà on convertit tout d'abord les stations de mesures Naides en objet géographique
+```{r}
+
+stations<-st_as_sf(operations, coords=c("CoordXPrel", "CoordYPrel"))%>%distinct()
+
+
+```
+
+
+

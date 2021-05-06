@@ -57,7 +57,7 @@ la fonction renvoie un graphique de classe ggplot
 fonction pour afficher les graphiques des paramètres en couleurs (mode histogramme)
 }
 \examples{
-data<-data.frame(annee=seq(2010,2013), RsAna=c(12,15.5,67,18.3))
+data <- data.frame(annee=seq(2010,2013), RsAna=c(12,15.5,67,18.3))
 graphDCE_bar(data, seuils=makeSeuils(CdParametre = "1340", type_seuil="DCE"))
 
 }

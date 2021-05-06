@@ -22,6 +22,7 @@ SEUILS_QUALITATIFS;REJET STEP;darkgoldenrod2
 SEUILS_QUALITATIFS;PATURES;chartreuse
 NON_DCE;<NQE moyen;darkseagreen2
 NON_DCE;[NQE moyen - CMA[;lightgoldenrod1
+NON_DCE;< CMA;green3
 NON_DCE;> CMA;tomato
 NON_DCE;>NQE moyen;lightgoldenrod1
 DCE;<NQE moyen;green1

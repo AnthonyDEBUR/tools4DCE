@@ -381,8 +381,8 @@ graphDCE_points <-
       if (is.null(unite)) {
         if (!is.null(seuils)) {
           unite <-
-            tools4DCE::unites_sandre[tools4DCE::unites_sandre$`Code de l'unité de référence` ==
-                                       seuils[[1]]@code_unite, ]$`Symbole de l'unité de référence`[1]
+            tools4DCE::unites_sandre[tools4DCE::unites_sandre$`Code de l'unite de reference` ==
+                                       seuils[[1]]@code_unite, ]$`Symbole de l'unite de reference`[1]
         }
         else {
           unite <- ""
