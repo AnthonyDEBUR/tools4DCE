@@ -123,10 +123,6 @@ makeSeuils <-
 base_seuils_color <-
 		base_seuils_color %>% left_join(couleurs_classes, by = c("CLASSE", "TYPE"))
 
-    # ajout des levels pour les classes de la base seuil
-
-
-
 
 	# on applique deux types d'arguments à la fonction setSeuils
   # les arguments NOM, NOM_SEUIL, TYPE, sont passés un par un

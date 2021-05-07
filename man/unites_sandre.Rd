@@ -5,7 +5,7 @@
 \alias{unites_sandre}
 \title{unites_sandre}
 \format{
-An object of class \code{spec_tbl_df} (inherits from \code{tbl_df}, \code{tbl}, \code{data.frame}) with 631 rows and 11 columns.
+An object of class \code{spec_tbl_df} (inherits from \code{tbl_df}, \code{tbl}, \code{data.frame}) with 633 rows and 11 columns.
 }
 \usage{
 data(unites_sandre)
