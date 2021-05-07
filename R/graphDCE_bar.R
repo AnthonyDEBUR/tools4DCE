@@ -30,7 +30,7 @@ graphDCE_bar <-
            col_annee = "annee",
            col_valeurs = "RsAna",
            ymaxi = NULL,
-           auto_ymaxi = TRUE, 
+           auto_ymaxi = TRUE,
            unite = NULL,
            titre = NULL,
            taille_titre = 12,
@@ -38,7 +38,8 @@ graphDCE_bar <-
            nom_legende = NULL,
            taille_legende = 12,
            lignes = NULL,
-           alpha = 0.8)
+           alpha = 0.8,
+           seuils = NULL)
   {
     data1 <- as.data.frame(data)
 		if (is.factor(data1$annee)) {

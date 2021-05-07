@@ -17,7 +17,8 @@ graphDCE_bar(
   nom_legende = NULL,
   taille_legende = 12,
   lignes = NULL,
-  alpha = 0.8
+  alpha = 0.8,
+  seuils = NULL
 )
 }
 \arguments{
