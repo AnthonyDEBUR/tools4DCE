@@ -39,4 +39,10 @@ plot(lieux_qual[,1])
 
 ```
 
+On peut également charger les stations d'épuration du territoire depuis l'atlas cartographique du SANDRE
+```{r}
+STEP<-charge_shp_STEP(shp_emprise=SAGE)
+plot(STEP[,1])
+```
+
 

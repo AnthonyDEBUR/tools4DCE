@@ -1,0 +1,108 @@
+---
+title: "Utilisation des fonctions graphiques"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Utilisation des fonctions graphiques}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+
+```{r message=FALSE, warning = FALSE}
+library(tools4DCE)
+```
+
+# Objets de classe seuil
+Le package tools4DCE a créé des objets S4 de classe seuils.
+Ces objets affectent à un ensemble paramètre, support, fraction, unités définis par leurs codes SANDRE, des classes de qualité ainsi que l'ordre et la couleur des classes de qualité.
+
+
+## Classes seuils prédéfinies
+Pour créer une liste de seuils prédéfinis à partir des fichiers de données il suffit de taper la commande makeSeuils().
+A ce jour `r length(makeSeuils())` seuils différents sont ainsi définis.
+On peut se limiter à créer la liste pour un ensemble de codes paramètres en renseignant l'argument CdParametre.
+Idem pour les codes support, fraction, pour les types de seuils (DCE ou NON_DCE), pour les spécificités (ex. SALMONICOLE ou CYPRINICOLE).
+
+```{r}
+tmp<-makeSeuils()
+tmp[100]
+
+
+test<-makeSeuils(CdParametre=c("1340", "1301"), specificites=c(NA, "CYPRINICOLE"), type_seuil = "DCE")
+print(test)
+```
+
+La liste de l'ensemble des seuils prédéfinis peut être obtenue de la façon suivante :
+La liste des paramètres concernés est la suivante :
+```{r}
+liste_des_seuils<-lapply(makeSeuils(), function(x) `@`( x , nom_parametre)[[1]])%>%unlist%>%sort%>%unique
+
+```
+# Graphiques
+
+Le package tools4DCE aide à réaliser des graphiques spécialement conçus pour des données de qualité des eaux.
+
+## Graphiques en mode points
+Le code suivant fourni un exemple de graphiques pour le paramètre codé 1340 (Nitrates).
+La zone grisée correspond à la limite de quantification.
+
+```{r fig.width=5}
+data0<-data.frame(DatePrel=Sys.Date() + sort(sample(1:500, 30)), RsAna=c(round(runif(30,0,100), 0)), LqAna=c(3))
+graphDCE_points(data0, seuils=makeSeuils(CdParametre = "1340", type_seuil="DCE"), affiche_LQ = T, ymini = 0)
+
+```
+
+Si on le souhaite, on peut zoomer sur le graphique et afficher les valeurs hors gamme sous forme de cases colorées à l'aid ede l'option ymaxi.
+
+```{r, fig.width=5}
+graphDCE_points(data0, seuils=makeSeuils(CdParametre = "1340", type_seuil="DCE"), affiche_LQ = T, ymini = 0, ymaxi=90)
+
+```
+
+Si le jeu de données comporte une donnée très largement supérieures aux autres, alors la fonction définira l'échelle visible sans prendre en compte cette valeur (qui apparaitra sous forme d'un rectangle coloré).
+
+```{r, fig.width=5}
+
+data0[10,"RsAna"]<-800
+graphDCE_points(data0, seuils=makeSeuils(CdParametre = "1340", type_seuil="DCE"), affiche_LQ = T, ymini = 0)
+
+```
+
+## Graphiques en mode barre
+On peut également réaliser des graphiques en barre, par exemple pour faire des bilans annuels
+
+```{r, fig.width=5}
+data<-data.frame(annee=seq(2010,2013), RsAna=c(12,15.5,67,18.3))
+graphDCE_bar(data, seuils=makeSeuils(CdParametre = "1340", type_seuil="DCE"),ymaxi=60)
+```
+
+## Graphiques boites à moustache
+
+```{r fig.width=5}
+data1<-data.frame(DatePrel=Sys.Date() + sort(sample(1:2000, 100)), RsAna=c(round(runif(100,0,100), 0)), LqAna=c(3))
+data1$mois<-format(data1$DatePrel, "%m")%>%factor(levels=c("07", "08", "09", "10", "11", "12", "01", "02", "03", "04", "05", "06"))
+seuil1<-seuils<-makeSeuils(CdParametre = "1340", type_seuil="DCE")
+graphDCE_boxplot(data1, seuils = seuil1)
+
+```
+
+# Bilan des quantifications
+
+Les fonctions suivantes permettent de faire le bilan, par exemple, sur les pesticides quantifiés sous forme de tableau.
+
+```{r}
+donnees<-data.frame(parametres=rep(c("1301", "1340", "1335"), 100), RsAna=sample(0.1:100, 300, replace=TRUE), LqAna=c(0.5,1,6))
+donnees<-donnees%>%mutate(RsAna=ifelse(RsAna<LqAna, LqAna, RsAna))
+donnees<-donnees%>%mutate(CdRqAna=ifelse(RsAna>LqAna, "1", ifelse(sample(1:100,5)>10,"10","1")))
+seuils<-makeSeuils(CdParametre=donnees$parametres%>%unique, specificites=c("CYPRINICOLE", rep(NA,2)), type_seuil = "DCE")
+tableau<-groupe_tableau_distribution(donnees, col_CdParametre="parametres", col_CdSupport=NULL, col_CdFraction=NULL, col_CdUnite=NULL, seuils = seuils)
+print(tableau)
+
+```
+
+Ces tableaux peuvent être mis sous forme graphique
+```{r fig.width=8}
+graphDCE_distribution(tableau)
+```
+
+
