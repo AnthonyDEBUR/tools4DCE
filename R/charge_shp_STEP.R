@@ -10,14 +10,22 @@
 #' @export
 charge_shp_STEP <- function(crs = 2154, shp_emprise = NULL) {
   # on charge le shp des SAGE de France à partir de l'atlas carto du SANDRE
+<<<<<<< HEAD
   url <- "https://services.sandre.eaufrance.fr/geo/odp"
+=======
+  url <- " https://services.sandre.eaufrance.fr/geo/odp"
+>>>>>>> d77751fc882076e6e8224628bf63026514d7fb7c
 
   sf_prov <- url %>%
     parse_url() %>%
     list_merge(
       query = list(
         service = "wfs",
+<<<<<<< HEAD
         version = "2.0.0",
+=======
+        version = "1.1.0",
+>>>>>>> d77751fc882076e6e8224628bf63026514d7fb7c
         # optional
         request = "GetFeature",
         typeName = "SysTraitementEauxUsees",
