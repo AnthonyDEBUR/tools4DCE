@@ -2,11 +2,11 @@
 #'
 #' charge sous forme d'objet sf le shape des ICPE depuis https://www.georisques.gouv.fr/donnees/bases-de-donnees/installations-industrielles
 #'
-#' @param nom_sage vecteur (optionnel) listant les périmètres de SAGE à retenir
+#' @param shp_emprise vecteur (optionnel) objet sf dans lequel on va récupérer les ICPE
 #' @param crs valeur du code de projection dans lequel renvoyer le résultat (par défaut Lambert 93, indiquer 4326 pour du wgs84)
 #'
-#' @return la fonction renvoie un objet sf avec l'emprise des SAGE sélectionnés et les attributs correspondants
-#' @examples Vilaine<-charge_shp_SAGE(nom_sage="Vilaine")
+#' @return la fonction renvoie un objet sf avec les ICPE de l'emprise indiquée
+#' @examples ICPE<-charge_shp_ICPE(nom_sage="Vilaine")
 #' @export
 charge_shp_ICPE <- function(crs = 2154, shp_emprise = NULL) {
   # on charge le shp des SAGE de France à partir de https://www.georisques.gouv.fr/donnees/bases-de-donnees/installations-industrielles
@@ -34,11 +34,9 @@ charge_shp_ICPE <- function(crs = 2154, shp_emprise = NULL) {
 
   unzip(tmp, exdir=tmp2)
 
-
-
   bel_regions <- read_sf(paste0(tmp2,"\\InstallationsClassees.shp"),crs = 4326)
 
-  # sélection des STEP dans l'emprise de découpe
+  # sélection des ICPE dans l'emprise de découpe
   if (!is.null(shp_emprise)) {
     # on reprojette dans en Lambert 93 avant decoupage
     bel_regions <- st_transform(bel_regions, crs = 2154)
@@ -50,5 +48,6 @@ charge_shp_ICPE <- function(crs = 2154, shp_emprise = NULL) {
 
   # on projette dans le crs de sortie
   bel_regions <- st_transform(bel_regions, crs = crs)
+
   return(bel_regions)
 }
