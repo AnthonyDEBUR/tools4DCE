@@ -37,11 +37,119 @@ charge_shp_STEP <- function(crs = 2154, shp_emprise = NULL) {
     shp_emprise <- st_transform(shp_emprise, crs = 2154)
 
     # on découpe par rapport à l'emprise de l'objet shp_emprise
-    bel_regions <- bel_regions[shp_emprise, ]
+    bel_regions <- bel_regions[shp_emprise,]
   }
 
   # on projette dans le crs de sortie
   bel_regions <- st_transform(bel_regions, crs = crs)
+
+  tmp <-
+    data.frame(
+      code = seq(0, 5, by = 1) %>% as.character(),
+      Type_station = c(
+        "Inconnue",
+        "Urbaine",
+        "Industrielle",
+        "Agricole",
+        "Privé",
+        "Mixte"
+      )
+    )
+  bel_regions$CdNatureSystTraitementEauxUsees <-
+    bel_regions$CdNatureSystTraitementEauxUsees %>% as.character()
+  bel_regions <-
+    left_join(bel_regions,
+              tmp,
+              by = c("CdNatureSystTraitementEauxUsees" = "code"))
+
+
+
+  # sélection des colonnes d’intérêt
+  bel_regions <-
+    bel_regions %>% select(
+      -c(
+        "gid",
+        "CdNatureSystTraitementEauxUsees",
+        "CoordXOuvrageDepollution":"CdProjCoordOuvrageDepollution",
+        "CdExistAutosurv":"CdAgglomerationAssainissement",
+        "CdCommunePrincipale":"LbCommune",
+        "SomChrgMaxEntree":"CdTypeOuvrageDepollution"
+      )
+    )
+
+
+  # chargement des performances épuratoires et autres attributs SISPEA depuis https://www.services.eaufrance.fr/donnees/telechargement
+  # boucle depuis 2008 jusqu'à l'année en cours (dans l'attente API hub eau interrogeable sur le code SANDRE station)
+
+  dates <- seq(2008, Sys.Date() %>% format("%Y") %>% as.numeric() - 1, by =
+                 1)
+
+  for (i in 1:length(dates))
+  {
+    fichier <-
+      paste0(
+        "https://www.services.eaufrance.fr/telechargement/donnees/SISPEA_FR_",
+        dates[i],
+        "_AC.zip"
+      )
+
+    # on dezip le fichier et on le lit dans via un dossier temporaire
+    tmp <- tempfile()
+    download.file(fichier, destfile = tmp, mode = "wb")
+    tmp2 <- tempdir()
+    unzip(tmp, exdir = tmp2)
+    ajout <-
+      read_excel(path = paste0(tmp2, "/SISPEA_FR_", dates[i], "_AC.xls"),
+                 sheet = "Ouvrages")
+    ajout$ANNEE <- dates[i]
+    ifelse(i == 1, sispea <- ajout, sispea <-
+             bind_rows(ajout, sispea))
+  }
+
+  # pour chaque ouvrage épuratoire on conserve la dernière année saisie
+  sispea <- sispea %>% subset(Statut != "En attente de saisie")
+  sispea <-
+    sispea %>% group_by(`Code SANDRE ouvrage`) %>% filter(ANNEE == max(ANNEE))
+
+  # changement de noms de colonnes avec noms explicites
+  sispea <-
+    sispea %>% dplyr::rename(
+      "qte_boues_t.MS_an" = "D203.0",
+      "Collecte_conforme_DERU" = "P203.3",
+      "Equipements_conformes_DERU" = "P204.3",
+      "Perf._epuratoires_conformes_DERU" = "P205.3",
+      "Taux_boues_conforme_DERU" = "P206.3",
+      "Perf._epuratoires_conformes_AP" = "P254.3",
+      "DBO5_entree_kg_j" = "VP.176",
+      "t_boues_evacuees" = "VP.209",
+      "nb_bilans_24h_conformes" = "VP.210",
+      "nb_bilans_24h_effectues" = "VP.211"
+    )
+
+  # ajout d'une url qui pointe vers le site eau france performance des services épuratoires
+  sispea$url_sispea <-
+    paste0(
+      "<a href='https://www.services.eaufrance.fr/donnees/service/",
+      sispea$`Id SISPEA de l'entité de gestion`,
+      "'>lien SISPEA</a>"
+    )
+
+  # suppression des informations non nécessaires
+  sispea <-
+    sispea %>% select(-c("DPT du siège de la coll.":"Id SISPEA ouvrage",-"Nom ouvrage"))
+
+  # on ajoute les infos SISPEA au fichier SANDRE
+  bel_regions <-
+    left_join(bel_regions,
+              sispea,
+              by = c("CdOuvrageDepollution" = "Code SANDRE ouvrage"))
+
+  bel_regions$url_sandre <-
+    paste0(
+      "<a href='https://www.sandre.eaufrance.fr/geo/SysTraitementEauxUsees/",
+      bel_regions$CdOuvrageDepollution,
+      "'>lien SANDRE</a>"
+    )
 
 
   return(bel_regions)

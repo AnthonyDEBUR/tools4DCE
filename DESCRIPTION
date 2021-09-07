@@ -27,5 +27,6 @@ Depends:
     tools,
     xml2,
     ows4R,
+    readxl,
     R (>= 2.10)
 
