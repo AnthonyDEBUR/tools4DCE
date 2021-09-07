@@ -37,7 +37,7 @@ charge_shp_STEP <- function(crs = 2154, shp_emprise = NULL) {
     shp_emprise <- st_transform(shp_emprise, crs = 2154)
 
     # on découpe par rapport à l'emprise de l'objet shp_emprise
-    bel_regions <- bel_regions[shp_emprise,]
+    bel_regions <- bel_regions[shp_emprise, ]
   }
 
   # on projette dans le crs de sortie
@@ -81,11 +81,14 @@ charge_shp_STEP <- function(crs = 2154, shp_emprise = NULL) {
   # chargement des performances épuratoires et autres attributs SISPEA depuis https://www.services.eaufrance.fr/donnees/telechargement
   # boucle depuis 2008 jusqu'à l'année en cours (dans l'attente API hub eau interrogeable sur le code SANDRE station)
 
-  dates <- seq(2008, Sys.Date() %>% format("%Y") %>% as.numeric() - 1, by =
-                 1)
+  dates <-
+    seq(2008, Sys.Date() %>% format("%Y") %>% as.numeric() - 1, by = 1)
+
+  sispea<-data.frame()
 
   for (i in 1:length(dates))
   {
+
     fichier <-
       paste0(
         "https://www.services.eaufrance.fr/telechargement/donnees/SISPEA_FR_",
@@ -95,15 +98,16 @@ charge_shp_STEP <- function(crs = 2154, shp_emprise = NULL) {
 
     # on dezip le fichier et on le lit dans via un dossier temporaire
     tmp <- tempfile()
-    download.file(fichier, destfile = tmp, mode = "wb")
+    try(download.file(fichier, destfile = tmp, mode = "wb"))
     tmp2 <- tempdir()
     unzip(tmp, exdir = tmp2)
-    ajout <-
+    try(ajout <-
       read_excel(path = paste0(tmp2, "/SISPEA_FR_", dates[i], "_AC.xls"),
-                 sheet = "Ouvrages")
-    ajout$ANNEE <- dates[i]
-    ifelse(i == 1, sispea <- ajout, sispea <-
+                 sheet = "Ouvrages"))
+    try(ajout$ANNEE <- dates[i])
+    ifelse(i == 1 | nrow(sispea)==0, sispea <- ajout, sispea <-
              bind_rows(ajout, sispea))
+    rm(ajout)
   }
 
   # pour chaque ouvrage épuratoire on conserve la dernière année saisie
@@ -111,16 +115,18 @@ charge_shp_STEP <- function(crs = 2154, shp_emprise = NULL) {
   sispea <-
     sispea %>% group_by(`Code SANDRE ouvrage`) %>% filter(ANNEE == max(ANNEE))
 
+  sispea$VP.176 <- round(sispea$VP.176 * 1000 / 60, 0)
+
   # changement de noms de colonnes avec noms explicites
   sispea <-
     sispea %>% dplyr::rename(
       "qte_boues_t.MS_an" = "D203.0",
       "Collecte_conforme_DERU" = "P203.3",
-      "Equipements_conformes_DERU" = "P204.3",
-      "Perf._epuratoires_conformes_DERU" = "P205.3",
-      "Taux_boues_conforme_DERU" = "P206.3",
-      "Perf._epuratoires_conformes_AP" = "P254.3",
-      "DBO5_entree_kg_j" = "VP.176",
+      "Equipements_conformes_DERU(%)" = "P204.3",
+      "Perf._epuratoires_conformes_DERU(%)" = "P205.3",
+      "Taux_boues_conforme_DERU(%)" = "P206.3",
+      "Perf._epuratoires_conformes_AP(%)" = "P254.3",
+      "EH_entree" = "VP.176",
       "t_boues_evacuees" = "VP.209",
       "nb_bilans_24h_conformes" = "VP.210",
       "nb_bilans_24h_effectues" = "VP.211"
@@ -136,7 +142,7 @@ charge_shp_STEP <- function(crs = 2154, shp_emprise = NULL) {
 
   # suppression des informations non nécessaires
   sispea <-
-    sispea %>% select(-c("DPT du siège de la coll.":"Id SISPEA ouvrage",-"Nom ouvrage"))
+    sispea %>% select(-c("DPT du siège de la coll.":"Id SISPEA ouvrage", -"Nom ouvrage"))
 
   # on ajoute les infos SISPEA au fichier SANDRE
   bel_regions <-
