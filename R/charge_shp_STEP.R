@@ -137,7 +137,7 @@ charge_shp_STEP <- function(crs = 2154, shp_emprise = NULL) {
     paste0(
       "<a href='https://www.services.eaufrance.fr/donnees/service/",
       sispea$`Id SISPEA de l'entité de gestion`,
-      "'>lien SISPEA</a>"
+      "' target='_blank'>lien SISPEA</a>"
     )
 
   # suppression des informations non nécessaires
@@ -154,7 +154,7 @@ charge_shp_STEP <- function(crs = 2154, shp_emprise = NULL) {
     paste0(
       "<a href='https://www.sandre.eaufrance.fr/geo/SysTraitementEauxUsees/",
       bel_regions$CdOuvrageDepollution,
-      "'>lien SANDRE</a>"
+      "' target='_blank'>lien SANDRE</a>"
     )
 
 
