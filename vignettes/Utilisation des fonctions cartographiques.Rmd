@@ -49,8 +49,11 @@ plot(STEP[,1])
 Ou les sites ICPE (élevage et industrie).
 ```{r}
 ICPE<-charge_shp_ICPE(shp_emprise=SAGE)
-plot(ICPE[,1])
-str(ICPE)
+plot(ICPE$shp[,1])
+
+
+
+
 ```
 
 
