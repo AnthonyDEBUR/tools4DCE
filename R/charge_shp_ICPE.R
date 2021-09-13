@@ -59,6 +59,8 @@ charge_shp_ICPE <- function(crs = 2154, shp_emprise = NULL) {
            bel_regions$url_fiche,
            "' target='_blank'>Lien georisques</a>")
 
+  bel_regions<-bel_regions%>%select(-c("x", "y", "epsg", "num_dep":"code_naf", "regime", "seveso", "rayon", "precis_loc"))
+
   # téléchargement des inventaires des émissions polluantes https://www.georisques.gouv.fr/donnees/bases-de-donnees/installations-industrielles-rejetant-des-polluants
   dates <-
     seq(2003, Sys.Date() %>% format("%Y") %>% as.numeric(), by = 1)
