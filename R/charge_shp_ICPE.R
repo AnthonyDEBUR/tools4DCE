@@ -61,6 +61,20 @@ charge_shp_ICPE <- function(crs = 2154, shp_emprise = NULL) {
 
   bel_regions<-bel_regions%>%select(-c("x", "y", "epsg", "num_dep":"code_naf", "regime", "seveso", "rayon", "precis_loc"))
 
+  # On recode les élevages soumis à autorisation dans les familles d'élevage et non dans la rubrique "Industries"
+  bel_regions <- bel_regions %>% mutate(
+    famille_ic = case_when(
+      lib_naf ==
+        "Élevage de volailles" ~
+        "Volailles",
+      lib_naf == "Élevage de porcins" ~ "Porcs",
+      lib_naf == "Élevage d'autres bovins et de buffles" ~ "Bovins",
+      lib_naf == "Élevage de vaches laitières" ~ "Bovins",
+
+      T ~ famille_ic
+    )
+  )
+
   # téléchargement des inventaires des émissions polluantes https://www.georisques.gouv.fr/donnees/bases-de-donnees/installations-industrielles-rejetant-des-polluants
   dates <-
     seq(2003, Sys.Date() %>% format("%Y") %>% as.numeric(), by = 1)
