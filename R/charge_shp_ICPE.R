@@ -138,6 +138,7 @@ charge_shp_ICPE <- function(crs = 2154, shp_emprise = NULL) {
 
   emissions <- emissions %>% select(-nom_etablissement)
 
+
   prelevements$identifiant <- paste0("0", prelevements$identifiant)
   prelevements <-
     prelevements %>% pivot_longer(
@@ -148,6 +149,65 @@ charge_shp_ICPE <- function(crs = 2154, shp_emprise = NULL) {
     )
   prelevements <- prelevements %>% group_by(identifiant, milieu) %>%
     pivot_wider(names_from = annee, values_from = value)
+
+  prelevements <- prelevements %>% select(-nom_etablissement)
+
+
+  # ajout d'un tableau avec les emissions dans bel_regions
+
+  bel_regions$emissions<-NA
+
+  id_em<-unique(emissions$identifiant)
+  for(i in 1:length(id_em))
+  {
+    print(paste0(i, " sur ", length(id_em)))
+
+    # on choisit les emissions du site concerné.
+    tmp<-emissions%>%subset(identifiant==id_em[i])
+
+    # On ne conserve que les colonnes de date non totalement vides
+    tmp<-tmp%>% select_if(~!all(is.na(.)))%>%ungroup
+
+    # selection des 3 dernières années renseignées
+    tmp<-tmp%>%select(milieu:unite, names(tmp)%>%as.numeric%>%sort%>%tail(3)%>%as.character)
+
+    # On supprime les lignes composées exclusivement de NA
+    tmp<-tmp%>% filter(if_any(starts_with("20"), ~ !is.na(.)))
+
+    bel_regions[bel_regions$code_s3ic==id_em[i],]$emissions<-tmp%>%
+      tableHTML()%>%as.character
+
+  }
+
+
+  # ajout d'un tableau avec les prélèvements dans bel_regions
+
+  bel_regions$prelevements<-NA
+
+  id_em<-unique(prelevements$identifiant)
+  for(i in 1:length(id_em))
+  {
+    print(paste0(i, " sur ", length(id_em)))
+
+    # on choisit les prelevements du site concerné.
+    tmp<-prelevements%>%subset(identifiant==id_em[i])
+
+    # On ne conserve que les colonnes de date non totalement vides
+    tmp<-tmp%>% select_if(~!all(is.na(.)))%>%ungroup
+
+    # selection des 3 dernières années renseignées
+    tmp<-tmp%>%select(milieu, names(tmp)%>%as.numeric%>%sort%>%tail(3)%>%as.character)
+
+    # On supprime les lignes composées exclusivement de NA
+    tmp<-tmp%>% filter(if_any(starts_with("20"), ~ !is.na(.)))
+
+    bel_regions[bel_regions$code_s3ic==id_em[i],]$prelevements<-tmp%>%
+      tableHTML()%>%as.character
+
+  }
+
+
+
 
 
   return(list(

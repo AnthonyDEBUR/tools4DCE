@@ -28,5 +28,6 @@ Depends:
     xml2,
     ows4R,
     readxl,
+    tableHTML,
     R (>= 2.10)
 
