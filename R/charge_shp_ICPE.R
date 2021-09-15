@@ -47,7 +47,7 @@ charge_shp_ICPE <- function(crs = 2154, shp_emprise = NULL) {
     shp_emprise <- st_transform(shp_emprise, crs = 2154)
 
     # on découpe par rapport à l'emprise de l'objet shp_emprise
-    bel_regions <- bel_regions[shp_emprise, ]
+    bel_regions <- bel_regions[shp_emprise,]
   }
 
   # on projette dans le crs de sortie
@@ -59,7 +59,20 @@ charge_shp_ICPE <- function(crs = 2154, shp_emprise = NULL) {
            bel_regions$url_fiche,
            "' target='_blank'>Lien georisques</a>")
 
-  bel_regions<-bel_regions%>%select(-c("x", "y", "epsg", "num_dep":"code_naf", "regime", "seveso", "rayon", "precis_loc", "url_fiche"))
+  bel_regions <-
+    bel_regions %>% select(
+      -c(
+        "x",
+        "y",
+        "epsg",
+        "num_dep":"code_naf",
+        "regime",
+        "seveso",
+        "rayon",
+        "precis_loc",
+        "url_fiche"
+      )
+    )
 
   # On recode les élevages soumis à autorisation dans les familles d'élevage et non dans la rubrique "Industries"
   bel_regions <- bel_regions %>% mutate(
@@ -141,6 +154,9 @@ charge_shp_ICPE <- function(crs = 2154, shp_emprise = NULL) {
 
   prelevements$identifiant <- paste0("0", prelevements$identifiant)
   prelevements <-
+    prelevements %>% subset(identifiant %in% bel_regions$code_s3ic)
+
+  prelevements <-
     prelevements %>% pivot_longer(
       cols = starts_with("prelevements"),
       names_to = "milieu",
@@ -155,54 +171,60 @@ charge_shp_ICPE <- function(crs = 2154, shp_emprise = NULL) {
 
   # ajout d'un tableau avec les emissions dans bel_regions
 
-  bel_regions$emissions<-NA
+  bel_regions$emissions <- NA
 
-  id_em<-unique(emissions$identifiant)
-  for(i in 1:length(id_em))
+  id_em <- unique(emissions$identifiant)
+  for (i in 1:length(id_em))
   {
     print(paste0(i, " sur ", length(id_em)))
 
     # on choisit les emissions du site concerné.
-    tmp<-emissions%>%subset(identifiant==id_em[i])
+    tmp <- emissions %>% subset(identifiant == id_em[i])
 
     # On ne conserve que les colonnes de date non totalement vides
-    tmp<-tmp%>% select_if(~!all(is.na(.)))%>%ungroup
+    tmp <- tmp %>% select_if( ~ !all(is.na(.))) %>% ungroup
 
     # selection des 3 dernières années renseignées
-    tmp<-tmp%>%select(milieu:unite, names(tmp)%>%as.numeric%>%sort%>%tail(4)%>%as.character)
+    tmp <-
+      tmp %>% select(milieu:unite,
+                     names(tmp) %>% as.numeric %>% sort %>% tail(4) %>% as.character)
 
     # On supprime les lignes composées exclusivement de NA
-    tmp<-tmp%>% filter(if_any(starts_with("20"), ~ !is.na(.)))
+    tmp <- tmp %>% filter(if_any(starts_with("20"), ~ !is.na(.)))
 
-    bel_regions[bel_regions$code_s3ic==id_em[i],]$emissions<-tmp%>%
-      tableHTML()%>%as.character
+    bel_regions[bel_regions$code_s3ic == id_em[i], ]$emissions <-
+      tmp %>%
+      tableHTML() %>% as.character
 
   }
 
 
   # ajout d'un tableau avec les prélèvements dans bel_regions
 
-  bel_regions$prelevements<-NA
+  bel_regions$prelevements <- NA
 
-  id_em<-unique(prelevements$identifiant)
-  for(i in 1:length(id_em))
+  id_em <- unique(prelevements$identifiant)
+  for (i in 1:length(id_em))
   {
     print(paste0(i, " sur ", length(id_em)))
 
     # on choisit les prelevements du site concerné.
-    tmp<-prelevements%>%subset(identifiant==id_em[i])
+    tmp <- prelevements %>% subset(identifiant == id_em[i])
 
     # On ne conserve que les colonnes de date non totalement vides
-    tmp<-tmp%>% select_if(~!all(is.na(.)))%>%ungroup
+    tmp <- tmp %>% select_if( ~ !all(is.na(.))) %>% ungroup
 
     # selection des 3 dernières années renseignées
-    tmp<-tmp%>%select(milieu, names(tmp)%>%as.numeric%>%sort%>%tail(4)%>%as.character)
+    tmp <-
+      tmp %>% select(milieu,
+                     names(tmp) %>% as.numeric %>% sort %>% tail(4) %>% as.character)
 
     # On supprime les lignes composées exclusivement de NA
-    tmp<-tmp%>% filter(if_any(starts_with("20"), ~ !is.na(.)))
+    tmp <- tmp %>% filter(if_any(starts_with("20"), ~ !is.na(.)))
 
-    bel_regions[bel_regions$code_s3ic==id_em[i],]$prelevements<-tmp%>%
-      tableHTML()%>%as.character
+    bel_regions[bel_regions$code_s3ic == id_em[i], ]$prelevements <-
+      tmp %>%
+      tableHTML() %>% as.character
 
   }
 
