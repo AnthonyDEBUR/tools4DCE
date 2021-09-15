@@ -157,6 +157,11 @@ charge_shp_STEP <- function(crs = 2154, shp_emprise = NULL) {
       "' target='_blank'>lien SANDRE</a>"
     )
 
+  bel_regions$url_portail_assainissement<-    paste0(
+    "<a href='http://assainissement.developpement-durable.gouv.fr/fiche.php?code=",
+    bel_regions$CdOuvrageDepollution,
+    "' target='_blank'>lien portail assainissement</a>"
+  )
 
   return(bel_regions)
 }

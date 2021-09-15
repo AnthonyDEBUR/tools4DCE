@@ -59,7 +59,7 @@ charge_shp_ICPE <- function(crs = 2154, shp_emprise = NULL) {
            bel_regions$url_fiche,
            "' target='_blank'>Lien georisques</a>")
 
-  bel_regions<-bel_regions%>%select(-c("x", "y", "epsg", "num_dep":"code_naf", "regime", "seveso", "rayon", "precis_loc"))
+  bel_regions<-bel_regions%>%select(-c("x", "y", "epsg", "num_dep":"code_naf", "regime", "seveso", "rayon", "precis_loc", "url_fiche"))
 
   # On recode les élevages soumis à autorisation dans les familles d'élevage et non dans la rubrique "Industries"
   bel_regions <- bel_regions %>% mutate(
@@ -169,7 +169,7 @@ charge_shp_ICPE <- function(crs = 2154, shp_emprise = NULL) {
     tmp<-tmp%>% select_if(~!all(is.na(.)))%>%ungroup
 
     # selection des 3 dernières années renseignées
-    tmp<-tmp%>%select(milieu:unite, names(tmp)%>%as.numeric%>%sort%>%tail(3)%>%as.character)
+    tmp<-tmp%>%select(milieu:unite, names(tmp)%>%as.numeric%>%sort%>%tail(4)%>%as.character)
 
     # On supprime les lignes composées exclusivement de NA
     tmp<-tmp%>% filter(if_any(starts_with("20"), ~ !is.na(.)))
@@ -196,7 +196,7 @@ charge_shp_ICPE <- function(crs = 2154, shp_emprise = NULL) {
     tmp<-tmp%>% select_if(~!all(is.na(.)))%>%ungroup
 
     # selection des 3 dernières années renseignées
-    tmp<-tmp%>%select(milieu, names(tmp)%>%as.numeric%>%sort%>%tail(3)%>%as.character)
+    tmp<-tmp%>%select(milieu, names(tmp)%>%as.numeric%>%sort%>%tail(4)%>%as.character)
 
     # On supprime les lignes composées exclusivement de NA
     tmp<-tmp%>% filter(if_any(starts_with("20"), ~ !is.na(.)))
@@ -207,12 +207,5 @@ charge_shp_ICPE <- function(crs = 2154, shp_emprise = NULL) {
   }
 
 
-
-
-
-  return(list(
-    shp = bel_regions,
-    emissions = emissions,
-    prelevements = prelevements
-  ))
+  return(bel_regions)
 }
