@@ -180,7 +180,7 @@ charge_shp_STEP <-
           read_html(
             paste0(
               "http://assainissement.developpement-durable.gouv.fr/fiche.php?code=",
-              "0422314S0001"
+              liste_step[i]
             )
           )
         tmp <- webpage %>%
