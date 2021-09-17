@@ -4,15 +4,13 @@
 #'
 #' @param crs valeur du code de projection dans lequel renvoyer le résultat (par défaut Lambert 93, indiquer 4326 pour du wgs84)
 #' @param shp_emprise objet SF qui délimite le périmètre sur lequel il faut renvoyer les stations
-#' @param recupere_XY_pts_rejets si ce paramètre vaut vrai, alors le script interroge le site assainissement-durable.gouv.fr pour récupérer les XY des pts de rejet
 #'
 #' @return la fonction renvoie un objet sf des STEP tel que disponible sous l'atlas cartographique du SANDRE
 #' @examples StepFR<-charge_shp_STEP()
 #' @export
 charge_shp_STEP <-
   function(crs = 2154,
-           shp_emprise = NULL,
-           recupere_XY_pts_rejets = F) {
+           shp_emprise = NULL) {
     # on charge le shp des SAGE de France à partir de l'atlas carto du SANDRE
 
     url <- "https://services.sandre.eaufrance.fr/geo/odp"
@@ -41,7 +39,7 @@ charge_shp_STEP <-
       shp_emprise <- st_transform(shp_emprise, crs = 2154)
 
       # on découpe par rapport à l'emprise de l'objet shp_emprise
-      bel_regions <- bel_regions[shp_emprise, ]
+      bel_regions <- bel_regions[shp_emprise,]
     }
 
     # on projette dans le crs de sortie
@@ -147,7 +145,7 @@ charge_shp_STEP <-
 
     # suppression des informations non nécessaires
     sispea <-
-      sispea %>% select(-c("DPT du siège de la coll.":"Id SISPEA ouvrage", -"Nom ouvrage"))
+      sispea %>% select(-c("DPT du siège de la coll.":"Id SISPEA ouvrage",-"Nom ouvrage"))
 
     # on ajoute les infos SISPEA au fichier SANDRE
     bel_regions <-
@@ -169,32 +167,75 @@ charge_shp_STEP <-
     )
 
     # récupération des XY des pts de rejet
-    if (recupere_XY_pts_rejets)
-    {
-      bel_regions$Xrejet <- NA
-      bel_regions$Yrejet <- NA
-      liste_step <- bel_regions$CdOuvrageDepollution %>% unique()
-      for (i in 1:length(liste_step))
-      {
-        webpage <-
-          read_html(
-            paste0(
-              "http://assainissement.developpement-durable.gouv.fr/fiche.php?code=",
-              liste_step[i]
-            )
-          )
-        tmp <- webpage %>%
-          rvest::html_element("body") %>% rvest::html_children() %>% rvest::html_children()
-        tmp <- tmp[[5]] %>% rvest::html_children()
-        tmp <- tmp[[7]] %>% as.character %>% str_split(",", simplify = T)
-        bel_regions[bel_regions$CdOuvrageDepollution == liste_step[i], ]$Xrejet <-
-          tmp[1, 1] %>% gsub("[^0-9.-]", "", .) %>% as.numeric
-        bel_regions[bel_regions$CdOuvrageDepollution == liste_step[i], ]$Yrejet <-
-          tmp[1, 2] %>% as.numeric
-      }
 
+    rejets <-
+      data.frame(
+        CdOuvrageDepollution = bel_regions$CdOuvrageDepollution,
+        Xrejet = NA,
+        Yrejet = NA
+      )
+
+
+    for (i in 1:length(bel_regions$CdOuvrageDepollution))
+    {
+      webpage <-
+        read_html(
+          paste0(
+            "http://assainissement.developpement-durable.gouv.fr/fiche.php?code=",
+            bel_regions$CdOuvrageDepollution[i]
+          )
+        )
+      tmp <- webpage %>%
+        rvest::html_element("body") %>% rvest::html_children() %>% rvest::html_children()
+      tmp <- tmp[[5]] %>% rvest::html_children()
+      tmp <-
+        tmp[[7]] %>% as.character %>% str_split(",", simplify = T)
+      rejets[i,]$Yrejet <-
+        tmp[1, 1] %>% gsub("[^0-9.-]", "", .) %>% as.numeric
+      rejets[i,]$Xrejet <-
+        tmp[1, 2] %>% as.numeric
+    }
+
+    # conversion des points de rejet en shp
+    rejets <-
+      st_as_sf(rejets[!is.na(rejets$Xrejet), ],
+               coords = c("Xrejet", "Yrejet"),
+               crs = 4326)
+
+
+    # reprojection dans le crs demandé
+    rejets <- st_transform(rejets, crs = crs)
+
+    # creation shp_liaison STEP / pt rejet
+
+    coord_rejets <- rejets %>%
+      mutate(lat2 = unlist(map(rejets$geometry, 1)),
+             lon2 = unlist(map(rejets$geometry, 2))) %>% as.data.frame
+
+    coord_STEP <- bel_regions %>%
+      mutate(lat1 = unlist(map(bel_regions$geometry, 1)),
+             lon1 = unlist(map(bel_regions$geometry, 2))) %>% as.data.frame
+
+
+    tmp <-
+      left_join(coord_rejets, coord_STEP, by = "CdOuvrageDepollution") %>%
+      select("CdOuvrageDepollution", "lon1", "lat1", "lon2", "lat2")
+
+    make_line <- function(lon1, lat1, lon2, lat2) {
+      st_linestring(matrix(c(lat1, lat2,lon1, lon2), 2, 2))
     }
 
 
-    return(bel_regions)
+    tmp<-tmp %>%
+      select(-CdOuvrageDepollution) %>%
+      pmap(make_line) %>%
+      st_as_sfc(crs = crs) %>%
+      {
+        tibble(CdOuvrageDepollution = tmp$CdOuvrageDepollution, geometry = .)
+      } %>%
+      st_sf()
+
+
+
+  return(list(shp=bel_regions, shp_rejets=rejets, liaison_STEP_rejet=tmp))
   }
