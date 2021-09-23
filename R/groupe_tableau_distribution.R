@@ -13,7 +13,7 @@
 #' @param col_tri : nom optionnel de la colonne complémentaire sur laquelle on veut faire le bilan (en plus des paramètres). Exemple : l'année des données
 #' @param seuils : liste d'objets de classe seuil
 #'
-#' @return la fonction renvoie un chiffre indiquant le nombre de décimales
+#' @return la fonction renvoie un tableau qui liste, pour chaque classe, le nombre d'analyses correspondant
 #'
 #'
 #' @examples donnees<-data.frame(parametres=rep(c("1301", "1340", "1335"), 100), RsAna=sample(0.1:100, 300, replace=TRUE), LqAna=c(0.5,1,6))
