@@ -108,14 +108,12 @@ makeSeuils <-
  #   }
 
 
-
-
 		# les lignes sont répétées dans le tableau initial ici on ne veut qu'une ligne par élément du tableau
     # seuils_demandes, les colonnes choisies ne sont pas répétées
 		base_seuils_paronly <- base_seuils %>%
 				select(NOM, SUPPORT, FRACTION, UNITE,  NOM_SEUIL, TYPE, TYPE_BORNE, SPECIFICITE, SYNONYMES, PARAMETRE, id) %>%
 				distinct()
-		if(nrow(base_seuils_paronly)!=nrow(seuils_demandes)) stop("Erreur interne, base_seuils_paronly et seuils_demandes doivent avoir le même nombre de lignes")
+		if(nrow(base_seuils_paronly)!=nrow(seuils_demandes)) stop(paste0("Plusieurs seuils différents sont possibles pour un même paramètre (ex. 2 températures différentes). Merci de préciser les critères de construction des seuils.\n"))
 
 		# je renomme cet object pour le distinguer de base_seuils, il inclut les couleurs
 		base_seuils_color <- base_seuils
@@ -143,8 +141,6 @@ liste_seuils <- mapply(setSeuils,
 					id_=base_seuils_paronly$id,
 					MoreArgs = list(base_seuils_color=base_seuils_color)
 			)
-
-
 
 
      return(liste_seuils)

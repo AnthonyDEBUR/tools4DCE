@@ -39,17 +39,20 @@ plot(lieux_qual[,1])
 
 ```
 
-On peut également charger les stations d'épuration du territoire depuis l'atlas cartographique du SANDRE
+On peut également charger les stations d'épuration du territoire depuis l'atlas cartographique du SANDRE complété des points de rejets issus du site http://assainissement.developpement-durable.gouv.fr et d'un objet sf liant STEP et points de rejet.
 ```{r}
 STEP<-charge_shp_STEP(shp_emprise=SAGE)
-plot(STEP[,1])
+plot(STEP$shp[,1])
+plot(STEP$shp_rejets[,1])
+plot(STEP$liaison_STEP_rejet[,1])
+
 ```
 
 
 Ou les sites ICPE (élevage et industrie).
 ```{r}
 ICPE<-charge_shp_ICPE(shp_emprise=SAGE)
-plot(ICPE$shp[,1])
+plot(ICPE[,1])
 
 
 

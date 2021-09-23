@@ -3,6 +3,7 @@ library(tools4DCE)
 library(openxlsx)
 
 # creation fichier xlsx à ajouter à la base seuils. Ce fichier contient seulement les seuils INERIS ecotox
+# https://substances.ineris.fr/fr/page/9
 donnees_ineris <-
   read.xlsx("tables_ref\\DRC-18-158732-03350A_NQE-VGE_INERIS_v20180416.xlsx",
             sheet = "Toutes valeurs seuils_201804") %>% subset(!is.na(CODE.SANDRE)) %>%

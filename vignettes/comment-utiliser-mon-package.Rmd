@@ -53,10 +53,25 @@ head(ordre_facteurs_qualite)
 Un objet de classe seuil sert à paramétrer les fonds colorer des graphiques. 
 Il précise l'intervalle entre lequel il faut appliquer une classe de qualité et la couleur de la représentation graphique correspondante.
 
+
 Pour créer un objet de classe seuil on utilise la fonction setSeuils
 
 ```{r}
-setSeuils(nom_parametre="parametre test",nom_seuil="AM 25 janv 2010",type_seuil="DCE", code_parametre="1301", synonymes_parametre = "1301",support="3",code_unite="27", seuils=tools4DCE::base_seuils%>%subset(NOM=="TEMPERATURE" & SPECIFICITE=="CYPRINICOLE")%>%left_join(couleurs_classes, by=c("CLASSE", "TYPE"))%>%select(SEUILMIN, SEUILMAX, CLASSE, NOM_COULEUR)%>%mutate_at("CLASSE", factor),bornesinfinclue=T)
+
+
+setSeuils(
+  nom_parametre = "parametre test",
+  nom_seuil = "AM 25 janv 2010",
+  type_seuil = "DCE",
+  code_parametre = "1301",
+  synonymes_parametre = "1301",
+  support = "3",
+  code_unite = "27",
+  base_seuils_color = tools4DCE::base_seuils %>% subset(NOM == "TEMPERATURE" &
+                                               SPECIFICITE == "CYPRINICOLE") %>% left_join(couleurs_classes, by = c("CLASSE", "TYPE")) %>%
+    select(SEUILMIN, SEUILMAX, CLASSE, NOM_COULEUR) %>% mutate_at("CLASSE", factor),
+  bornesinfinclue = T
+)
 
 ```
 
@@ -66,17 +81,11 @@ On peut se limiter à créer la liste pour un ensemble de codes paramètres en r
 Idem pour les codes support, fraction, pour les types de seuils (DCE ou NON_DCE), pour les spécificités (ex. SALMONICOLE ou CYPRINICOLE).
 
 ```{r}
-tmp<-makeSeuils()
-tmp[100]
-
 
 test<-makeSeuils(CdParametre=c("1340", "1301"), specificites=c(NA, "CYPRINICOLE"), type_seuil = "DCE")
 print(test)
 ```
-La liste des paramètres concernés est la suivante :
-```{r}
-lapply(tmp, function(x) `@`( x , nom_parametre)[[1]])%>%unlist%>%sort%>%unique
-```
+
 # Exemples de graphs en mode points
 
 ```{r fig.width=5}
@@ -147,6 +156,8 @@ donnees<-donnees%>%mutate(CdRqAna=ifelse(RsAna>LqAna, "1", ifelse(sample(1:100,5
 seuils<-makeSeuils(CdParametre=donnees$parametres%>%unique, specificites=c("CYPRINICOLE", rep(NA,2)), type_seuil = "DCE")
 bilan<-groupe_tableau_distribution(donnees, col_CdParametre="parametres", col_CdSupport=NULL, col_CdFraction=NULL, col_CdUnite=NULL, seuils = seuils)
 print(bilan)
+
+seuils$TEMPERATURE@seuils
 ```
 
 et de faire une sortie graphique de ce bilan

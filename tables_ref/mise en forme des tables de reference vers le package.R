@@ -41,8 +41,11 @@ download.file(
   mode = "wb",
   cacheOK = T
 )
+Sys.setenv("VROOM_CONNECTION_SIZE"=5000000)
+
 parametres_sandre <-
   read_delim("param.csv.gz", delim = ";", skip = 1)
+
 parametres_sandre$CdParametre <-
   as.character(parametres_sandre$CdParametre)
 # suppression des colonnes remplies de NA

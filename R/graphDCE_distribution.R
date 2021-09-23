@@ -62,7 +62,7 @@ graphDCE_distribution <-
       if(!is.numeric(nb_top)){stop("le parametre nb_top n'est pas un nombre entier positif.")}
       if(nb_top%%1!=0 | nb_top<1){stop("le parametre nb_top n'est pas un nombre entier positif.")}
       donnees<-donnees%>%subset(parametre%in%levels(donnees$parametre)[1:nb_top])
-      sous_titre<-paste0("Top ", nb_top," des paramètres")
+      sous_titre<-paste0("Top ", nb_top," des paramètres recherchés")
     }
 
     graph <-
@@ -82,7 +82,7 @@ graphDCE_distribution <-
         subtitle = sous_titre,
         x = "",
         y = "",
-        alpha = "QUANTIFICATION"
+        alpha = "QUANTIFICATION (a = nb de données)"
       ) +
       theme(
         legend.position = "bottom",

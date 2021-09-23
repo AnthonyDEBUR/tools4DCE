@@ -5,7 +5,7 @@
 #' @param crs valeur du code de projection dans lequel renvoyer le résultat (par défaut Lambert 93, indiquer 4326 pour du wgs84)
 #' @param shp_emprise objet SF qui délimite le périmètre sur lequel il faut renvoyer les stations
 #'
-#' @return la fonction renvoie une liste composée d'un slot shp : objet sf des STEP tel que disponible sous l'atlas cartographique du SANDRE
+#' @return la fonction renvoie une liste composée d'un slot shp : objet sf des STEP tel que disponible sous l'atlas cartographique du SANDRE.La table jointe intègre les dernières valeurs de rejet connues par cette STEP sous SYSPEA.
 #' @return la fonction renvoie une liste composée d'un slot shp_rejets : objet sf des points de rejets des STEP obtenus à partir des fiches stations du site http://assainissement.developpement-durable.gouv.fr
 #' @return la fonction renvoie une liste composée d'un slot liaison_STEP_rejet : objet sf avec des lignes entre STEP et points de rejets.
 #'
