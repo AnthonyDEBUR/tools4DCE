@@ -12,10 +12,15 @@ charge_shp_ICPE(crs = 2154, shp_emprise = NULL)
 \item{shp_emprise}{vecteur (optionnel) objet sf dans lequel on va récupérer les ICPE}
 }
 \value{
-la fonction renvoie un objet sf avec les ICPE de l'emprise indiquée
+la fonction renvoie une liste avec un slot shp = objet sf avec les ICPE de l'emprise indiquée,
+
+avec un slot rejets = table avec les rejets référencés dans le registre national des émissions polluantes,
+
+et un slot prelevements avec les prélèvements d'eau issus de ce registre
 }
 \description{
-charge sous forme d'objet sf le shape des ICPE depuis https://www.georisques.gouv.fr/donnees/bases-de-donnees/installations-industrielles
+charge sous forme d'objet le shape des ICPE depuis https://www.georisques.gouv.fr/donnees/bases-de-donnees/installations-industrielles
+et les émissions polluantes depuis https://www.georisques.gouv.fr/donnees/bases-de-donnees/installations-industrielles-rejetant-des-polluants
 }
 \examples{
 ICPE<-charge_shp_ICPE(nom_sage="Vilaine")

@@ -33,14 +33,14 @@ la fonction renvoie une liste d'objets de class seuil
 Créé automatiquement une liste de seuils à partir des données stockées dans les objets base_seuils, couleurs_classes et ordre_facteurs_qualite
 }
 \examples{
-# crÃ©Ã© l'ensemble des seuils
+# créé l'ensemble des seuils
 makeSeuils()
 
 # liste l'ensemble des parametres disponibles
 lapply(makeSeuils(), function(x) `@`( x , nom_parametre)[[1]])
 
 
-# gÃ©nÃ¨re les seuils pour les paramÃ¨tres 1340, 1301 avec la spÃ©cificitÃ© non renseignÃ©e ou CYPRINICOLE et un type de seuil DCE :
+# génère les seuils pour les paramètres 1340, 1301 avec la spécificité non renseignée ou CYPRINICOLE et un type de seuil DCE :
 test<-makeSeuils(CdParametre=c("1340", "1301"), specificites=c(NA, "CYPRINICOLE"), type_seuil = "DCE")
 print(test)
 

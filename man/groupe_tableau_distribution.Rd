@@ -38,7 +38,7 @@ groupe_tableau_distribution(
 \item{col_CdSupport:}{nom de la colonne avec les codes SANDRE des supports analysés (par défaut : CdSupport), renseigner NULL si pas de colonne correspondant}
 }
 \value{
-la fonction renvoie un chiffre indiquant le nombre de décimales
+la fonction renvoie un tableau qui liste, pour chaque classe, le nombre d'analyses correspondant
 }
 \description{
 fonction pour réaliser grouper les tableaux de distribution par paramètre et par un éventuel autre critère optionnel

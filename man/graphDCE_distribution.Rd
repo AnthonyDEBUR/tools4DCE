@@ -10,7 +10,10 @@ graphDCE_distribution(
   taille_titre = 12,
   legende_LQ = c("NON QUANTIFIE", "QUANTIFIE"),
   affiche_valeurs = T,
-  min_affiche = 0.1
+  min_affiche = 0.1,
+  tri_donnees = T,
+  tri_croissant = T,
+  nb_top = NULL
 )
 }
 \arguments{
@@ -25,6 +28,12 @@ graphDCE_distribution(
 \item{affiche_valeurs}{: booléen qui indique d'il faut afficher les valeurs ou pas dans les barres}
 
 \item{min_affiche}{: pourcentage minimum à atteindre pour que la valeur soit affiché (ex si min_affiche=0.3, seules le nb de prélèvements représentant au moins 30\% pour une categorie et un paramètre sera affiché)}
+
+\item{tri_donnees}{booleen vrai par défaut. Si il est vrai, les résultats sont affichés par ordre du plus dégradé au moins dégradé (au sens des dépassement de seuils). Si non, les résultats sont affichés dans l'ordre alphabétique des noms de paramètres.}
+
+\item{tri_croissant}{booleen vrai par défaut. Si faux, l'ordre du tri est inversé. Paramètre sans effet si tri_donnees=FALSE}
+
+\item{nb_top}{: optionnel. Si renseigné, le graph n'affiche que le nb de paramètres indiqués en affichant en priorité les + dégradés}
 }
 \value{
 la fonction renvoie un objet ggplot avec le graphique de distribution

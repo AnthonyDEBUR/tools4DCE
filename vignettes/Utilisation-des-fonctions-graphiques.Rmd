@@ -91,18 +91,31 @@ graphDCE_boxplot(data1, seuils = seuil1)
 Les fonctions suivantes permettent de faire le bilan, par exemple, sur les pesticides quantifiés sous forme de tableau.
 
 ```{r}
-donnees<-data.frame(parametres=rep(c("1301", "1340", "1335"), 100), RsAna=sample(0.1:100, 300, replace=TRUE), LqAna=c(0.5,1,6))
+donnees<-data.frame(parametres=rep(c("1506", "1907", "1221", "6854"), 100), RsAna=sample(0.001:3, 400, replace=TRUE), LqAna=c(rep(0.01,200),rep(0.2,100),rep(c(0.1,0.05,0.01,1),25)))
 donnees<-donnees%>%mutate(RsAna=ifelse(RsAna<LqAna, LqAna, RsAna))
 donnees<-donnees%>%mutate(CdRqAna=ifelse(RsAna>LqAna, "1", ifelse(sample(1:100,5)>10,"10","1")))
-seuils<-makeSeuils(CdParametre=donnees$parametres%>%unique, specificites=c("CYPRINICOLE", rep(NA,2)), type_seuil = "DCE")
+seuils<-makeSeuils(CdParametre=donnees$parametres%>%unique, specificites=c("OEB"), type_seuil = "AEP")
 tableau<-groupe_tableau_distribution(donnees, col_CdParametre="parametres", col_CdSupport=NULL, col_CdFraction=NULL, col_CdUnite=NULL, seuils = seuils)
 print(tableau)
 
 ```
 
-Ces tableaux peuvent être mis sous forme graphique
-```{r fig.width=8}
-graphDCE_distribution(tableau)
+Il est possible de trier les molécules de la plus préoccupante à la moins préoccupante
+```{r}
+tri_molecules(tableau, tri_croissant = T)
 ```
 
 
+
+Ces tableaux peuvent être mis sous forme graphique
+```{r fig.width=8}
+graphDCE_distribution(tableau, titre="Répartition des pesticides par rapport aux normes AEP")
+```
+On peut se limiter aux molécules les plus préoccupantes
+```{r fig.width=8}
+graphDCE_distribution(tableau, titre="Répartition des pesticides par rapport aux normes AEP", nb_top=3)
+```
+Ou aux moins préoccupantes
+```{r fig.width=8}
+graphDCE_distribution(tableau, titre="Répartition des pesticides par rapport aux normes AEP", nb_top=3, tri_croissant = F)
+```

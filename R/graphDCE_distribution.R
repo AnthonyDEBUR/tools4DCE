@@ -30,8 +30,7 @@ graphDCE_distribution <-
            tri_donnees = T,
            tri_croissant = T,
            nb_top = NULL) {
-
-    sous_titre<-""
+    sous_titre <- ""
 
     # creation d'un tableau de correspondance CATEGORIE - LEGENDE
     cat_leg <-
@@ -42,28 +41,30 @@ graphDCE_distribution <-
       donnees %>% group_by(parametre) %>% dplyr::summarise(total = sum(nb))
     donnees <- donnees %>% left_join(seuil_param, by = "parametre")
 
-    # si tri_donnees, on tri les résultats en mettant en 1er le plus haut pourcentage du 1er facteur de niveau
-    donnees$pc <- donnees$nb / donnees$total
-    donnees$ordre_tri <-
-      donnees$CLASSE %>% as.character %>% factor(levels = sort(levels(cat_leg$CLASSE), decreasing = tri_croissant))
-    donnees$CdRqAna <-
-      donnees$CdRqAna %>% as.character %>% factor(levels = c("3", "1", "10", "2", "7"))
-    donnees <- donnees %>% arrange(CdRqAna, ordre_tri,-pc)
+# tri des données
     if (tri_donnees) {
       donnees$parametre <-
-        donnees$parametre %>% as.character %>% factor(levels = unique(donnees$parametre))
+        donnees$parametre %>% as.character %>% factor(levels = tri_molecules(donnees, tri_croissant=tri_croissant))
     } else{
       donnees$parametre <- factor(donnees$parametre)
     }
 
     # si nb_top n'est pas nul, on retient les nb_top 1ers paramètres (soit par ordre de tri, soit par ordre alphabétique)
-    if(!is.null(nb_top))
+    if (!is.null(nb_top))
     {
-      if(!is.numeric(nb_top)){stop("le parametre nb_top n'est pas un nombre entier positif.")}
-      if(nb_top%%1!=0 | nb_top<1){stop("le parametre nb_top n'est pas un nombre entier positif.")}
-      donnees<-donnees%>%subset(parametre%in%levels(donnees$parametre)[1:nb_top])
-      sous_titre<-paste0("Top ", nb_top," des paramètres recherchés")
+      if (!is.numeric(nb_top)) {
+        stop("le parametre nb_top n'est pas un nombre entier positif.")
+      }
+      if (nb_top %% 1 != 0 |
+          nb_top < 1) {
+        stop("le parametre nb_top n'est pas un nombre entier positif.")
+      }
+      donnees <-
+        donnees %>% subset(parametre %in% levels(donnees$parametre)[1:nb_top])
+      sous_titre <-
+        paste0("Top ", nb_top, " des paramètres recherchés")
     }
+
 
     graph <-
       ggplot(donnees,
@@ -73,8 +74,14 @@ graphDCE_distribution <-
                fill = CLASSE,
                alpha = ALPHA %>% as.factor
              )) +
-      geom_bar(position = "fill", stat = "identity") + scale_alpha_manual(values =
-                                                                            c(0.20, 1), labels = legende_LQ) +
+      geom_bar(position = "fill", stat = "identity") + scale_alpha_manual(
+        values =
+          sort(
+            donnees$ALPHA %>% unique() %>% as.character() %>% as.numeric(),
+            decreasing = F
+          ),
+        labels = legende_LQ
+      ) +
       scale_fill_manual(labels = cat_leg$CLASSE, values = cat_leg$NOM_COULEUR) +
       scale_x_continuous(labels = scales::percent) +
       labs(
@@ -108,4 +115,3 @@ graphDCE_distribution <-
     return(graph)
 
   }
-

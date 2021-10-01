@@ -12,7 +12,11 @@ charge_shp_STEP(crs = 2154, shp_emprise = NULL)
 \item{shp_emprise}{objet SF qui délimite le périmètre sur lequel il faut renvoyer les stations}
 }
 \value{
-la fonction renvoie un objet sf des STEP tel que disponible sous l'atlas cartographique du SANDRE
+la fonction renvoie une liste composée d'un slot shp : objet sf des STEP tel que disponible sous l'atlas cartographique du SANDRE.La table jointe intègre les dernières valeurs de rejet connues par cette STEP sous SYSPEA.
+
+la fonction renvoie une liste composée d'un slot shp_rejets : objet sf des points de rejets des STEP obtenus à partir des fiches stations du site http://assainissement.developpement-durable.gouv.fr
+
+la fonction renvoie une liste composée d'un slot liaison_STEP_rejet : objet sf avec des lignes entre STEP et points de rejets.
 }
 \description{
 charge sous forme d'objet sf le shape des stations d'épurations en France (ou un extrait) à partir du flux wms du SANDRE
