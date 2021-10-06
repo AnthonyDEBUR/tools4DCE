@@ -65,12 +65,13 @@ graphDCE_distribution <-
         paste0("Top ", nb_top, " des paramètres recherchés")
     }
 
+    # on inverse l'ordre des levels pour lire les graphs de haut en bas et pas de bas en haut
 
     graph <-
       ggplot(donnees,
              aes(
                x = nb,
-               y = parametre,
+               y = forcats::fct_rev(parametre),
                fill = CLASSE,
                alpha = ALPHA %>% as.factor
              )) +

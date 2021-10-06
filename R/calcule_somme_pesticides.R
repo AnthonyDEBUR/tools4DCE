@@ -5,7 +5,11 @@
 #' Si pour une même station et une même date on trouve un paramètre inclus dans un deuxième (ex. S-métolachlore et métolachlore total), alors seule la valeur du paramètre qui englobe l'autre (métolachore total par ex.) est retenu.
 #' paramètres incluant d'autres paramètres :
 #' - métolachlore total
-#' - mecoprop
+#' - mecoprop (inclus Mécoprop-P)
+#' - diméthénamide (inclus diméthénamide-P (= isomère S))
+#' - dichlorprop (inclus dichlorprop-P)
+#' - Uniconizole (inclus uniconizole-P)
+#' - Fluazifop (inclus Fluazifop-P)
 #' - Somme des Hexachlorocyclohexanes
 #' - Somme Heptachlore époxyde cis/trans
 #' - Somme du DDE 44' et de la dieldrine
@@ -20,6 +24,8 @@
 #' - Somme du DDD 24', DDE 24', DDT 24', DDT 44' 7170 =  DDD 24' 1143 + DDE 24' 1145 + DDT 24' 1147 + DDT 44' 1148
 #' - Somme du DDDpp', DDEpp', DDTop', DDTpp' 7146 = DDDpp' 1144 + DDEpp' 1146 + DDTop' 1147 + DDTpp' 1148
 #' - Somme de l'Alachlor OXA et de l'Acetochlor OXA 8101	= Alachlor OXA 6855 + Acetochlor OXA 6862
+#' - Somme de Fluazifop-P-butyl (1404) et de Fluazifop-butyl (1825)
+
 #'
 #' @param data tableau de données avec les résultats d'analyse
 #' @param liste_pesticides vecteur qui contient les identifiants des pesticides à prendre en compte. Si NULL, toutes les molécules du tableau sont prises en compte.
@@ -183,6 +189,99 @@ calcule_somme_pesticides <-
 
     }
 
+    # cas du diméthénamide
+    #  Diméthénamide (1678) > Diméthénamide-P (5617)
+    if ("1678" %in% liste_pesticides) {
+      if (!("par_1678" %in% names(data2))) {
+        data2 <- data2 %>% add_column(par_1678 = NA)
+      }
+    }
+    if ("par_1678" %in% names(data2)) {
+      if (!("par_5617" %in% names(data2))) {
+        data2 <- data2 %>% add_column(par_5617 = 0)
+      }
+
+      # on prend le max entre l'énantiomère et la molécule totale
+      data2$par_1678 <-
+        apply(data2[, c("par_1678", "par_5617")], 1, function(x) {
+          ifelse(all(is.na(x)), NA , max(x, na.rm = T))
+
+        })
+      # on supprime les colonnes hors diméthénamide
+      data2 <- data2 %>% select(-par_5617)
+
+    }
+
+    # cas du Dichlorprop
+    #  Dichlorprop (1169) > Dichlorprop-P (2544)
+    if ("1169" %in% liste_pesticides) {
+      if (!("par_1169" %in% names(data2))) {
+        data2 <- data2 %>% add_column(par_1169 = NA)
+      }
+    }
+    if ("par_1169" %in% names(data2)) {
+      if (!("par_2544" %in% names(data2))) {
+        data2 <- data2 %>% add_column(par_2544 = 0)
+      }
+
+      # on prend le max entre l'énantiomère et la molécule totale
+      data2$par_1169 <-
+        apply(data2[, c("par_1169", "par_2544")], 1, function(x) {
+          ifelse(all(is.na(x)), NA , max(x, na.rm = T))
+
+        })
+      # on supprime les colonnes hors Dichlorprop
+      data2 <- data2 %>% select(-par_2544)
+
+    }
+
+    # cas du Uniconizole
+    #  Uniconizole (7482) > Uniconizole-P (	5845)
+    if ("7482" %in% liste_pesticides) {
+      if (!("par_7482" %in% names(data2))) {
+        data2 <- data2 %>% add_column(par_7482 = NA)
+      }
+    }
+    if ("par_7482" %in% names(data2)) {
+      if (!("par_5845" %in% names(data2))) {
+        data2 <- data2 %>% add_column(par_5845 = 0)
+      }
+
+      # on prend le max entre l'énantiomère et la molécule totale
+      data2$par_7482 <-
+        apply(data2[, c("par_7482", "par_5845")], 1, function(x) {
+          ifelse(all(is.na(x)), NA , max(x, na.rm = T))
+
+        })
+      # on supprime les colonnes hors Uniconizole
+      data2 <- data2 %>% select(-par_5845)
+
+    }
+
+    # cas du Fluazifop
+    #  Fluazifop (6545) > Fluazifop-P (5634)
+    if ("6545" %in% liste_pesticides) {
+      if (!("par_6545" %in% names(data2))) {
+        data2 <- data2 %>% add_column(par_6545 = NA)
+      }
+    }
+    if ("par_6545" %in% names(data2)) {
+      if (!("par_5634" %in% names(data2))) {
+        data2 <- data2 %>% add_column(par_5634 = 0)
+      }
+
+      # on prend le max entre l'énantiomère et la molécule totale
+      data2$par_6545 <-
+        apply(data2[, c("par_6545", "par_5634")], 1, function(x) {
+          ifelse(all(is.na(x)), NA , max(x, na.rm = T))
+
+        })
+      # on supprime les colonnes hors Fluazifop
+      data2 <- data2 %>% select(-par_5634)
+
+    }
+
+
     # fonction pour sommer les paramètres individuels qui sont groupés dans un paramètre somme
     remplace_somme <- function(code_somme, vecteur_codes_a_sommer)
     {
@@ -253,6 +352,13 @@ calcule_somme_pesticides <-
       remplace_somme(
         code_somme = "6235",
         vecteur_codes_a_sommer = c("5648", "5484", "6214")
+      )
+
+    # Somme de Fluazifop-P-butyl (1404) et de Fluazifop-butyl (1825)
+    data2 <-
+      remplace_somme(
+        code_somme = "8366",
+        vecteur_codes_a_sommer = c("1404", "1825")
       )
 
     # Somme de Ethylamine + Diméthylamine (	7887) = Ethylamine (6993) + Diméthylamine (2773)

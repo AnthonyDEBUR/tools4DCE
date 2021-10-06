@@ -51,7 +51,11 @@ Si pour une même station et une même date on trouve un paramètre inclus dans 
 paramètres incluant d'autres paramètres :
 \itemize{
 \item métolachlore total
-\item mecoprop
+\item mecoprop (inclus Mécoprop-P)
+\item diméthénamide (inclus diméthénamide-P (= isomère S))
+\item dichlorprop (inclus dichlorprop-P)
+\item Uniconizole (inclus uniconizole-P)
+\item Fluazifop (inclus Fluazifop-P)
 \item Somme des Hexachlorocyclohexanes
 \item Somme Heptachlore époxyde cis/trans
 \item Somme du DDE 44' et de la dieldrine
@@ -66,6 +70,7 @@ paramètres incluant d'autres paramètres :
 \item Somme du DDD 24', DDE 24', DDT 24', DDT 44' 7170 =  DDD 24' 1143 + DDE 24' 1145 + DDT 24' 1147 + DDT 44' 1148
 \item Somme du DDDpp', DDEpp', DDTop', DDTpp' 7146 = DDDpp' 1144 + DDEpp' 1146 + DDTop' 1147 + DDTpp' 1148
 \item Somme de l'Alachlor OXA et de l'Acetochlor OXA 8101	= Alachlor OXA 6855 + Acetochlor OXA 6862
+\item Somme de Fluazifop-P-butyl (1404) et de Fluazifop-butyl (1825)
 }
 }
 \examples{
