@@ -46,7 +46,7 @@ table_distribution <-
 
     # légende
     donnees <-
-      donnees %>% mutate(CATEGORIE = if_else(
+      donnees %>% plyr::mutate(CATEGORIE = if_else(
         donnees$CdRqAna %in% c("1"),
         donnees$CLASSE %>% as.character,
         paste0("<LQ et LQ de classe ", donnees$CLASSE)
