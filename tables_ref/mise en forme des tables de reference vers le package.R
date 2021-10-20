@@ -44,7 +44,10 @@ download.file(
 Sys.setenv("VROOM_CONNECTION_SIZE"=5000000)
 
 parametres_sandre <-
-  read_delim("param.csv.gz", delim = ";", skip = 1)
+  read_delim("param.csv.gz", delim = ";")
+
+parametres_sandre<-parametres_sandre%>%subset(CdParametre != "Code du paramètre")
+
 
 parametres_sandre$CdParametre <-
   as.character(parametres_sandre$CdParametre)
