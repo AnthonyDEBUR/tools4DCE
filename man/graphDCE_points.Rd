@@ -14,6 +14,8 @@ graphDCE_points(
   nom_legende = NULL,
   titre = NULL,
   taille_titre = 12,
+  sous_titre = NULL,
+  taille_sous_titre = 10,
   unite = NULL,
   bilan_annuel = FALSE,
   xmini = NULL,
@@ -48,6 +50,10 @@ graphDCE_points(
 \item{titre}{titre du graphique (si absent et si seuils et renseigné, la légende par défaut sera le slot nom_parametre)}
 
 \item{taille_titre}{taille police du titre (par défaut 12)}
+
+\item{sous_titre}{sous titre du graphique}
+
+\item{taille_sous_titre}{taille police du sous titre (par défaut 10)}
 
 \item{unite}{unité du paramètre (par défaut si seuils est renseigné : le label SANDRE correspondant au slot code_unite du paramètre seuils)}
 
