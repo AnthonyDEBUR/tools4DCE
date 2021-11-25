@@ -48,7 +48,7 @@ La zone grisée correspond à la limite de quantification.
 
 ```{r fig.width=5}
 data0<-data.frame(DatePrel=Sys.Date() + sort(sample(1:500, 30)), RsAna=c(round(runif(30,0,100), 0)), LqAna=c(3))
-graphDCE_points(data0, seuils=makeSeuils(CdParametre = "1340", type_seuil="DCE"), affiche_LQ = T, ymini = 0)
+graphDCE_points(data0, seuils=makeSeuils(CdParametre = "1340", type_seuil="DCE"), affiche_LQ = T, ymini = 0, sous_titre="station inconnue")
 
 ```
 
