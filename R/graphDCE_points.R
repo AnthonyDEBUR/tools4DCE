@@ -527,7 +527,7 @@ graphDCE_points <-
 
       if (!is.null(sous_titre)) {
         graph1 <-
-          graph1 + ggtitle(subtitle=sous_titre) + theme(plot.subtitle = element_text(size = taille_titre))
+          graph1 + labs(subtitle=sous_titre) + theme(plot.subtitle = element_text(size = taille_titre))
       }
 
       graph1 <- graph1 + xlab('') + ylab(unite)
