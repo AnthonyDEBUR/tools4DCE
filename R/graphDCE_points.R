@@ -11,6 +11,8 @@
 #' @param affiche_legende booléen indiquant s'il faut afficher la légende (par défaut TRUE)
 #' @param titre titre du graphique (si absent et si seuils et renseigné, la légende par défaut sera le slot nom_parametre)
 #' @param taille_titre taille police du titre (par défaut 12)
+#' @param sous_titre sous titre du graphique
+#' @param taille_sous_titre taille police du sous titre (par défaut 10)
 #' @param unite unité du paramètre (par défaut si seuils est renseigné : le label SANDRE correspondant au slot code_unite du paramètre seuils)
 #' @param xmini année mini (si non précisé, sera calculé automatiquement comme étant le 1er janvier de l'année correspondant au minimum des dates du jeu de données). Format : "2010"
 #' @param xmaxi année maxi (si non précisé, sera calculé automatiquement comme étant le 31 décembre de l'année correspondant au maximum des dates du jeu de données). Format : "2010"
@@ -45,6 +47,8 @@ graphDCE_points <-
            nom_legende = NULL,
            titre = NULL,
            taille_titre = 12,
+           sous_titre=NULL,
+           taille_sous_titre=10,
            unite = NULL,
            bilan_annuel = FALSE,
            xmini = NULL,
@@ -520,6 +524,12 @@ graphDCE_points <-
         graph1 <-
           graph1 + ggtitle(titre) + theme(plot.title = element_text(size = taille_titre))
       }
+
+      if (!is.null(sous_titre)) {
+        graph1 <-
+          graph1 + ggtitle(subtitle=sous_titre) + theme(plot.subtitle = element_text(size = taille_titre))
+      }
+
       graph1 <- graph1 + xlab('') + ylab(unite)
       # ajout des lignes au niveau des seuils1
       if (length(lignes) > 0) {
