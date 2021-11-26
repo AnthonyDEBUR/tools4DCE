@@ -8,6 +8,7 @@
 #' @param affiche_valeurs : booléen qui indique d'il faut afficher les valeurs ou pas dans les barres
 #' @param min_affiche : pourcentage minimum à atteindre pour que la valeur soit affiché (ex si min_affiche=0.3, seules le nb de prélèvements représentant au moins 30% pour une categorie et un paramètre sera affiché)
 #' @param taille_titre taille police du titre (par défaut 12)
+#' @param taille_axes taille police des axes (par défaut 11)
 #' @param tri_donnees booleen vrai par défaut. Si il est vrai, les résultats sont affichés par ordre du plus dégradé au moins dégradé (au sens des dépassement de seuils). Si non, les résultats sont affichés dans l'ordre alphabétique des noms de paramètres.
 #' @param tri_croissant booleen vrai par défaut. Si faux, l'ordre du tri est inversé. Paramètre sans effet si tri_donnees=FALSE
 #' @param nb_top : optionnel. Si renseigné, le graph n'affiche que le nb de paramètres indiqués en affichant en priorité les + dégradés
@@ -24,6 +25,7 @@ graphDCE_distribution <-
   function(donnees,
            titre = "",
            taille_titre = 12,
+           taille_axes=11,
            legende_LQ = c("NON QUANTIFIE", "QUANTIFIE"),
            affiche_valeurs = T,
            min_affiche = 0.1,
@@ -96,7 +98,8 @@ graphDCE_distribution <-
         legend.position = "bottom",
         plot.title = element_text(size = taille_titre),
         legend.box = "vertical",
-        legend.margin = margin()
+        legend.margin = margin(),
+        axis.text = element_text(size=taille_axes)
       )
     # guides(fill=guide_legend(nrow=2,byrow=TRUE))
 

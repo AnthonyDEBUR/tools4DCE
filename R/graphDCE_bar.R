@@ -10,6 +10,7 @@
 #' @param affiche_legende booléen indiquant s'il faut afficher la légende (par défaut TRUE)
 #' @param titre titre du graphique (si absent et si seuils et renseigné, la légende par défaut sera le slot nom_parametre)
 #' @param taille_titre taille police du titre (par défaut 12)
+#' @param taille_axes taille de la police des axes (par défaut 11)
 #' @param unite unité du paramètre (par défaut si seuils est renseigné : le label SANDRE correspondant au slot code_unite du paramètre seuils)
 #' @param ymaxi force l'échelle des valeurs (si non précisé, échelle automatique de ggplot2)
 #' @param auto_ymaxi booléen. Si le paramètre vaut TRUE et que ymaxi n'est pas renseigné alors ce dernier est calculé automatiquement de manière à rendre le graph aussi lisible que possible
@@ -34,6 +35,7 @@ graphDCE_bar <-
            unite = NULL,
            titre = NULL,
            taille_titre = 12,
+           taille_axes = 11,
            affiche_legende = T,
            nom_legende = NULL,
            taille_legende = 12,
@@ -42,16 +44,16 @@ graphDCE_bar <-
            seuils = NULL)
   {
     data1 <- as.data.frame(data)
-		if (is.factor(data1$annee)) {
-			data1$annee <- as.numeric(as.character(data1$annee))
-			cat("data$annee transformée de facteur en numerique")
-		}
+    if (is.factor(data1$annee)) {
+      data1$annee <- as.numeric(as.character(data1$annee))
+      cat("data$annee transformée de facteur en numerique")
+    }
     ymini <- 0
 
     if (!is.null(seuils)) {
       color_seuils <- seuils[[1]]@seuils
     } else{
-			color_seuils <- NULL
+      color_seuils <- NULL
     }
 
 
@@ -90,7 +92,7 @@ graphDCE_bar <-
         if (!is.null(seuils)) {
           unite <-
             tools4DCE::unites_sandre[tools4DCE::unites_sandre$`Code de l'unite de reference` ==
-                                       seuils[[1]]@code_unite, ]$`Symbole de l'unite de reference`[1]
+                                       seuils[[1]]@code_unite,]$`Symbole de l'unite de reference`[1]
         }
         else {
           unite <- ""
@@ -116,9 +118,9 @@ graphDCE_bar <-
         if (seuils[[1]]@bornesinfinclue) {
           f_couleur <- function(x, i) {
             if (!is.na(x)) {
-              if (x >= color_seuils[i, ]$SEUILMIN &
-                  x < color_seuils[i, ]$SEUILMAX) {
-                as.character(color_seuils[i, ]$NOM_COULEUR)
+              if (x >= color_seuils[i,]$SEUILMIN &
+                  x < color_seuils[i,]$SEUILMAX) {
+                as.character(color_seuils[i,]$NOM_COULEUR)
               } else{
                 ""
               }
@@ -131,9 +133,9 @@ graphDCE_bar <-
           f_couleur <-
             function(x, i) {
               if (!(is.na(x))) {
-                if (x > color_seuils[i, ]$SEUILMIN &
-                    x <= color_seuils[i, ]$SEUILMAX) {
-                  as.character(color_seuils[i, ]$NOM_COULEUR)
+                if (x > color_seuils[i,]$SEUILMIN &
+                    x <= color_seuils[i,]$SEUILMAX) {
+                  as.character(color_seuils[i,]$NOM_COULEUR)
                 } else{
                   ""
                 }
@@ -155,20 +157,27 @@ graphDCE_bar <-
         }
       }
       if (any(which(data1$couleur_pt == ""))) {
-        data1[which(data1$couleur_pt == ""), ]$couleur_pt <-
+        data1[which(data1$couleur_pt == ""),]$couleur_pt <-
           "white"
       } # les points qui n'ont pas de couleurs sont considérés blancs
 
       # calcul et ajout des bornes min_max du graph
       color_seuilsminmax <-
-        as.numeric(unique(c(
-          ymini, color_seuils$SEUILMIN, color_seuils$SEUILMAX, ymaxi
-        )))
+        as.numeric(unique(
+          c(
+            ymini,
+            color_seuils$SEUILMIN,
+            color_seuils$SEUILMAX,
+            ymaxi
+          )
+        ))
 
       # calcul du nb de décimales max dans les color_seuils (à défaut dans les données) pour choisir le nb de décimales à afficher dans légende
       if (!is.null(color_seuils))
       {
-        nb_decim <- max(sapply(color_seuils$SEUILMIN, compte_decimales), na.rm = T)
+        nb_decim <-
+          max(sapply(color_seuils$SEUILMIN, compte_decimales),
+              na.rm = T)
       }
       else
       {
@@ -198,18 +207,22 @@ graphDCE_bar <-
 
       # si ymini et ymaxi non définis alors on zoom le graphique autour de la plage de données disponible
       if (is.null(ymini)) {
-        color_seuilsminmax <- c(min_data, color_seuilsminmax[color_seuilsminmax >= min_data])
+        color_seuilsminmax <-
+          c(min_data, color_seuilsminmax[color_seuilsminmax >= min_data])
       }
       if (is.null(ymaxi)) {
-        color_seuilsminmax <- c(color_seuilsminmax[color_seuilsminmax <= max_data], max_data)
+        color_seuilsminmax <-
+          c(color_seuilsminmax[color_seuilsminmax <= max_data], max_data)
       }
 
       # on ne conserve que les color_seuils d'affichage entre ymini et ymaxi
       if (!is.null(ymini)) {
-        color_seuilsminmax <- color_seuilsminmax[color_seuilsminmax >= ymini]
+        color_seuilsminmax <-
+          color_seuilsminmax[color_seuilsminmax >= ymini]
       }
       if (!is.null(ymaxi)) {
-        color_seuilsminmax <- color_seuilsminmax[color_seuilsminmax <= ymaxi]
+        color_seuilsminmax <-
+          color_seuilsminmax[color_seuilsminmax <= ymaxi]
       }
 
       # on supprime les doublons
@@ -218,26 +231,27 @@ graphDCE_bar <-
       ##### mise en forme du tableau de color_seuils pour affichage des couleurs en fond de graph
       if (!is.null(color_seuils)) {
         # les couleurs sont en character et non facteurs
-        color_seuils$NOM_COULEUR <- as.character(color_seuils$NOM_COULEUR)
+        color_seuils$NOM_COULEUR <-
+          as.character(color_seuils$NOM_COULEUR)
         # on corrige le tableau de couleurs pour l'adapter aux min-max
-        if (nrow(color_seuils[color_seuils$SEUILMIN < min(color_seuilsminmax, na.rm = T), ]) >
+        if (nrow(color_seuils[color_seuils$SEUILMIN < min(color_seuilsminmax, na.rm = T),]) >
             0) {
-          color_seuils[color_seuils$SEUILMIN < min(color_seuilsminmax, na.rm = T), ]$SEUILMIN <-
+          color_seuils[color_seuils$SEUILMIN < min(color_seuilsminmax, na.rm = T),]$SEUILMIN <-
             min(color_seuilsminmax, na.rm = T)
         }
-        if (nrow(color_seuils[color_seuils$SEUILMAX < min(color_seuilsminmax, na.rm = T), ]) >
+        if (nrow(color_seuils[color_seuils$SEUILMAX < min(color_seuilsminmax, na.rm = T),]) >
             0) {
-          color_seuils[color_seuils$SEUILMAX < min(color_seuilsminmax, na.rm = T), ]$SEUILMAX <-
+          color_seuils[color_seuils$SEUILMAX < min(color_seuilsminmax, na.rm = T),]$SEUILMAX <-
             min(color_seuilsminmax, na.rm = T)
         }
-        if (nrow(color_seuils[color_seuils$SEUILMIN > max(color_seuilsminmax, na.rm = T), ]) >
+        if (nrow(color_seuils[color_seuils$SEUILMIN > max(color_seuilsminmax, na.rm = T),]) >
             0) {
-          color_seuils[color_seuils$SEUILMIN > max(color_seuilsminmax, na.rm = T), ]$SEUILMIN <-
+          color_seuils[color_seuils$SEUILMIN > max(color_seuilsminmax, na.rm = T),]$SEUILMIN <-
             max(color_seuilsminmax, na.rm = T)
         }
-        if (nrow(color_seuils[color_seuils$SEUILMAX > max(color_seuilsminmax, na.rm = T), ]) >
+        if (nrow(color_seuils[color_seuils$SEUILMAX > max(color_seuilsminmax, na.rm = T),]) >
             0) {
-          color_seuils[color_seuils$SEUILMAX > max(color_seuilsminmax, na.rm = T), ]$SEUILMAX <-
+          color_seuils[color_seuils$SEUILMAX > max(color_seuilsminmax, na.rm = T),]$SEUILMAX <-
             max(color_seuilsminmax, na.rm = T)
         }
 
@@ -258,26 +272,31 @@ graphDCE_bar <-
         }
         couleurs <- paste0("c(", couleurs, ")")
         # suppression des classes de qualité avec les color_seuils min et max égaux
-        color_seuils <- color_seuils[which(color_seuils$SEUILMIN != color_seuils$SEUILMAX), ]
+        color_seuils <-
+          color_seuils[which(color_seuils$SEUILMIN != color_seuils$SEUILMAX),]
       }
 
       # table des valeurs hors range qui seront étiquettées. Pour ces valeurs on remplace la valeur par le max (ou min) de l'échelle (pour afficher un point)
       data1$depassementSUP <-
-        ifelse(data1$RsAna > max(color_seuilsminmax, na.rm = T),
-               max(color_seuilsminmax[color_seuilsminmax < Inf], na.rm = T) ,
-               NA)
+        ifelse(
+          data1$RsAna > max(color_seuilsminmax, na.rm = T),
+          max(color_seuilsminmax[color_seuilsminmax < Inf], na.rm = T) ,
+          NA
+        )
       data1$depassementINF <-
-        ifelse(data1$RsAna < min(color_seuilsminmax, na.rm = T),
-               min(color_seuilsminmax[color_seuilsminmax > -Inf], na.rm = T),
-               NA)
+        ifelse(
+          data1$RsAna < min(color_seuilsminmax, na.rm = T),
+          min(color_seuilsminmax[color_seuilsminmax > -Inf], na.rm = T),
+          NA
+        )
       if (any(!is.na(data1$depassementSUP))) {
-        depassSUP <- subset(data1,!is.na(depassementSUP))
-        data1[which(!is.na(data1$depassementSUP)), ]$RsAna <-
+        depassSUP <- subset(data1, !is.na(depassementSUP))
+        data1[which(!is.na(data1$depassementSUP)),]$RsAna <-
           max(color_seuilsminmax[color_seuilsminmax < Inf], na.rm = T)
       }
       if (any(!is.na(data1$depassementINF))) {
-        depassINF <- subset(data1,!is.na(depassementINF))
-        data1[which(!is.na(data1$depassementINF)), ]$RsAna <-
+        depassINF <- subset(data1, !is.na(depassementINF))
+        data1[which(!is.na(data1$depassementINF)),]$RsAna <-
           min(color_seuilsminmax[color_seuilsminmax > -Inf], na.rm = T)
       }
 
@@ -314,12 +333,13 @@ graphDCE_bar <-
           breaks = color_seuilsminmax,
           expand = c(0, 0),
           limits = c(min(color_seuilsminmax[color_seuilsminmax > -Inf]), max(color_seuilsminmax[color_seuilsminmax <
-                                                                                   Inf]))
+                                                                                                  Inf]))
         )
 
       # ajout des étiquettes sur les barres (x)
       lblXdo <- c("", Xdo[2:(length(Xdo) - 1)], "")
-      graph1 <- graph1 + scale_x_continuous(breaks = Xdo, labels = lblXdo)
+      graph1 <-
+        graph1 + scale_x_continuous(breaks = Xdo, labels = lblXdo)
 
       # ajout des barres
       graph1 <-
@@ -367,13 +387,17 @@ graphDCE_bar <-
       # ajout du titre et des noms d'axes
       if (!is.null(titre)) {
         graph1 <-
-          graph1 + ggtitle(titre) + theme(plot.title = element_text(size = taille_titre))
+          graph1 + ggtitle(titre) + theme(
+            plot.title = element_text(size = taille_titre),
+            axis.text = element_text(size = taille_axes)
+          )
       }
       graph1 <- graph1 + xlab('') + ylab(unite)
 
       # ajout des lignes au niveau des color_seuils
       if (length(lignes) > 0) {
-        graph1 <- graph1 + geom_hline(yintercept = lignes, linetype = "dashed")
+        graph1 <-
+          graph1 + geom_hline(yintercept = lignes, linetype = "dashed")
       }
 
 
