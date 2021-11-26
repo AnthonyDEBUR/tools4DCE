@@ -11,6 +11,7 @@
 #' @param affiche_legende booléen indiquant s'il faut afficher la légende (par défaut TRUE)
 #' @param titre titre du graphique (si absent et si seuils et renseigné, la légende par défaut sera distribution suivi de la valeur du  le slot nom_parametre)
 #' @param taille_titre taille police du titre (par défaut 12)
+#' @param taille_axes taille police des axes (par défaut 11)
 #' @param unite unité du paramètre (par défaut si seuils est renseigné : le label SANDRE correspondant au slot code_unite du paramètre seuils)
 #' @param xlab étiquette de l'axe des abscisses (vide par défaut)
 #' @param ymaxi force l'échelle des valeurs (si non précisé, échelle automatique de ggplot2)
@@ -39,6 +40,7 @@ graphDCE_boxplot <-
            xlab = "",
            titre = NULL,
            taille_titre = 12,
+           taille_axes = 11,
            affiche_legende = T,
            nom_legende = NULL,
            taille_legende = 12,
@@ -89,7 +91,7 @@ graphDCE_boxplot <-
         if (!is.null(seuils)) {
           unite <-
             tools4DCE::unites_sandre[tools4DCE::unites_sandre$`Code de l'unite de reference` ==
-                                       seuils[[1]]@code_unite, ]$`Symbole de l'unite de reference`[1]
+                                       seuils[[1]]@code_unite,]$`Symbole de l'unite de reference`[1]
         }
         else {
           unite <- ""
@@ -115,9 +117,9 @@ graphDCE_boxplot <-
         if (seuils[[1]]@bornesinfinclue) {
           f_couleur <- function(x, i) {
             if (!is.na(x)) {
-              if (x >= seuils1[i, ]$SEUILMIN &
-                  x < seuils1[i, ]$SEUILMAX) {
-                as.character(seuils1[i, ]$NOM_COULEUR)
+              if (x >= seuils1[i,]$SEUILMIN &
+                  x < seuils1[i,]$SEUILMAX) {
+                as.character(seuils1[i,]$NOM_COULEUR)
               } else{
                 ""
               }
@@ -130,9 +132,9 @@ graphDCE_boxplot <-
           f_couleur <-
             function(x, i) {
               if (!(is.na(x))) {
-                if (x > seuils1[i, ]$SEUILMIN &
-                    x <= seuils1[i, ]$SEUILMAX) {
-                  as.character(seuils1[i, ]$NOM_COULEUR)
+                if (x > seuils1[i,]$SEUILMIN &
+                    x <= seuils1[i,]$SEUILMAX) {
+                  as.character(seuils1[i,]$NOM_COULEUR)
                 } else{
                   ""
                 }
@@ -154,7 +156,7 @@ graphDCE_boxplot <-
         }
       }
       if (any(which(data$couleur_pt == ""))) {
-        data[which(data$couleur_pt == ""), ]$couleur_pt <-
+        data[which(data$couleur_pt == ""),]$couleur_pt <-
           "white"
       } # les points qui n'ont pas de couleurs sont considérés blancs
 
@@ -222,24 +224,24 @@ graphDCE_boxplot <-
         # les couleurs sont en character et non facteurs
         seuils1$NOM_COULEUR <- as.character(seuils1$NOM_COULEUR)
         # on corrige le tableau de couleurs pour l'adapter aux min-max
-        if (nrow(seuils1[seuils1$SEUILMIN < min(seuils1minmax, na.rm = T), ]) >
+        if (nrow(seuils1[seuils1$SEUILMIN < min(seuils1minmax, na.rm = T),]) >
             0) {
-          seuils1[seuils1$SEUILMIN < min(seuils1minmax, na.rm = T), ]$SEUILMIN <-
+          seuils1[seuils1$SEUILMIN < min(seuils1minmax, na.rm = T),]$SEUILMIN <-
             min(seuils1minmax, na.rm = T)
         }
-        if (nrow(seuils1[seuils1$SEUILMAX < min(seuils1minmax, na.rm = T), ]) >
+        if (nrow(seuils1[seuils1$SEUILMAX < min(seuils1minmax, na.rm = T),]) >
             0) {
-          seuils1[seuils1$SEUILMAX < min(seuils1minmax, na.rm = T), ]$SEUILMAX <-
+          seuils1[seuils1$SEUILMAX < min(seuils1minmax, na.rm = T),]$SEUILMAX <-
             min(seuils1minmax, na.rm = T)
         }
-        if (nrow(seuils1[seuils1$SEUILMIN > max(seuils1minmax, na.rm = T), ]) >
+        if (nrow(seuils1[seuils1$SEUILMIN > max(seuils1minmax, na.rm = T),]) >
             0) {
-          seuils1[seuils1$SEUILMIN > max(seuils1minmax, na.rm = T), ]$SEUILMIN <-
+          seuils1[seuils1$SEUILMIN > max(seuils1minmax, na.rm = T),]$SEUILMIN <-
             max(seuils1minmax, na.rm = T)
         }
-        if (nrow(seuils1[seuils1$SEUILMAX > max(seuils1minmax, na.rm = T), ]) >
+        if (nrow(seuils1[seuils1$SEUILMAX > max(seuils1minmax, na.rm = T),]) >
             0) {
-          seuils1[seuils1$SEUILMAX > max(seuils1minmax, na.rm = T), ]$SEUILMAX <-
+          seuils1[seuils1$SEUILMAX > max(seuils1minmax, na.rm = T),]$SEUILMAX <-
             max(seuils1minmax, na.rm = T)
         }
 
@@ -261,7 +263,7 @@ graphDCE_boxplot <-
         couleurs <- paste0("c(", couleurs, ")")
         # suppression des classes de qualité avec les seuils1 min et max égaux
         seuils1 <-
-          seuils1[which(seuils1$SEUILMIN != seuils1$SEUILMAX), ]
+          seuils1[which(seuils1$SEUILMIN != seuils1$SEUILMAX),]
       }
 
       # table des valeurs hors range qui seront étiquettées. Pour ces valeurs on remplace la valeur par le max (ou min) de l'échelle (pour afficher un point)
@@ -274,13 +276,13 @@ graphDCE_boxplot <-
                min(seuils1minmax[seuils1minmax > -Inf], na.rm = T),
                NA)
       if (any(!is.na(data$depassementSUP))) {
-        depassSUP <- subset(data,!is.na(depassementSUP))
-        data[which(!is.na(data$depassementSUP)), ]$RsAna <-
+        depassSUP <- subset(data, !is.na(depassementSUP))
+        data[which(!is.na(data$depassementSUP)),]$RsAna <-
           max(seuils1minmax[seuils1minmax < Inf], na.rm = T)
       }
       if (any(!is.na(data$depassementINF))) {
-        depassINF <- subset(data,!is.na(depassementINF))
-        data[which(!is.na(data$depassementINF)), ]$RsAna <-
+        depassINF <- subset(data, !is.na(depassementINF))
+        data[which(!is.na(data$depassementINF)),]$RsAna <-
           min(seuils1minmax[seuils1minmax > -Inf], na.rm = T)
       }
 
@@ -369,7 +371,10 @@ graphDCE_boxplot <-
       # ajout du titre et des noms d'axes
       if (!is.null(titre)) {
         graph1 <-
-          graph1 + ggtitle(titre) + theme(plot.title = element_text(size = taille_titre))
+          graph1 + ggtitle(titre) + theme(
+            plot.title = element_text(size = taille_titre),
+            axis.text = element_text(size = taille_axes)
+          )
       }
       graph1 <- graph1 + xlab(xlab) + ylab(unite)
 

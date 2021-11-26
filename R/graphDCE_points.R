@@ -23,6 +23,7 @@
 #' @param lignes vecteur permettant d'ajouter des lignes horizontales au graphique. ex c(10, 25)
 #' @param echelleLog booléen : si vrai le graphique est affiché en échelle logarithmique (FALSE par défaut)
 #' @param taille_legende taille police caractères de la légende
+#' @param taille_axes taille police de caractères des axes
 #' @param liaison option faisant afficher ou pas des lignes pointillées entre les points (défaut = TRUE)
 #' @param affiche_LQ option qui affiche une zone grisée correspondant à la LqAna (par défaut non affiché)
 #' @param separ_stations nom de la colonne par rapport à laquelle séparer les données avec différents shape (par exemple pour distinguer les résultats de plusieurs stations de mesures)
@@ -47,8 +48,8 @@ graphDCE_points <-
            nom_legende = NULL,
            titre = NULL,
            taille_titre = 12,
-           sous_titre=NULL,
-           taille_sous_titre=10,
+           sous_titre = NULL,
+           taille_sous_titre = 11,
            unite = NULL,
            bilan_annuel = FALSE,
            xmini = NULL,
@@ -59,12 +60,13 @@ graphDCE_points <-
            lignes = NULL,
            echelleLog = FALSE,
            taille_legende = 12,
+           taille_axes = 11,
            liaison = T,
            affiche_LQ = F,
            separ_stations = NULL,
            alpha = 0.8)
   {
-		#browser()
+    #browser()
     data1 <- data.frame(data)
     if (!is.null(seuils)) {
       seuils1 <- seuils[[1]]@seuils
@@ -88,7 +90,8 @@ graphDCE_points <-
       }
 
       ##### on homogénéise les times zones pour l'ensemble des données (conserver GMT qui évite des bugs de décallage avec scale_x_datetime#####
-      attr(data1$DatePrel, "tzone") <- "Europe/Paris" # "Europe/Paris"
+      attr(data1$DatePrel, "tzone") <-
+        "Europe/Paris" # "Europe/Paris"
       ##### paramétrage x mini et maxi du graph #####
       if (bilan_annuel)
       {
@@ -122,7 +125,8 @@ graphDCE_points <-
                          "Europe/Paris")
         }
         # on ne conserve que les données entre les dates xmini et xmaxi
-        data1 <- subset(data1, DatePrel >= xmini & DatePrel <= xmaxi)
+        data1 <-
+          subset(data1, DatePrel >= xmini & DatePrel <= xmaxi)
       }
       else
       {
@@ -144,7 +148,8 @@ graphDCE_points <-
                          "Europe/Paris")
         }
         # on ne conserve que les données entre les dates xmini et xmaxi
-        data1 <- subset(data1, DatePrel >= xmini & DatePrel <= xmaxi)
+        data1 <-
+          subset(data1, DatePrel >= xmini & DatePrel <= xmaxi)
         # on élargi les échelles min et max pour que les premiers points soient totalement dans la zone colorée
         xmini <-
           xmini - abs(range(data1$DatePrel)[2] - range(data1$DatePrel)[1]) * 0.05
@@ -243,7 +248,8 @@ graphDCE_points <-
       # calcul du nb de décimales max dans les seuils1 (à défaut dans les données) pour choisir le nb de décimales à afficher dans légende
       if (!is.null(seuils1))
       {
-        nb_decim <- max(sapply(seuils1$SEUILMIN, compte_decimales), na.rm = T)
+        nb_decim <-
+          max(sapply(seuils1$SEUILMIN, compte_decimales), na.rm = T)
       }
       else
       {
@@ -273,10 +279,12 @@ graphDCE_points <-
 
       # si ymini et ymaxi non définis alors on zoom le graphique autour de la plage de données disponible
       if (is.null(ymini)) {
-        seuils1minmax <- c(min_data, seuils1minmax[seuils1minmax >= min_data])
+        seuils1minmax <-
+          c(min_data, seuils1minmax[seuils1minmax >= min_data])
       }
       if (is.null(ymaxi)) {
-        seuils1minmax <- c(seuils1minmax[seuils1minmax <= max_data], max_data)
+        seuils1minmax <-
+          c(seuils1minmax[seuils1minmax <= max_data], max_data)
       }
 
       # on ne conserve que les seuils1 d'affichage entre ymini et ymaxi
@@ -301,24 +309,24 @@ graphDCE_points <-
         # les couleurs sont en character et non facteurs
         seuils1$NOM_COULEUR <- as.character(seuils1$NOM_COULEUR)
         # on corrige le tableau de couleurs pour l'adapter aux min-max
-        if (nrow(seuils1[seuils1$SEUILMIN < min(seuils1minmax, na.rm = T), ]) >
+        if (nrow(seuils1[seuils1$SEUILMIN < min(seuils1minmax, na.rm = T),]) >
             0) {
-          seuils1[seuils1$SEUILMIN < min(seuils1minmax, na.rm = T), ]$SEUILMIN <-
+          seuils1[seuils1$SEUILMIN < min(seuils1minmax, na.rm = T),]$SEUILMIN <-
             min(seuils1minmax, na.rm = T)
         }
-        if (nrow(seuils1[seuils1$SEUILMAX < min(seuils1minmax, na.rm = T), ]) >
+        if (nrow(seuils1[seuils1$SEUILMAX < min(seuils1minmax, na.rm = T),]) >
             0) {
-          seuils1[seuils1$SEUILMAX < min(seuils1minmax, na.rm = T), ]$SEUILMAX <-
+          seuils1[seuils1$SEUILMAX < min(seuils1minmax, na.rm = T),]$SEUILMAX <-
             min(seuils1minmax, na.rm = T)
         }
-        if (nrow(seuils1[seuils1$SEUILMIN > max(seuils1minmax, na.rm = T), ]) >
+        if (nrow(seuils1[seuils1$SEUILMIN > max(seuils1minmax, na.rm = T),]) >
             0) {
-          seuils1[seuils1$SEUILMIN > max(seuils1minmax, na.rm = T), ]$SEUILMIN <-
+          seuils1[seuils1$SEUILMIN > max(seuils1minmax, na.rm = T),]$SEUILMIN <-
             max(seuils1minmax, na.rm = T)
         }
-        if (nrow(seuils1[seuils1$SEUILMAX > max(seuils1minmax, na.rm = T), ]) >
+        if (nrow(seuils1[seuils1$SEUILMAX > max(seuils1minmax, na.rm = T),]) >
             0) {
-          seuils1[seuils1$SEUILMAX > max(seuils1minmax, na.rm = T), ]$SEUILMAX <-
+          seuils1[seuils1$SEUILMAX > max(seuils1minmax, na.rm = T),]$SEUILMAX <-
             max(seuils1minmax, na.rm = T)
         }
 
@@ -339,7 +347,8 @@ graphDCE_points <-
         }
         couleurs <- paste0("c(", couleurs, ")")
         # suppression des classes de qualité avec les seuils1 min et max égaux
-        seuils1 <- seuils1[which(seuils1$SEUILMIN != seuils1$SEUILMAX), ]
+        seuils1 <-
+          seuils1[which(seuils1$SEUILMIN != seuils1$SEUILMAX),]
         # ajout des xmini et maxi
         seuils1$xmini <- xmini
         seuils1$xmaxi <- xmaxi
@@ -358,13 +367,13 @@ graphDCE_points <-
                min(seuils1minmax[seuils1minmax > -Inf], na.rm = T),
                NA)
       if (any(!is.na(data1$depassementSUP))) {
-        depassSUP <- subset(data1,!is.na(depassementSUP))
-        data1[which(!is.na(data1$depassementSUP)), ]$RsAna <-
+        depassSUP <- subset(data1, !is.na(depassementSUP))
+        data1[which(!is.na(data1$depassementSUP)),]$RsAna <-
           max(seuils1minmax[seuils1minmax < Inf], na.rm = T)
       }
       if (any(!is.na(data1$depassementINF))) {
-        depassINF <- subset(data1,!is.na(depassementINF))
-        data1[which(!is.na(data1$depassementINF)), ]$RsAna <-
+        depassINF <- subset(data1, !is.na(depassementINF))
+        data1[which(!is.na(data1$depassementINF)),]$RsAna <-
           min(seuils1minmax[seuils1minmax > -Inf], na.rm = T)
       }
 
@@ -387,13 +396,13 @@ graphDCE_points <-
         if (!is.null(seuils)) {
           unite <-
             tools4DCE::unites_sandre[tools4DCE::unites_sandre$`Code de l'unite de reference` ==
-                                       seuils[[1]]@code_unite, ]$`Symbole de l'unite de reference`[1]
+                                       seuils[[1]]@code_unite,]$`Symbole de l'unite de reference`[1]
         }
         else {
           unite <- ""
         }
       }
-			 #browser()
+      #browser()
 
       ##### Cas du titre de graphique #####
       # si le titre n'est pas renseigné mais que le seuil est renseigné alors on renseigne le titre à partir de l'information contenue dans l'objet seuil
@@ -506,7 +515,8 @@ graphDCE_points <-
       # cas où on ne distingue pas les codes stations
       if (is.null(separ_stations))
       {
-        graph1 <- graph1 + geom_point(data = data1, aes(x = DatePrel, y = RsAna))
+        graph1 <-
+          graph1 + geom_point(data = data1, aes(x = DatePrel, y = RsAna))
       }
       else
       {
@@ -527,13 +537,14 @@ graphDCE_points <-
 
       if (!is.null(sous_titre)) {
         graph1 <-
-          graph1 + labs(subtitle=sous_titre) + theme(plot.subtitle = element_text(size = taille_titre))
+          graph1 + labs(subtitle = sous_titre) + theme(plot.subtitle = element_text(size = taille_titre))
       }
 
       graph1 <- graph1 + xlab('') + ylab(unite)
       # ajout des lignes au niveau des seuils1
       if (length(lignes) > 0) {
-        graph1 <- graph1 + geom_hline(yintercept = lignes, linetype = "dashed")
+        graph1 <-
+          graph1 + geom_hline(yintercept = lignes, linetype = "dashed")
       }
 
       # ajout des indications de valeurs hors plage de données
@@ -575,7 +586,12 @@ graphDCE_points <-
           panel.grid.major = element_line(colour = "black"),
           panel.grid.minor = element_blank(),
           panel.spacing = unit(2, "lines"),
-          axis.text.x = element_text(angle = 90, vjust = 0.5)
+          axis.text.x = element_text(
+            angle = 90,
+            vjust = 0.5,
+            size = taille_axes
+          ),
+          axis.text.y = element_text(size = taille_axes)
         )
 
     } # fin du traitement s'il existe bien des données à traiter
