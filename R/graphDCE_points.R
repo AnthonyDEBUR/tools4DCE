@@ -532,12 +532,12 @@ graphDCE_points <-
       # ajout du titre et des noms d'axes
       if (!is.null(titre)) {
         graph1 <-
-          graph1 + ggtitle(titre) + theme(plot.title = element_text(size = taille_titre))
+          graph1 + ggtitle(titre)
       }
 
       if (!is.null(sous_titre)) {
         graph1 <-
-          graph1 + labs(subtitle = sous_titre) + theme(plot.subtitle = element_text(size = taille_titre))
+          graph1 + labs(subtitle = sous_titre)
       }
 
       graph1 <- graph1 + xlab('') + ylab(unite)
@@ -591,7 +591,9 @@ graphDCE_points <-
             vjust = 0.5,
             size = taille_axes
           ),
-          axis.text.y = element_text(size = taille_axes)
+          axis.text.y = element_text(size = taille_axes),
+          plot.title = element_text(size = taille_titre),
+          plot.subtitle = element_text(size = taille_sous_titre)
         )
 
     } # fin du traitement s'il existe bien des données à traiter

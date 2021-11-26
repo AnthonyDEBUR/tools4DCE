@@ -387,10 +387,7 @@ graphDCE_bar <-
       # ajout du titre et des noms d'axes
       if (!is.null(titre)) {
         graph1 <-
-          graph1 + ggtitle(titre) + theme(
-            plot.title = element_text(size = taille_titre),
-            axis.text = element_text(size = taille_axes)
-          )
+          graph1 + ggtitle(titre)
       }
       graph1 <- graph1 + xlab('') + ylab(unite)
 
@@ -411,7 +408,9 @@ graphDCE_bar <-
           panel.grid.minor = element_blank(),
           panel.spacing = unit(2, "lines"),
           axis.text.x = element_text(angle = 90, vjust = 0.5),
-
+          plot.title = element_text(size = taille_titre),
+          axis.text = element_text(size = taille_axes),
+          axis.title = element_text(size = taille_axes)
         )
 
 

@@ -97,6 +97,7 @@ graphDCE_distribution <-
       theme(
         legend.position = "bottom",
         plot.title = element_text(size = taille_titre),
+        plot.subtitle = element_text(size = taille_titre),
         legend.box = "vertical",
         legend.margin = margin(),
         axis.text = element_text(size=taille_axes)

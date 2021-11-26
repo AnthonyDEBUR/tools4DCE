@@ -8,6 +8,7 @@ graphDCE_distribution(
   donnees,
   titre = "",
   taille_titre = 12,
+  taille_axes = 11,
   legende_LQ = c("NON QUANTIFIE", "QUANTIFIE"),
   affiche_valeurs = T,
   min_affiche = 0.1,
@@ -22,6 +23,8 @@ graphDCE_distribution(
 \item{titre}{: titre du graphique}
 
 \item{taille_titre}{taille police du titre (par défaut 12)}
+
+\item{taille_axes}{taille police des axes (par défaut 11)}
 
 \item{legende_LQ}{: vecteur de character de longueur 2 qui précise l'étiquette pour les données inférieures et supérieures à la LQ}
 

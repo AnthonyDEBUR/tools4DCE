@@ -15,7 +15,7 @@ graphDCE_points(
   titre = NULL,
   taille_titre = 12,
   sous_titre = NULL,
-  taille_sous_titre = 10,
+  taille_sous_titre = 11,
   unite = NULL,
   bilan_annuel = FALSE,
   xmini = NULL,
@@ -26,6 +26,7 @@ graphDCE_points(
   lignes = NULL,
   echelleLog = FALSE,
   taille_legende = 12,
+  taille_axes = 11,
   liaison = T,
   affiche_LQ = F,
   separ_stations = NULL,
@@ -74,6 +75,8 @@ graphDCE_points(
 \item{echelleLog}{booléen : si vrai le graphique est affiché en échelle logarithmique (FALSE par défaut)}
 
 \item{taille_legende}{taille police caractères de la légende}
+
+\item{taille_axes}{taille police de caractères des axes}
 
 \item{liaison}{option faisant afficher ou pas des lignes pointillées entre les points (défaut = TRUE)}
 

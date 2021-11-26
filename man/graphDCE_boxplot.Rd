@@ -15,6 +15,7 @@ graphDCE_boxplot(
   xlab = "",
   titre = NULL,
   taille_titre = 12,
+  taille_axes = 11,
   affiche_legende = T,
   nom_legende = NULL,
   taille_legende = 12,
@@ -42,6 +43,8 @@ graphDCE_boxplot(
 \item{titre}{titre du graphique (si absent et si seuils et renseigné, la légende par défaut sera distribution suivi de la valeur du  le slot nom_parametre)}
 
 \item{taille_titre}{taille police du titre (par défaut 12)}
+
+\item{taille_axes}{taille police des axes (par défaut 11)}
 
 \item{affiche_legende}{booléen indiquant s'il faut afficher la légende (par défaut TRUE)}
 
