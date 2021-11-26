@@ -592,6 +592,7 @@ graphDCE_points <-
             size = taille_axes
           ),
           axis.text.y = element_text(size = taille_axes),
+          axis.title=element_text(size = taille_axes),
           plot.title = element_text(size = taille_titre),
           plot.subtitle = element_text(size = taille_sous_titre)
         )
