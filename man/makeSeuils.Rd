@@ -10,6 +10,7 @@ makeSeuils(
   CdFraction = NULL,
   CdUnite = NULL,
   type_seuil = NULL,
+  nom_seuil = NULL,
   specificites = NULL
 )
 }
@@ -23,6 +24,8 @@ makeSeuils(
 \item{CdUnite}{vecteur optionnel de character qui liste les codes unité à sélectionner}
 
 \item{type_seuil}{vecteur optionnel de character qui liste les types de seuils à afficher ("DCE", "NON_DCE")}
+
+\item{nom_seuil}{vecteur optionnel de character qui liste les noms de suils à afficher ("AM. 25/01/2010", "OSPAR")}
 
 \item{specificites}{vecteur optionnel de character qui liste les spécificités ("SALMONICOLE", "CYPRINICOLE")}
 }
