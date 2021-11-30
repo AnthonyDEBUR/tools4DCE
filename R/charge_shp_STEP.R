@@ -14,7 +14,7 @@
 charge_shp_STEP <-
   function(crs = 2154,
            shp_emprise = NULL) {
-    # on charge le shp des SAGE de France à partir de l'atlas carto du SANDRE
+    # on charge le shp des STEP de France à partir de l'atlas carto du SANDRE
 
     url <- "https://services.sandre.eaufrance.fr/geo/odp"
 

@@ -9,10 +9,10 @@
 #' @return la fonction renvoie une liste avec un slot shp = objet sf avec les ICPE de l'emprise indiquée,
 #' @return avec un slot rejets = table avec les rejets référencés dans le registre national des émissions polluantes,
 #' @return et un slot prelevements avec les prélèvements d'eau issus de ce registre
-#' @examples ICPE<-charge_shp_ICPE(nom_sage="Vilaine")
+#' @examples ICPE<-charge_shp_ICPE(shp_emprise=charge_shp_SAGE(nom_sage="Vilaine"))
 #' @export
 charge_shp_ICPE <- function(crs = 2154, shp_emprise = NULL) {
-  # on charge le shp des SAGE de France à partir de https://www.georisques.gouv.fr/donnees/bases-de-donnees/installations-industrielles
+  # on charge le shp des ICPE de France à partir de https://www.georisques.gouv.fr/donnees/bases-de-donnees/installations-industrielles
   url <- "https://mapsref.brgm.fr/wxs/georisques/georisques_dl"
 
   sf_prov <- url %>%
@@ -47,7 +47,7 @@ charge_shp_ICPE <- function(crs = 2154, shp_emprise = NULL) {
     shp_emprise <- st_transform(shp_emprise, crs = 2154)
 
     # on découpe par rapport à l'emprise de l'objet shp_emprise
-    bel_regions <- bel_regions[shp_emprise,]
+    bel_regions <- bel_regions[shp_emprise, ]
   }
 
   # on projette dans le crs de sortie
@@ -111,6 +111,7 @@ charge_shp_ICPE <- function(crs = 2154, shp_emprise = NULL) {
     try(ajout <-
           read.csv2(paste0(tmp2, "/", dates[i] , "/emissions.csv"), encoding =
                       "UTF-8"))
+    try(ajout$identifiant <- as.character(ajout$identifiant))
     if (nrow(ajout) > 0) {
       ifelse((i == 1 | nrow(emissions) == 0),
              emissions <- ajout,
@@ -125,6 +126,7 @@ charge_shp_ICPE <- function(crs = 2154, shp_emprise = NULL) {
                       "UTF-8"))
     try(ajout <-
           ajout %>% dplyr::mutate(across(starts_with("prelevements"), ~ as.numeric(.))))
+    try(ajout$identifiant <- as.character(ajout$identifiant))
     if (nrow(ajout) > 0) {
       ifelse(
         i == 1 |
@@ -138,7 +140,28 @@ charge_shp_ICPE <- function(crs = 2154, shp_emprise = NULL) {
   }
 
   # mise en forme des tableaux d'emissions et de prélèvements
-  emissions$identifiant <- paste0("0", emissions$identifiant)
+  emissions$identifiant <- gsub("[^0-9]", "", emissions$identifiant)
+
+  emissions$identifiant <-
+    paste0(
+      substr(emissions$identifiant, 1, nchar(emissions$identifiant) - 5),
+      ".",
+      substr(
+        emissions$identifiant,
+        nchar(emissions$identifiant) - 4,
+        nchar(emissions$identifiant)
+      )
+    )
+
+  emissions$identifiant <-
+    paste0(sapply(
+      emissions$identifiant,
+      FUN = function(x) {
+        ifelse(10 - nchar(x) > 0, paste0(rep("0", 10 - nchar(x)), collapse = ""), "")
+      }
+    ),
+    emissions$identifiant)
+
   emissions <-
     emissions %>% subset(
       milieu %in% c("Eau (indirect)", "Eau (direct)") &
@@ -152,7 +175,27 @@ charge_shp_ICPE <- function(crs = 2154, shp_emprise = NULL) {
   emissions <- emissions %>% select(-nom_etablissement)
 
 
-  prelevements$identifiant <- paste0("0", prelevements$identifiant)
+  prelevements$identifiant <- gsub("[^0-9]", "", prelevements$identifiant)
+
+  prelevements$identifiant <-
+    paste0(
+      substr(prelevements$identifiant, 1, nchar(prelevements$identifiant) - 5),
+      ".",
+      substr(
+        prelevements$identifiant,
+        nchar(prelevements$identifiant) - 4,
+        nchar(prelevements$identifiant)
+      )
+    )
+
+  prelevements$identifiant <-
+    paste0(sapply(
+      prelevements$identifiant,
+      FUN = function(x) {
+        ifelse(10 - nchar(x) > 0, paste0(rep("0", 10 - nchar(x)), collapse = ""), "")
+      }
+    ),
+    prelevements$identifiant)
   prelevements <-
     prelevements %>% subset(identifiant %in% bel_regions$code_s3ic)
 
@@ -182,7 +225,7 @@ charge_shp_ICPE <- function(crs = 2154, shp_emprise = NULL) {
     tmp <- emissions %>% subset(identifiant == id_em[i])
 
     # On ne conserve que les colonnes de date non totalement vides
-    tmp <- tmp %>% select_if( ~ !all(is.na(.))) %>% ungroup
+    tmp <- tmp %>% select_if(~ !all(is.na(.))) %>% ungroup
 
     # selection des 3 dernières années renseignées
     tmp <-
@@ -192,7 +235,7 @@ charge_shp_ICPE <- function(crs = 2154, shp_emprise = NULL) {
     # On supprime les lignes composées exclusivement de NA
     tmp <- tmp %>% filter(if_any(starts_with("20"), ~ !is.na(.)))
 
-    bel_regions[bel_regions$code_s3ic == id_em[i], ]$emissions <-
+    bel_regions[bel_regions$code_s3ic == id_em[i],]$emissions <-
       tmp %>%
       tableHTML() %>% as.character
 
@@ -212,7 +255,7 @@ charge_shp_ICPE <- function(crs = 2154, shp_emprise = NULL) {
     tmp <- prelevements %>% subset(identifiant == id_em[i])
 
     # On ne conserve que les colonnes de date non totalement vides
-    tmp <- tmp %>% select_if( ~ !all(is.na(.))) %>% ungroup
+    tmp <- tmp %>% select_if(~ !all(is.na(.))) %>% ungroup
 
     # selection des 3 dernières années renseignées
     tmp <-
@@ -222,7 +265,7 @@ charge_shp_ICPE <- function(crs = 2154, shp_emprise = NULL) {
     # On supprime les lignes composées exclusivement de NA
     tmp <- tmp %>% filter(if_any(starts_with("20"), ~ !is.na(.)))
 
-    bel_regions[bel_regions$code_s3ic == id_em[i], ]$prelevements <-
+    bel_regions[bel_regions$code_s3ic == id_em[i],]$prelevements <-
       tmp %>%
       tableHTML() %>% as.character
 

@@ -23,5 +23,5 @@ charge sous forme d'objet le shape des ICPE depuis https://www.georisques.gouv.f
 et les émissions polluantes depuis https://www.georisques.gouv.fr/donnees/bases-de-donnees/installations-industrielles-rejetant-des-polluants
 }
 \examples{
-ICPE<-charge_shp_ICPE(nom_sage="Vilaine")
+ICPE<-charge_shp_ICPE(shp_emprise=charge_shp_SAGE(nom_sage="Vilaine"))
 }
