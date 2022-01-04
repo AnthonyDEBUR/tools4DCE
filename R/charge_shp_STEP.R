@@ -109,11 +109,11 @@ charge_shp_STEP <-
             read_excel(path = paste0(tmp2, "/SISPEA_FR_", dates[i], "_AC.xls"),
                        sheet = "Ouvrages"))
       try(ajout$ANNEE <- dates[i])
-      ifelse(i == 1 | nrow(sispea) == 0,
+      try(ifelse(i == 1 | nrow(sispea) == 0,
              sispea <- ajout,
              sispea <-
-               bind_rows(ajout, sispea))
-      rm(ajout)
+               bind_rows(ajout, sispea)))
+      try(rm(ajout))
     }
 
     # pour chaque ouvrage épuratoire on conserve la dernière année saisie
