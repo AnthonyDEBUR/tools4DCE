@@ -48,38 +48,25 @@ charge_shp_STEP <-
     # on projette dans le crs de sortie
     bel_regions <- st_transform(bel_regions, crs = crs)
 
-    tmp <-
-      data.frame(
-        code = seq(0, 5, by = 1) %>% as.character(),
-        Type_station = c(
-          "Inconnue",
-          "Urbaine",
-          "Industrielle",
-          "Agricole",
-          "Privé",
-          "Mixte"
-        )
-      )
     bel_regions$CdNatureSystTraitementEauxUsees <-
       bel_regions$CdNatureSystTraitementEauxUsees %>% as.character()
-    bel_regions <-
-      left_join(bel_regions,
-                tmp,
-                by = c("CdNatureSystTraitementEauxUsees" = "code"))
 
+    bel_regions <-
+      dplyr::rename(bel_regions, Type_station = MnNatureSystTraitementEauxUsees)
 
 
     # sélection des colonnes d’intérêt
     bel_regions <-
       bel_regions %>% select(
-        -c(
-          "gid",
-          "CdNatureSystTraitementEauxUsees",
-          "CoordXOuvrageDepollution":"CdProjCoordOuvrageDepollution",
-          "CdExistAutosurv":"CdAgglomerationAssainissement",
-          "CdCommunePrincipale":"LbCommune",
-          "SomChrgMaxEntree":"CdTypeOuvrageDepollution"
-        )
+        CdOuvrageDepollution,
+        NomAgglomerationAssainissement,
+        NomOuvrageDepollution,
+        Type_station,
+        CapaciteNom,
+        DateMiseServiceOuvrageDepollution,
+        DateMiseHorServiceOuvrageDepollution,
+        LatWGS84OuvrageRejet,
+        LonWGS84OuvrageRejet
       )
 
 
@@ -110,9 +97,9 @@ charge_shp_STEP <-
                        sheet = "Ouvrages"))
       try(ajout$ANNEE <- dates[i])
       try(ifelse(i == 1 | nrow(sispea) == 0,
-             sispea <- ajout,
-             sispea <-
-               bind_rows(ajout, sispea)))
+                 sispea <- ajout,
+                 sispea <-
+                   bind_rows(ajout, sispea)))
       try(rm(ajout))
     }
 
@@ -174,30 +161,10 @@ charge_shp_STEP <-
     rejets <-
       data.frame(
         CdOuvrageDepollution = bel_regions$CdOuvrageDepollution,
-        Xrejet = NA,
-        Yrejet = NA
+        Xrejet = bel_regions$LonWGS84OuvrageRejet,
+        Yrejet = bel_regions$LatWGS84OuvrageRejet
       )
 
-
-    for (i in 1:length(bel_regions$CdOuvrageDepollution))
-    {
-      webpage <-
-        read_html(
-          paste0(
-            "http://assainissement.developpement-durable.gouv.fr/fiche.php?code=",
-            bel_regions$CdOuvrageDepollution[i]
-          )
-        )
-      tmp <- webpage %>%
-        rvest::html_element("body") %>% rvest::html_children() %>% rvest::html_children()
-      tmp <- tmp[[5]] %>% rvest::html_children()
-      tmp <-
-        tmp[[7]] %>% as.character %>% str_split(",", simplify = T)
-      rejets[i,]$Yrejet <-
-        tmp[1, 1] %>% gsub("[^0-9.-]", "", .) %>% as.numeric
-      rejets[i,]$Xrejet <-
-        tmp[1, 2] %>% as.numeric
-    }
 
     # conversion des points de rejet en shp
     rejets <-
@@ -225,20 +192,25 @@ charge_shp_STEP <-
       select("CdOuvrageDepollution", "lon1", "lat1", "lon2", "lat2")
 
     make_line <- function(lon1, lat1, lon2, lat2) {
-      st_linestring(matrix(c(lat1, lat2,lon1, lon2), 2, 2))
+      st_linestring(matrix(c(lat1, lat2, lon1, lon2), 2, 2))
     }
 
 
-    tmp<-tmp %>%
+    tmp <- tmp %>%
       select(-CdOuvrageDepollution) %>%
       pmap(make_line) %>%
       st_as_sfc(crs = crs) %>%
       {
-        tibble(CdOuvrageDepollution = tmp$CdOuvrageDepollution, geometry = .)
+        tibble(CdOuvrageDepollution = tmp$CdOuvrageDepollution,
+               geometry = .)
       } %>%
       st_sf()
 
 
 
-  return(list(shp=bel_regions, shp_rejets=rejets, liaison_STEP_rejet=tmp))
+    return(list(
+      shp = bel_regions,
+      shp_rejets = rejets,
+      liaison_STEP_rejet = tmp
+    ))
   }
