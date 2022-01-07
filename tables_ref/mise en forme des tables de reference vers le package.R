@@ -30,7 +30,15 @@ download.file(
 unites_sandre <- read_delim("unites.csv.gz", delim = ";", skip = 1)
 file.remove("unites.csv.gz")
 
-colnames(unites_sandre)<-stringi::stri_trans_general(colnames(unites_sandre), "Latin-ASCII")
+colnames(unites_sandre) <-
+  stringi::stri_trans_general(colnames(unites_sandre), "Latin-ASCII")
+
+unites_sandre <-
+  unites_sandre %>% dplyr::rename(
+    "CdUniteMesure" = "Code de l'unite de reference",
+    "SymUniteMesure" = "Symbole de l'unite de reference",
+    "LblUniteMesure" = "Libelle de l'unite de reference"
+  )
 
 save(unites_sandre, file = "data/unites_sandre.RData")
 
@@ -41,12 +49,13 @@ download.file(
   mode = "wb",
   cacheOK = T
 )
-Sys.setenv("VROOM_CONNECTION_SIZE"=5000000)
+Sys.setenv("VROOM_CONNECTION_SIZE" = 5000000)
 
 parametres_sandre <-
   read_delim("param.csv.gz", delim = ";")
 
-parametres_sandre<-parametres_sandre%>%subset(CdParametre != "Code du paramètre")
+parametres_sandre <-
+  parametres_sandre %>% subset(CdParametre != "Code du paramètre")
 
 
 parametres_sandre$CdParametre <-

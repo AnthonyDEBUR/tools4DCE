@@ -182,6 +182,20 @@ ajoute_nom_param(donnees, col_parametre="code")
 
 ```
 
+
+## Ajout du nom des unités à partir de codes SANDRE unités
+La fonction ajoute_nom_unite permet d'ajouter à une data frame qui contient des codes unités SANDRE les symboles ou nom d'unité correspondants.
+
+```{r}
+donnees<-data.frame(CdUniteMesure2=c("129", "13", "133"))
+ajoute_nom_unite(donnees, CdUniteMesure="CdUniteMesure")
+
+```
+
+
+
+
+
 # Chargement de données
 
 Le package tools4DCE offre plusieurs fonctions pour charger des données de qualité des eaux.
