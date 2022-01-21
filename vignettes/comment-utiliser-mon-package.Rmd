@@ -32,6 +32,33 @@ Elle sert à déterminer combien de chiffres significatifs il faut conserver sur
 compte_decimales(3.234)
 ```
 
+## arrondi
+Fonction pour calculer les arrondis selon les règles usuelels en France (et non comme la fonction round qui arrondi différemment les nombres terminant par 0.5 selon si leur partie entière est paire ou impaire).
+
+
+```{r}
+round(2.5)
+arrondi(2.5)
+
+round(1.5)
+arrondi(1.5)
+
+
+```
+
+
+
+## PercentileDCE
+
+Calcul le percentile selon les règles DCE.
+Dans l'exemple ci-dessous le percentile 90 correspond au 18ème rang sur 20 valeurs (rang = arrondi((20 x 0.9) + 0.5))
+
+```{r}
+test<-sample(x=1:100, size=20, replace=T)
+test%>%sort
+PercentileDCE(test, type=0.9)
+```
+
 
 ## Couleurs et échelle des fonds graphiques
 Les couleurs et les valeurs des seuils pour les différents paramètres sont listés dans le jeu de données base_seuils
@@ -82,7 +109,7 @@ Idem pour les codes support, fraction, pour les types de seuils (DCE ou NON_DCE)
 
 ```{r}
 
-test<-makeSeuils(CdParametre=c("1340", "1301"), specificites=c(NA, "CYPRINICOLE"), type_seuil = "DCE")
+test<-makeSeuils(CdParametre=c("1340", "1301"), specificites=c("CAS_GENERAL", "CYPRINICOLE"), type_seuil = "DCE")
 print(test)
 ```
 
@@ -153,7 +180,7 @@ Il permet également de faire le bilan par paramètre
 donnees<-data.frame(parametres=rep(c("1301", "1340", "1335"), 100), RsAna=sample(0.1:100, 300, replace=TRUE), LqAna=c(0.5,1,6))
 donnees<-donnees%>%mutate(RsAna=ifelse(RsAna<LqAna, LqAna, RsAna))
 donnees<-donnees%>%mutate(CdRqAna=ifelse(RsAna>LqAna, "1", ifelse(sample(1:100,5)>10,"10","1")))
-seuils<-makeSeuils(CdParametre=donnees$parametres%>%unique, specificites=c("CYPRINICOLE", rep(NA,2)), type_seuil = "DCE")
+seuils<-makeSeuils(CdParametre=donnees$parametres%>%unique, specificites=c("CYPRINICOLE", rep("CAS_GENERAL",2)), type_seuil = "DCE")
 bilan<-groupe_tableau_distribution(donnees, col_CdParametre="parametres", col_CdSupport=NULL, col_CdFraction=NULL, col_CdUnite=NULL, seuils = seuils)
 print(bilan)
 
@@ -187,8 +214,8 @@ ajoute_nom_param(donnees, col_parametre="code")
 La fonction ajoute_nom_unite permet d'ajouter à une data frame qui contient des codes unités SANDRE les symboles ou nom d'unité correspondants.
 
 ```{r}
-donnees<-data.frame(CdUniteMesure2=c("129", "13", "133"))
-ajoute_nom_unite(donnees, CdUniteMesure="CdUniteMesure")
+donnees<-data.frame(CdUniteMesure=c("129", "13", "133"))
+ajoute_nom_unite(donnees, col_unite="CdUniteMesure")
 
 ```
 
