@@ -24,7 +24,7 @@ PercentileDCE <- function(A, type = 0.9, na.rm = T)
       type > 1) {
     stop("type doit être un nombre entre 0 et 1")
   }
-  if (na.rm == T &
+  if (na.rm == F &
       any(is.na(A))) {
     stop(
       "Une valeur dans le vecteur d'entrée n'est pas un nombre. Utiliser le paramètre na.rm=TRUE pour ne pas prendre en compte les valeurs manquantes."
