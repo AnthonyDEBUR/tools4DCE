@@ -74,6 +74,17 @@ graphDCE_points <-
       seuils1 <- NULL
     }
 
+    if (!is.null(ymaxi) & !is.null(ymini)) {
+      if (ymaxi <= ymini) {
+        stop("ymaxi doit être strictement supérieur à ymini")
+      }
+    }
+    if (!is.null(xmaxi) & !is.null(xmini)) {
+      if (xmaxi <= xmini) {
+        stop("xmaxi doit être strictement supérieur à xmini")
+      }
+    }
+
 
     if ((nrow(data1) > 0) &
         (!all(is.na(data1[[col_valeurs]]))))
@@ -287,6 +298,11 @@ graphDCE_points <-
           c(seuils1minmax[seuils1minmax <= max_data], max_data)
       }
 
+      # si seuils1minmax[1]==seuils1minmax[2] (les échelles des ordonnées mini et maxi sont identiques) alors on ajoute un bruit pour décaller le seuil max
+      if (seuils1minmax[1] == seuils1minmax[2]) {
+        seuils1minmax[2] <- seuils1minmax[2] + max(0.1 * seuils1minmax[2], 0.001)
+      }
+
       # on ne conserve que les seuils1 d'affichage entre ymini et ymaxi
       if (!is.null(ymini)) {
         seuils1minmax <- seuils1minmax[seuils1minmax >= ymini]
@@ -309,24 +325,24 @@ graphDCE_points <-
         # les couleurs sont en character et non facteurs
         seuils1$NOM_COULEUR <- as.character(seuils1$NOM_COULEUR)
         # on corrige le tableau de couleurs pour l'adapter aux min-max
-        if (nrow(seuils1[seuils1$SEUILMIN < min(seuils1minmax, na.rm = T),]) >
+        if (nrow(seuils1[seuils1$SEUILMIN < min(seuils1minmax, na.rm = T), ]) >
             0) {
-          seuils1[seuils1$SEUILMIN < min(seuils1minmax, na.rm = T),]$SEUILMIN <-
+          seuils1[seuils1$SEUILMIN < min(seuils1minmax, na.rm = T), ]$SEUILMIN <-
             min(seuils1minmax, na.rm = T)
         }
-        if (nrow(seuils1[seuils1$SEUILMAX < min(seuils1minmax, na.rm = T),]) >
+        if (nrow(seuils1[seuils1$SEUILMAX < min(seuils1minmax, na.rm = T), ]) >
             0) {
-          seuils1[seuils1$SEUILMAX < min(seuils1minmax, na.rm = T),]$SEUILMAX <-
+          seuils1[seuils1$SEUILMAX < min(seuils1minmax, na.rm = T), ]$SEUILMAX <-
             min(seuils1minmax, na.rm = T)
         }
-        if (nrow(seuils1[seuils1$SEUILMIN > max(seuils1minmax, na.rm = T),]) >
+        if (nrow(seuils1[seuils1$SEUILMIN > max(seuils1minmax, na.rm = T), ]) >
             0) {
-          seuils1[seuils1$SEUILMIN > max(seuils1minmax, na.rm = T),]$SEUILMIN <-
+          seuils1[seuils1$SEUILMIN > max(seuils1minmax, na.rm = T), ]$SEUILMIN <-
             max(seuils1minmax, na.rm = T)
         }
-        if (nrow(seuils1[seuils1$SEUILMAX > max(seuils1minmax, na.rm = T),]) >
+        if (nrow(seuils1[seuils1$SEUILMAX > max(seuils1minmax, na.rm = T), ]) >
             0) {
-          seuils1[seuils1$SEUILMAX > max(seuils1minmax, na.rm = T),]$SEUILMAX <-
+          seuils1[seuils1$SEUILMAX > max(seuils1minmax, na.rm = T), ]$SEUILMAX <-
             max(seuils1minmax, na.rm = T)
         }
 
@@ -348,7 +364,7 @@ graphDCE_points <-
         couleurs <- paste0("c(", couleurs, ")")
         # suppression des classes de qualité avec les seuils1 min et max égaux
         seuils1 <-
-          seuils1[which(seuils1$SEUILMIN != seuils1$SEUILMAX),]
+          seuils1[which(seuils1$SEUILMIN != seuils1$SEUILMAX), ]
         # ajout des xmini et maxi
         seuils1$xmini <- xmini
         seuils1$xmaxi <- xmaxi
@@ -367,13 +383,13 @@ graphDCE_points <-
                min(seuils1minmax[seuils1minmax > -Inf], na.rm = T),
                NA)
       if (any(!is.na(data1$depassementSUP))) {
-        depassSUP <- subset(data1, !is.na(depassementSUP))
-        data1[which(!is.na(data1$depassementSUP)),]$RsAna <-
+        depassSUP <- subset(data1,!is.na(depassementSUP))
+        data1[which(!is.na(data1$depassementSUP)), ]$RsAna <-
           max(seuils1minmax[seuils1minmax < Inf], na.rm = T)
       }
       if (any(!is.na(data1$depassementINF))) {
-        depassINF <- subset(data1, !is.na(depassementINF))
-        data1[which(!is.na(data1$depassementINF)),]$RsAna <-
+        depassINF <- subset(data1,!is.na(depassementINF))
+        data1[which(!is.na(data1$depassementINF)), ]$RsAna <-
           min(seuils1minmax[seuils1minmax > -Inf], na.rm = T)
       }
 
@@ -396,7 +412,7 @@ graphDCE_points <-
         if (!is.null(seuils)) {
           unite <-
             tools4DCE::unites_sandre[tools4DCE::unites_sandre$CdUniteMesure ==
-                                       seuils[[1]]@code_unite,]$SymUniteMesure[1]
+                                       seuils[[1]]@code_unite, ]$SymUniteMesure[1]
         }
         else {
           unite <- ""
@@ -592,7 +608,7 @@ graphDCE_points <-
             size = taille_axes
           ),
           axis.text.y = element_text(size = taille_axes),
-          axis.title=element_text(size = taille_axes),
+          axis.title = element_text(size = taille_axes),
           plot.title = element_text(size = taille_titre),
           plot.subtitle = element_text(size = taille_sous_titre)
         )
