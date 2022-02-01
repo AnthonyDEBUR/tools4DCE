@@ -9,6 +9,7 @@
 #' Cette échelle est calculée selon la règle suivante :
 #'  - s'il y a moins de 10 données, ymaxi = 1.2*max(donnees, na.rm=T)
 #'  - s'il y a plus de 10 données, ymaxi est calculé de manière empirique comme max(4 x interquantile(10%-90%) + quartile 90%)
+#'  A la fin de ce calcul, si ymaxi est identique au minimum des valeurs alors ymaxi = max(donnees, na.rm=T)
 #'
 #' @examples data<-runif(30, 0, 10)%>%round(2)
 #' @examples calcule_ymaxi(data)
@@ -27,6 +28,9 @@ calcule_ymaxi <- function(donnees)
         tools4DCE::ceiling_dec(ymaxi, max(sapply(
           donnees, tools4DCE::compte_decimales
         ), na.rm = T))
+
+      if(ymaxi==min(donnees, na.rm = T)){ymaxi<-max(donnees, na.rm = T)}
+
     }
   }
   return(ymaxi)

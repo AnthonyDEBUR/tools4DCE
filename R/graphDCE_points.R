@@ -298,10 +298,6 @@ graphDCE_points <-
           c(seuils1minmax[seuils1minmax <= max_data], max_data)
       }
 
-      # si seuils1minmax[1]==seuils1minmax[2] (les échelles des ordonnées mini et maxi sont identiques) alors on ajoute un bruit pour décaller le seuil max
-      if (seuils1minmax[1] == seuils1minmax[2]) {
-        seuils1minmax[2] <- seuils1minmax[2] + max(0.1 * seuils1minmax[2], 0.001)
-      }
 
       # on ne conserve que les seuils1 d'affichage entre ymini et ymaxi
       if (!is.null(ymini)) {
