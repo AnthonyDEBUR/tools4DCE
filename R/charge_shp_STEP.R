@@ -151,7 +151,7 @@ charge_shp_STEP <-
       )
 
     bel_regions$url_portail_assainissement <-    paste0(
-      "<a href='http://assainissement.developpement-durable.gouv.fr/fiche.php?code=",
+      "<a href='https://www.assainissement.developpement-durable.gouv.fr/PortailAC/fiche-",
       bel_regions$CdOuvrageDepollution,
       "' target='_blank'>lien portail assainissement</a>"
     )
