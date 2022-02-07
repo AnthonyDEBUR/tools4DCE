@@ -80,7 +80,7 @@ graphDCE_points <-
       }
     }
     if (!is.null(xmaxi) & !is.null(xmini)) {
-      if (xmaxi <= xmini) {
+      if ((xmaxi <= xmini) & bilan_annuel==FALSE) {
         stop("xmaxi doit être strictement supérieur à xmini")
       }
     }
