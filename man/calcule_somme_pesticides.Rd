@@ -50,7 +50,7 @@ Si pour une même station et une même date il y a plusieurs résultats du même
 Si pour une même station et une même date on trouve un paramètre inclus dans un deuxième (ex. S-métolachlore et métolachlore total), alors seule la valeur du paramètre qui englobe l'autre (métolachore total par ex.) est retenu.
 paramètres incluant d'autres paramètres :
 \itemize{
-\item métolachlore total
+\item métolachlore total (somme des isomères R et S) + exclure le paramètre S-métolachlore (mélange des 2 isomères avec au moins 80\% d'isomère S) si le métolachlore total est renseigné
 \item mecoprop (inclus Mécoprop-P)
 \item diméthénamide (inclus diméthénamide-P (= isomère S))
 \item dichlorprop (inclus dichlorprop-P)

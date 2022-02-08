@@ -16,6 +16,7 @@ Cette échelle est calculée selon la règle suivante :
 \itemize{
 \item s'il y a moins de 10 données, ymaxi = 1.2*max(donnees, na.rm=T)
 \item s'il y a plus de 10 données, ymaxi est calculé de manière empirique comme max(4 x interquantile(10\%-90\%) + quartile 90\%)
+A la fin de ce calcul, si ymaxi est identique au minimum des valeurs alors ymaxi = max(donnees, na.rm=T)
 }
 }
 \description{

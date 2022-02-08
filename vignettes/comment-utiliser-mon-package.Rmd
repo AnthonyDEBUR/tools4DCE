@@ -271,6 +271,24 @@ Resultats<-import_QESU_PHY_v3("fichier.xml")
 
 Les résultats sont stockés dans une liste de  data.frame avec des noms de colonne identiques à ceux des imports Naïades
 
+## Import de données hydrobiologiques depuis HubEau
+
+Le package permet d'importer les résultats d'Hub-Eau sous R facilement
+### Import des stations de mesures avec des données hydrobiologiques
+
+On peut importer par code station
+```{r}
+import_hub_eau_staq_hbio(liste_stations=c("03174000", "04216000"))
+```
+
+Ou bien par emprise géographique (en se limitant éventellement aux stations qui ont des données sur une période déterminée et pour un type d'indice limités).
+```{r}
+Vilaine<-charge_shp_SAGE(nom_sage="Vilaine")
+head(import_hub_eau_staq_hbio(emprise=Vilaine, an_debut=2018, an_fin=2018, indice=c("poi")),2)
+
+```
+
+
 
 # Outils pesticides
 
