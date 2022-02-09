@@ -21,7 +21,7 @@ names(ordre_facteurs_qualite) <- "CLASSE"
 save(ordre_facteurs_qualite, file = "data/ordre_facteurs_qualite.RData")
 
 # valeurs de reference EQR
-base_ref_EQR <-
+base_ref_eqr <-
   read_xlsx("tables_ref/base_reference_EQR.xlsx",
             col_types =  c(rep("text", 3), rep("numeric", 2), rep("text", 1)))
 save(base_ref_EQR, file = "data/base_ref_eqr.RData")
