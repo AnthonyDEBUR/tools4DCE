@@ -279,20 +279,20 @@ Le package permet d'importer les résultats d'Hub-Eau sous R facilement
 
 On peut importer par code station
 ```{r}
-import_hub_eau_staq_hbio(liste_stations=c("03174000", "04216000"))
+import_hubeau_staq_hbio(liste_stations=c("03174000", "04216000"))
 ```
 
 Ou bien par emprise géographique (en se limitant éventellement aux stations qui ont des données sur une période déterminée et pour un type d'indice limités).
 ```{r}
 Vilaine<-charge_shp_SAGE(nom_sage="Vilaine")
-str(import_hub_eau_staq_hbio(emprise=Vilaine, an_debut=2018, an_fin=2018, indice=c("poi")))
+str(import_hubeau_staq_hbio(emprise=Vilaine, an_debut=2018, an_fin=2018, indice=c("poi")))
 
 ```
 
 ### Import des indices hydrobiologiques
 On peut importer les indices disponibles par code station. Ces indices sont remis en forme pour être directement valorisables avec les fonctions graphiques du package.
 ```{r}
-str(import_hub_eau_indices_hbio(liste_stations=c("03174000", "04216000"), indice=c("mphy")))
+str(import_hubeau_indices_hbio(liste_stations=c("03174000", "04216000"), indice=c("mphy")))
 ```
 
 

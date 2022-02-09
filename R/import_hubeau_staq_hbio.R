@@ -1,4 +1,4 @@
-#' import_hub_eau_staq_hbio
+#' import_hubeau_staq_hbio
 #'
 #' Importe depuis Hubeau une liste de station avec des indices hydrobiologiques
 #' https://hubeau.eaufrance.fr/page/api-hydrobiologie
@@ -16,7 +16,7 @@
 #' @examples import_hub_eau_staq_hbio(emprise=Vilaine, an_debut=2010)
 #' @examples import_hub_eau_staq_hbio(liste_stations=c("03174000", "04216000"))
 #' @export
-import_hub_eau_staq_hbio <-
+import_hubeau_staq_hbio <-
   function(emprise = NULL,
            liste_stations = NULL,
            an_debut = 1900,
@@ -88,7 +88,7 @@ import_hub_eau_staq_hbio <-
       data <- httr::GET(url_base,
                         query = list(
                           bbox = paste0(bbox_emprise, collapse = ","),
-                          codes_supports = paste0(support, collapse = ","),
+                          code_support = paste0(support, collapse = ","),
                           size = 10000
                         ))
     } else
@@ -97,7 +97,7 @@ import_hub_eau_staq_hbio <-
         url_base,
         query = list(
           code_station_hydrobio = paste0(liste_stations, collapse = ","),
-          codes_supports = paste0(support, collapse = ","),
+          code_support = paste0(support, collapse = ","),
           size = 10000
         )
       )

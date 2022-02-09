@@ -15,7 +15,7 @@
 #' @return la fonction renvoie un tibble avec la liste des stations de mesures concernées
 #' @examples import_hub_eau_indices_hbio(liste_stations=c("03174000", "04216000"))
 #' @export
-import_hub_eau_indices_hbio <-
+import_hubeau_indices_hbio <-
   function(liste_stations = NULL,
            an_debut = 1900,
            an_fin = format(Sys.Date(), "%Y") %>% as.numeric(),
@@ -71,7 +71,7 @@ import_hub_eau_indices_hbio <-
       url_base,
       query = list(
         code_station_hydrobio = paste0(liste_stations, collapse = ","),
-        codes_supports = paste0(support, collapse = ","),
+        code_support = paste0(support, collapse = ","),
         size = 10000
         # ,
         # date_debut_prelevement=paste0(an_debut, "-01-01"),
