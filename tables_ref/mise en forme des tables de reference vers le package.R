@@ -24,7 +24,8 @@ save(ordre_facteurs_qualite, file = "data/ordre_facteurs_qualite.RData")
 base_ref_eqr <-
   read_xlsx("tables_ref/base_reference_EQR.xlsx",
             col_types =  c(rep("text", 3), rep("numeric", 2), rep("text", 1)))
-save(base_ref_EQR, file = "data/base_ref_eqr.RData")
+base_ref_eqr$TYPEFR<-factor(base_ref_eqr$TYPEFR)
+save(base_ref_eqr, file = "data/base_ref_eqr.RData")
 
 
 # telechargement du referentiel unites sandre
