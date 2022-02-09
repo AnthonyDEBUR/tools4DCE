@@ -1,4 +1,4 @@
-#' import_hub_eau_indices_hbio
+#' import_hubeau_indices_hbio
 #'
 #' Importe depuis Hubeau les indices hydrobiologiques d'une sélection de station sur une période donnée
 #' https://hubeau.eaufrance.fr/page/api-hydrobiologie
@@ -13,7 +13,7 @@
 #' @param alarme Comportement à avoir si la requête renvoi un code erreur : "stop" : renvoi une erreur bloquante "warning" : envoi un simple message d'alerte
 #'
 #' @return la fonction renvoie un tibble avec la liste des stations de mesures concernées
-#' @examples import_hub_eau_indices_hbio(liste_stations=c("03174000", "04216000"))
+#' @examples import_hubeau_indices_hbio(liste_stations=c("03174000", "04216000"))
 #' @export
 import_hubeau_indices_hbio <-
   function(liste_stations = NULL,
