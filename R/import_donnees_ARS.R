@@ -1,6 +1,7 @@
 #' import_donnees_ARS
 #'
-#' fonction pour importer un fichier .zip exporté de Naiades sous forme d'objets R
+#' fonction pour importer un fichier .zip exporté depuis le site data.gouv.fr sous forme d'objets R
+#' https://www.data.gouv.fr/api/1/datasets/resultats-du-controle-sanitaire-de-leau-du-robinet/
 #'
 #' @param x un fichier .zip exporté depuis la base nationale Naïades
 #' @param shp objet sf facultatif. Si le paramètre est renseigné, seules les données acquises à l'intérieur du périmètre sont conservées.

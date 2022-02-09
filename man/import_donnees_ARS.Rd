@@ -17,7 +17,8 @@ import_donnees_ARS(x, shp = NULL, type = "eau_brute")
 la fonction renvoie une liste de data.frame avec les résultats contenus dans le fichier
 }
 \description{
-fonction pour importer un fichier .zip exporté de Naiades sous forme d'objets R
+fonction pour importer un fichier .zip exporté depuis le site data.gouv.fr sous forme d'objets R
+https://www.data.gouv.fr/api/1/datasets/resultats-du-controle-sanitaire-de-leau-du-robinet/
 }
 \examples{
 x<-"http://data.cquest.org/sise-eaux/eaurob-2016.zip"
