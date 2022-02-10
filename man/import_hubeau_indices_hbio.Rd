@@ -2,7 +2,7 @@
 % Please edit documentation in R/import_hubeau_indices_hbio.R
 \name{import_hubeau_indices_hbio}
 \alias{import_hubeau_indices_hbio}
-\title{import_hub_eau_indices_hbio}
+\title{import_hubeau_indices_hbio}
 \usage{
 import_hubeau_indices_hbio(
   liste_stations = NULL,
@@ -35,5 +35,5 @@ Les champs sont remis en forme pour être directement compatibles avec les param
 En raison d'un bug sur l'API hub-eau (version bêta du 09/02/2022), les options an_debut an_fin ne sont pas fonctionnelles.
 }
 \examples{
-import_hub_eau_indices_hbio(liste_stations=c("03174000", "04216000"))
+import_hubeau_indices_hbio(liste_stations=c("03174000", "04216000"))
 }

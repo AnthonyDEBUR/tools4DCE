@@ -18,7 +18,7 @@ Ce document explique comment télécharger des indices hydrobiologiques depuis H
 A partir de la plateforme Hubeau, on télécharge les données hydrobiologiques disponibles sur les stations 04207400 et 04216000.
 
 ```{r}
-donnees<-import_hubeau_indices_hbio(liste_stations = c("04207400", "04216000"))
+donnees<-import_hubeau_indices_hbio(liste_stations = c("04207400"))
 str(donnees)
 ```
 
@@ -28,14 +28,19 @@ str(donnees)
 Le package tools4DCE fournit une table avec les paramètres nécessaires au calcul des EQR selon la typologie de cours d'eau, conformément à l'arrêté ministériel du 25 janvier 2010 modifié.
 
 ```{r}
-str(data(base_ref_eqr))
+str(base_ref_eqr)
+
 
 ```
+## Calcul des EQR
 
-## Objet de classe seuil_eqr_hydrobio
+Le package contient une fonction pour calculer les EQR.
 
-On peut convertir cette table (ou toute table présentant les mêmes noms de colonnes) en objet de classe S4 : seuil_eqr_hydrobio.
-Ces objets relient une typologie de station et un paramètre (IBD ou IBMR) aux valeurs de référence qui permettent le calcul de l'EQR.
+```{r}
+donnees_IBD<-donnees%>%subset(CdParametre=="5856" & !is.na(RsAna))
 
+donnees_IBD$EQR<-sapply(donnees_IBD$RsAna, CdParametre=='5856', Typologie=="P12-A")
+
+```
 
 
