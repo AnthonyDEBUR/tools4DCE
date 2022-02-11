@@ -15,7 +15,7 @@ Ce document explique comment télécharger des indices hydrobiologiques depuis H
 
 # Chargement de donnees hydrobiologiques depuis Hubeau
 
-A partir de la plateforme Hubeau, on télécharge les données hydrobiologiques disponibles sur les stations 04207400 et 04216000.
+A partir de la plateforme Hubeau, on télécharge les données hydrobiologiques disponibles sur la station 04207400.
 
 ```{r}
 donnees<-import_hubeau_indices_hbio(liste_stations = c("04207400"))
@@ -38,9 +38,29 @@ Le package contient une fonction pour calculer les EQR.
 
 ```{r}
 donnees_IBD<-donnees%>%subset(CdParametre=="5856" & !is.na(RsAna))
-
-donnees_IBD$EQR<-sapply(donnees_IBD$RsAna, CdParametre=='5856', Typologie=="P12-A")
+donnees_IBD$EQR<-sapply(donnees_IBD$RsAna, function(x){calcule_EQR_hbio(x, CdParametre='5856', typologie="P12-A")})
 
 ```
+
+## Graphique des résultats
+Le package permet de mettre facilement les résulytats sous forme graphique
+
+Création d'un seuil qualité :
+```{r, fig.width=6}
+seuil_IBD<-makeSeuils(CdParametre = "5856", type_seuil = "DCE", specificites = "<10000 km2")
+graphDCE_points(donnees_IBD, col_valeurs = "EQR", seuils=seuil_IBD, ymini=0, ymaxi=1) + ylab("EQR")
+
+
+```
+
+## Calcul de la classe de qualité correspondant à chaque résultat
+Il permet également d'affecter une classe de qualité à chaque résultat.
+
+Création d'un seuil qualité :
+```{r}
+donnees_IBD$CLASSE<-sapply(donnees_IBD$EQR, function(x){affecte_une_classe(x, seuil_IBD)})
+
+```
+
 
 

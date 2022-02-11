@@ -46,7 +46,7 @@ Le package tools4DCE aide à réaliser des graphiques spécialement conçus pour
 Le code suivant fourni un exemple de graphiques pour le paramètre codé 1340 (Nitrates).
 La zone grisée correspond à la limite de quantification.
 
-```{r fig.width=5}
+```{r fig.width=6}
 data0<-data.frame(DatePrel=Sys.Date() + sort(sample(1:500, 30)), RsAna=c(round(runif(30,0,100), 0)), LqAna=c(3))
 graphDCE_points(data0, seuils=makeSeuils(CdParametre = "1340", type_seuil="DCE", specificites="CAS_GENERAL"), affiche_LQ = T, ymini = 0, sous_titre="station inconnue")
 
@@ -54,14 +54,14 @@ graphDCE_points(data0, seuils=makeSeuils(CdParametre = "1340", type_seuil="DCE",
 
 Si on le souhaite, on peut zoomer sur le graphique et afficher les valeurs hors gamme sous forme de cases colorées à l'aid ede l'option ymaxi.
 
-```{r, fig.width=5}
+```{r, fig.width=6}
 graphDCE_points(data0, seuils=makeSeuils(CdParametre = "1340", type_seuil="DCE", specificites="CAS_GENERAL"), affiche_LQ = T, ymini = 0, ymaxi=90)
 
 ```
 
 Si le jeu de données comporte une donnée très largement supérieures aux autres, alors la fonction définira l'échelle visible sans prendre en compte cette valeur (qui apparaitra sous forme d'un rectangle coloré).
 
-```{r, fig.width=5}
+```{r, fig.width=6}
 
 data0[10,"RsAna"]<-800
 graphDCE_points(data0, seuils=makeSeuils(CdParametre = "1340", type_seuil="DCE", specificites="CAS_GENERAL"), affiche_LQ = T, ymini = 0)
@@ -71,14 +71,14 @@ graphDCE_points(data0, seuils=makeSeuils(CdParametre = "1340", type_seuil="DCE",
 ## Graphiques en mode barre
 On peut également réaliser des graphiques en barre, par exemple pour faire des bilans annuels
 
-```{r, fig.width=5}
+```{r, fig.width=6}
 data<-data.frame(annee=seq(2010,2013), RsAna=c(12,15.5,67,18.3))
 graphDCE_bar(data, seuils=makeSeuils(CdParametre = "1340", type_seuil="DCE", specificites="CAS_GENERAL"),ymaxi=60)
 ```
 
 ## Graphiques boites à moustache
 
-```{r fig.width=5}
+```{r fig.width=6}
 data1<-data.frame(DatePrel=Sys.Date() + sort(sample(1:2000, 100)), RsAna=c(round(runif(100,0,100), 0)), LqAna=c(3))
 data1$mois<-format(data1$DatePrel, "%m")%>%factor(levels=c("07", "08", "09", "10", "11", "12", "01", "02", "03", "04", "05", "06"))
 seuil1<-seuils<-makeSeuils(CdParametre = "1340", type_seuil="DCE", specificites="CAS_GENERAL")

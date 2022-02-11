@@ -115,7 +115,7 @@ print(test)
 
 # Exemples de graphs en mode points
 
-```{r fig.width=5}
+```{r fig.width=6}
 data0<-data.frame(DatePrel=c("2019-01-01 12:30:00", "2020-05-03 00:00:00","2020-10-25 12:30:00", "2021-07-18 12:30:00")%>%as.POSIXct(tz="Europe/Paris"), RsAna=c(12,35.5,58.3, 42), LqAna=c(3))
 graphDCE_points(data0, seuils=makeSeuils(CdParametre = "1340", type_seuil="DCE"), affiche_LQ = T, ymini = 0)
 
@@ -126,13 +126,13 @@ graphDCE_points(data0, seuils=makeSeuils(CdParametre = "1340", type_seuil="DCE")
 
 En cas de points hors de l'échelle, la fonction trace remplace ces points par une étiquette colorée qui reprend la valeur du point manquant affiché de la couleur correspondant à sa classe de qualité.
 
-```{r fig.width=5}
+```{r fig.width=6}
 graphDCE_points(data0, seuils=makeSeuils(CdParametre = "1340", type_seuil="DCE"), ymaxi=55, titre = "Nitrates", bilan_annuel = T, nom_legende = "Classe \nqualité")
 ```
 En l'état, la fonction graphDCE_points ne permet pas d'afficher de légende pour l'affichage des LQ.
 Ce manque peut être contourné en combinant la fonction legend_LQ() avec la fonction plot_grid du package cowplot.
 
-```{r}
+```{r, fig.width=6}
 
 
 graph<-graphDCE_points(data0, seuils=makeSeuils(CdParametre = "1340", type_seuil="DCE"), affiche_LQ = T, ymini = 0)
@@ -144,7 +144,7 @@ plot_grid(graph, legend_LQ(), rel_heights = c(9,1), ncol=1)
 
 # graphs en barre
 On peut également réaliser des graphiques en barre, par exemple pour faire des bilans annuels
-```{r}
+```{r, fig.width=6}
 data<-data.frame(annee=seq(2010,2013), RsAna=c(12,15.5,67,18.3))
 graphDCE_bar(data, seuils=makeSeuils(CdParametre = "1340", type_seuil="DCE"),ymaxi=60)
 
@@ -189,7 +189,7 @@ seuils$TEMPERATURE@seuils
 
 et de faire une sortie graphique de ce bilan
 
-```{r}
+```{r, fig.width=6}
       
 
 graphDCE_distribution(bilan, titre="Bilan par paramètre") 
@@ -279,7 +279,7 @@ Le package permet d'importer les résultats d'Hub-Eau sous R facilement
 
 On peut importer par code station
 ```{r}
-import_hubeau_staq_hbio(liste_stations=c("03174000", "04216000"))
+str(import_hubeau_staq_hbio(liste_stations=c("03174000", "04216000")))
 ```
 
 Ou bien par emprise géographique (en se limitant éventellement aux stations qui ont des données sur une période déterminée et pour un type d'indice limités).

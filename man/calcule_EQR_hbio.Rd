@@ -5,34 +5,27 @@
 \title{calcule_EQR_hbio}
 \usage{
 calcule_EQR_hbio(
-  data,
-  col_parametre = "CdParametre",
-  col_date = "DatePrel",
-  col_valeur = "RsAna",
-  col_station = "CdStationMesureEauxSurface",
-  resultat_seul = T
+  valeur_indice,
+  CdParametre,
+  typologie,
+  specificite = "CAS_GENERAL"
 )
 }
 \arguments{
-\item{data}{tableau de données avec les résultats d'analyse}
+\item{valeur_indice}{note à convertir en EQR}
 
-\item{col_parametre}{nom de la colonne qui identifie les pesticides. Par défaut CdParametre}
+\item{CdParametre}{code sandre du paramètre à convertir}
 
-\item{col_date}{nom de la colonne avec la date du prélèvement. Par defaut DatePrel.}
+\item{typologie}{: typologie de la station à convertir}
 
-\item{col_valeur}{nom de la colonne avec les résultats d'analyse. Par défaut RsAna.}
-
-\item{col_station}{nom de la colonne qui renseigne sur où se trouve les différentes stations. Par défaut CdStationMesureEauxSurface}
-
-\item{resultat_seul}{booléen. Si il vaut TRUE, la fonction ne renvoie que la colonne somme pesticides. Si il vaut FALSE, la fonction renvoie une colonne par paramètre pris en compte}
+\item{specificite}{: précisions sur la typologie (ex pour IBD de > 10000 km2 ou pas)}
 }
 \value{
-la fonction renvoie une dataframe avec les informations sur la station, la date, l'unité et la valeur de la somme des pesticides ainsi qu'une colonne avec chaque pesticide constituant la somme.
+la fonction renvoie l'AQR correspondant à la note.
 }
 \description{
 fonction pour calculer l'EQR d'un indice hydrobiologique à partir de la note de l'indice et de la typologie de la staation.
 }
 \examples{
-data<-import_hubeau_indices_hbio(liste_stations="03174000", indice="inv")
-calcule_EQR_hbio(data)
+calcule_EQR_hbio(15.5, CdParametre="5856", typologie="P12-A", specificite="CAS_GENERAL")
 }
