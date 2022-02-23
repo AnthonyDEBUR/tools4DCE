@@ -21,10 +21,12 @@ calcule_EQR_hbio(
 \item{specificite}{: précisions sur la typologie (ex pour IBD de > 10000 km2 ou pas)}
 }
 \value{
-la fonction renvoie l'AQR correspondant à la note.
+la fonction renvoie l'EQR correspondant à la note.
 }
 \description{
-fonction pour calculer l'EQR d'un indice hydrobiologique à partir de la note de l'indice et de la typologie de la staation.
+fonction pour calculer l'EQR d'un indice hydrobiologique à partir de la note de l'indice et de la typologie de la station.
+la valeur est arrondie à la deuxième décimale pour les IBD et IBMR
+la valeur est arrondie à la cinquième décimale pour les IBG grands cours d'eau et IBGN
 }
 \examples{
 calcule_EQR_hbio(15.5, CdParametre="5856", typologie="P12-A", specificite="CAS_GENERAL")

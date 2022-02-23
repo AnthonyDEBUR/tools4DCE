@@ -4,10 +4,12 @@
 \alias{arrondi}
 \title{arrondi}
 \usage{
-arrondi(nb)
+arrondi(nb, digits = 0)
 }
 \arguments{
 \item{nb}{nombre à arrondir}
+
+\item{digits}{nombre de chiffres significatifs}
 }
 \value{
 l'arrondi du nombre selon les règles usuelles en France

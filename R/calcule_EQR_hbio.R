@@ -1,13 +1,15 @@
 #' calcule_EQR_hbio
 #'
-#' fonction pour calculer l'EQR d'un indice hydrobiologique à partir de la note de l'indice et de la typologie de la staation.
+#' fonction pour calculer l'EQR d'un indice hydrobiologique à partir de la note de l'indice et de la typologie de la station.
+#' la valeur est arrondie à la deuxième décimale pour les IBD et IBMR
+#' la valeur est arrondie à la cinquième décimale pour les IBG grands cours d'eau et IBGN
 #'
 #' @param valeur_indice note à convertir en EQR
 #' @param CdParametre code sandre du paramètre à convertir
 #' @param typologie : typologie de la station à convertir
 #' @param specificite : précisions sur la typologie (ex pour IBD de > 10000 km2 ou pas)
 #'
-#' @return la fonction renvoie l'AQR correspondant à la note.
+#' @return la fonction renvoie l'EQR correspondant à la note.
 #'
 #' @examples calcule_EQR_hbio(15.5, CdParametre="5856", typologie="P12-A", specificite="CAS_GENERAL")
 #' @export
@@ -44,6 +46,11 @@ calcule_EQR_hbio <-
     # on limite EQR entre 0 et 1
     if(EQR<0){EQR<-0}
     if(EQR>1){EQR<-1}
+
+    # on arrondi les valeurs avec un nombre de décimale fonction du paramètre
+    if(CdParametre%in%c("5856", "2928")){EQR<-arrondi(EQR,digits=2)}
+    if(CdParametre%in%c("5910", "6951")){EQR<-arrondi(EQR,digits=5)}
+
 
     return(EQR)
   }
