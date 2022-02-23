@@ -41,5 +41,9 @@ calcule_EQR_hbio <-
     EQR = (valeur_indice - base_eqr$NOTE_MINI) / (base_eqr$NOTE_REFERENCE -
                                                     base_eqr$NOTE_MINI)
 
+    # on limite EQR entre 0 et 1
+    if(EQR<0){EQR<-0}
+    if(EQR>1){EQR<-1}
+
     return(EQR)
   }

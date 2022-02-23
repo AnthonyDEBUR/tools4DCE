@@ -1,0 +1,59 @@
+---
+title: "Utilisation des fonctions cartographiques"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Utilisation des fonctions cartographiques}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+
+```{r message=FALSE, warning = FALSE}
+library(tools4DCE)
+```
+
+
+# Interrogation des services cartographiques du SANDRE
+La librairie tools4DCE permet d'interroger les services cartographiques du SANDRE.
+Par exemple elle permet d'importer sous R le périmètre géographique d'un ou plusieurs SAGE
+
+```{r}
+SAGE <- charge_shp_SAGE(nom_sage = c("Vilaine", "Iton"), crs=2154)
+plot(SAGE[,2])
+
+```
+
+Elle permet également de récupérer les stations de mesures et les lieux de prélèvements localisées dans un périmètre géographique précis (sans cette précision, l'ensemble des stations définies sous le SANDRE sont téléchargées).
+```{r}
+
+stations <- charge_shp_STAQ(shp_emprise=SAGE)
+plot(stations[,1])
+
+```
+On peut de la même façon charger les points de suivis associés aux stations de mesures depuis le SANDRE.
+```{r}
+
+lieux_qual <- charge_shp_lieux_qualite(shp_emprise=SAGE)
+plot(lieux_qual[,1])
+
+
+```
+
+On peut également charger les stations d'épuration du territoire depuis l'atlas cartographique du SANDRE
+```{r}
+STEP<-charge_shp_STEP(shp_emprise=SAGE)
+plot(STEP[,1])
+```
+
+
+Ou les sites ICPE (élevage et industrie).
+```{r}
+ICPE<-charge_shp_ICPE(shp_emprise=SAGE)
+plot(ICPE$shp[,1])
+
+
+
+
+```
+
+

@@ -5,7 +5,7 @@
 \alias{base_ref_eqr}
 \title{base_ref_eqr}
 \format{
-An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 328 rows and 6 columns.
+An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 456 rows and 6 columns.
 }
 \usage{
 data(base_ref_eqr)
