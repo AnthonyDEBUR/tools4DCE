@@ -43,7 +43,7 @@ donnees_IBD$EQR<-sapply(donnees_IBD$RsAna, function(x){calcule_EQR_hbio(x, CdPar
 ```
 
 ## Graphique des résultats
-Le package permet de mettre facilement les résulytats sous forme graphique
+Le package permet de mettre facilement les résultats sous forme graphique
 
 Création d'un seuil qualité :
 ```{r, fig.width=6}

@@ -30,7 +30,8 @@ graphDCE_points(
   liaison = T,
   affiche_LQ = F,
   separ_stations = NULL,
-  alpha = 0.8
+  alpha = 0.8,
+  coef_axes_date = 1
 )
 }
 \arguments{
@@ -85,6 +86,8 @@ graphDCE_points(
 \item{separ_stations}{nom de la colonne par rapport à laquelle séparer les données avec différents shape (par exemple pour distinguer les résultats de plusieurs stations de mesures)}
 
 \item{alpha}{transparence des applats de couleurs}
+
+\item{coef_axes_date}{coefficient qui détermine le nombre de graduations pour les dates (valeur par défaut : 1). Une valeur 2 correspond au double de repères qu'une valeur de 1}
 }
 \value{
 la fonction renvoie un graphique de classe ggplot

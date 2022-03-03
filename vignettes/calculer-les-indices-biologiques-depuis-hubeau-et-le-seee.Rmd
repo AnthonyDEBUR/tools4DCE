@@ -1,0 +1,106 @@
+---
+title: "Calculer-les-indice-biologiques-depuis-hubeau-et-le-seee"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Calculer-les-indice-biologiques-depuis-hubeau-et-le-seee}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+
+```{r message=FALSE, warning = FALSE}
+library(tools4DCE)
+```
+Ce document explique comment récupérer des listes floristiques ou faunistiques depuis Hubeau (https://hubeau.eaufrance.fr/page/api-hydrobiologie) et de les transmettre à l'API SEEE pour divers calculs d'indicateurs (https://www.seee.eaufrance.fr/).
+
+# Chargement de donnees hydrobiologiques depuis Hubeau
+
+A partir de la plateforme Hubeau, on télécharge les listes faunistiques invertébrés disponibles sur la station 04207400. On se limite aux opérations pour lesquels un indice I2M2 a été calculé (faute de pouvoir rapatrier le protocole de prélèvement depuis hubeau).
+
+Liste des opérations avec I2M2
+```{r}
+
+station_etudiee<-"04207400"
+
+stations_op<-import_hubeau_indices_hbio(liste_stations = station_etudiee, indice="inv")
+stations_op<-stations_op%>%subset(CdParametre=="7613")
+
+```
+
+On importe les listes faunistiques depuis HubEau et on ne retient que les données qui correspondent à une date où l'I2M2 est calculé.
+
+```{r}
+donnees<-import_hubeau_liste_hbio(liste_stations = c(station_etudiee), indice="inv")
+donnees<-donnees%>%subset(date_prelevement%in%stations_op$DatePrel)
+```
+
+On met en forme les listes conformément au format d'entrée du script du SEEE Outil diagnostic invertébrés (https://seee.eaufrance.fr/api/indicateurs/ODInvertebres/1.0.2) 
+
+
+```{r}
+donnees$CODE_OPERATION <-
+  paste0(donnees$code_station_hydrobio, "*", donnees$date_prelevement)
+donnees$CODE_STATION <- donnees$code_station_hydrobio
+donnees$DATE <- format(donnees$date_prelevement, "%d/%m/%Y")
+donnees$TYPONATIONALE <- "P12-A"
+donnees$CODE_PHASE <- donnees$code_lot
+donnees$CODE_TAXON <- donnees$code_appel_taxon
+donnees$RESULTAT <- donnees$resultat_taxon
+donnees$CODE_REMARQUE <- donnees$code_type_resultat
+
+donnees <-
+  donnees %>% select(
+    CODE_OPERATION,
+    CODE_STATION,
+    DATE,
+    TYPONATIONALE,
+    CODE_PHASE,
+    CODE_TAXON,
+    RESULTAT,
+    CODE_REMARQUE
+  )
+
+```
+
+Appel de l'API sur le SEEE
+
+
+
+```{r}
+
+url_base <-
+  paste0("https://seee.eaufrance.fr/api/calcul?indicateur=ODInvertebres&version=1.0.2")
+
+
+fichier_tmp <- tempfile(fileext = ".csv")
+write.table(donnees, fichier_tmp, sep = "\t", row.names = F)
+
+test <-
+  POST(
+    url_base,
+    body = list(
+      `multipart/form-data` = upload_file(fichier_tmp, type = ".csv")
+    ) ,
+    encode = "multipart"
+  )
+
+
+httr::warn_for_status(test)
+
+data <- test %>%
+  httr::content(as = 'text')
+
+data <- read.csv2(text = data, skip = 1)
+
+
+
+```
+
+
+
+
+
+
+
+
+

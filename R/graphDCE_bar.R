@@ -44,9 +44,11 @@ graphDCE_bar <-
            seuils = NULL)
   {
     data1 <- as.data.frame(data)
-    if (is.factor(data1$annee)) {
-      data1$annee <- as.numeric(as.character(data1$annee))
-      cat("data$annee transformée de facteur en numerique")
+    data1$ANNEE<-data1[[col_annee]]
+    data1$RsAna<-data1[[col_valeurs]]
+    if (is.factor(data1$ANNEE)) {
+      data1$ANNEE <- as.numeric(as.character(data1$ANNEE))
+      warning("colonne col_annee transformée de facteur en numerique")
     }
     ymini <- 0
 
@@ -61,7 +63,7 @@ graphDCE_bar <-
         (!all(is.na(data1[[col_valeurs]]))))
       # on ne traite les données que si le tableau de données n'est pas vide
     {
-      data1 <- data1 %>% dplyr::rename(ANNEE = annee, RsAna = col_valeurs)
+
 
 
       if (is.null(ymaxi) &

@@ -64,7 +64,7 @@ Si le jeu de données comporte une donnée très largement supérieures aux autr
 ```{r, fig.width=6}
 
 data0[10,"RsAna"]<-800
-graphDCE_points(data0, seuils=makeSeuils(CdParametre = "1340", type_seuil="DCE", specificites="CAS_GENERAL"), affiche_LQ = T, ymini = 0)
+graphDCE_points(data0, seuils=makeSeuils(CdParametre = "1340", type_seuil="DCE", specificites="CAS_GENERAL"), affiche_LQ = T, ymini = 0, coef_axes_date=0.2)
 
 ```
 
@@ -72,8 +72,17 @@ graphDCE_points(data0, seuils=makeSeuils(CdParametre = "1340", type_seuil="DCE",
 On peut également réaliser des graphiques en barre, par exemple pour faire des bilans annuels
 
 ```{r, fig.width=6}
-data<-data.frame(annee=seq(2010,2013), RsAna=c(12,15.5,67,18.3))
-graphDCE_bar(data, seuils=makeSeuils(CdParametre = "1340", type_seuil="DCE", specificites="CAS_GENERAL"),ymaxi=60)
+data <- data.frame(annee = seq(2010, 2013),
+                   RsAna = c(12, 15.5, 67, 18.3))
+graphDCE_bar(
+  data,
+  seuils = makeSeuils(
+    CdParametre = "1340",
+    type_seuil = "DCE",
+    specificites = "CAS_GENERAL"
+  ),
+  ymaxi = 60
+)
 ```
 
 ## Graphiques boites à moustache
