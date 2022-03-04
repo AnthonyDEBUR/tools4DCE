@@ -32,6 +32,7 @@ On importe les listes faunistiques depuis HubEau et on ne retient que les donné
 ```{r}
 donnees<-import_hubeau_liste_hbio(liste_stations = c(station_etudiee), indice="inv")
 donnees<-donnees%>%subset(date_prelevement%in%stations_op$DatePrel)
+
 ```
 
 On met en forme les listes conformément au format d'entrée du script du SEEE Outil diagnostic invertébrés (https://seee.eaufrance.fr/api/indicateurs/ODInvertebres/1.0.2) 
@@ -42,7 +43,7 @@ donnees$CODE_OPERATION <-
   paste0(donnees$code_station_hydrobio, "*", donnees$date_prelevement)
 donnees$CODE_STATION <- donnees$code_station_hydrobio
 donnees$DATE <- format(donnees$date_prelevement, "%d/%m/%Y")
-donnees$TYPONATIONALE <- "P12-A"
+donnees$TYPO_NATIONALE <- "P12-A"
 donnees$CODE_PHASE <- donnees$code_lot
 donnees$CODE_TAXON <- donnees$code_appel_taxon
 donnees$RESULTAT <- donnees$resultat_taxon
@@ -53,12 +54,13 @@ donnees <-
     CODE_OPERATION,
     CODE_STATION,
     DATE,
-    TYPONATIONALE,
+    TYPO_NATIONALE,
     CODE_PHASE,
     CODE_TAXON,
     RESULTAT,
     CODE_REMARQUE
   )
+
 
 ```
 
@@ -68,29 +70,7 @@ Appel de l'API sur le SEEE
 
 ```{r}
 
-url_base <-
-  paste0("https://seee.eaufrance.fr/api/calcul?indicateur=ODInvertebres&version=1.0.2")
-
-
-fichier_tmp <- tempfile(fileext = ".csv")
-write.table(donnees, fichier_tmp, sep = "\t", row.names = F)
-
-test <-
-  POST(
-    url_base,
-    body = list(
-      `multipart/form-data` = upload_file(fichier_tmp, type = ".csv")
-    ) ,
-    encode = "multipart"
-  )
-
-
-httr::warn_for_status(test)
-
-data <- test %>%
-  httr::content(as = 'text')
-
-data <- read.csv2(text = data, skip = 1)
+calcule_SEEE_ODinvertebres(donnees)
 
 
 

@@ -28,7 +28,7 @@
 #' @param affiche_LQ option qui affiche une zone grisée correspondant à la LqAna (par défaut non affiché)
 #' @param separ_stations nom de la colonne par rapport à laquelle séparer les données avec différents shape (par exemple pour distinguer les résultats de plusieurs stations de mesures)
 #' @param alpha transparence des applats de couleurs
-#'
+#' @param coef_axes_date coefficient qui détermine le nombre de graduations pour les dates (valeur par défaut : 1). Une valeur 2 correspond au double de repères qu'une valeur de 1
 #'
 #' @return la fonction renvoie un graphique de classe ggplot
 #'
@@ -64,8 +64,14 @@ graphDCE_points <-
            liaison = T,
            affiche_LQ = F,
            separ_stations = NULL,
-           alpha = 0.8)
+           alpha = 0.8,
+           coef_axes_date = 1)
   {
+
+    if(class(coef_axes_date)!="numeric"){stop("le paramètre coef_axes_date doit être un nombre strictement positif")}
+    if(coef_axes_date<=0){stop("le paramètre coef_axes_date doit être un nombre strictement positif")}
+
+
     #browser()
     data1 <- data.frame(data)
     if (!is.null(seuils)) {
@@ -180,47 +186,49 @@ graphDCE_points <-
 
       # durée <= 1 jour
       if (duree_jours <= 1) {
-        break_date_max <- "1 hour"
+        break_date_max <- paste0(ceiling(60*coef_axes_date)," minutes")
         dateformat <- "%d%b%y %Hh"
       }
       # durée <= 15 jours
       else if (duree_jours <= 15) {
-        break_date_max <- "1 day"
+        break_date_max <- paste0(ceiling(24*coef_axes_date)," hours")
         dateformat <- "%d%b%y"
       }
       # durée <= 31 jours
       else if (duree_jours <= 31) {
-        break_date_max <- "2 days"
+        break_date_max <- paste0(ceiling(48*coef_axes_date)," hours")
         dateformat <- "%d%b%y"
       }
       # durée <= 1 an
       else if (duree_jours <= 365) {
-        break_date_max <- "1 month"
+        break_date_max <- ifelse(coef_axes_date>=1, paste0(ceiling(1*coef_axes_date)," months"), paste0(ceiling(4*coef_axes_date)," weeks"))
+
+
         dateformat <- "%d%b%y"
       }
       # durée <= 2 ans
       else if (duree_jours <= 2 * 365) {
-        break_date_max <- "3 months"
+        break_date_max <-  paste0(ceiling(3*coef_axes_date)," months")
         dateformat <- "%d%b%y"
       }
       # durée entre 2 et 3 ans
       else if (duree_jours %/% 365 <= 3) {
-        break_date_max <- "6 months"
+        break_date_max <-  paste0(ceiling(6*coef_axes_date)," months")
         dateformat <- "%d%b%y"
       }
       # durée entre 4 et 15 ans
       else if (duree_jours %/% 365 <= 14) {
-        break_date_max <- "1 year"
-        dateformat <- "%b%Y"
+        break_date_max <- ifelse(coef_axes_date>=1, paste0(ceiling(1*coef_axes_date)," year"), paste0(ceiling(12*coef_axes_date)," months"))
+          dateformat <- "%b%Y"
       }
       # durée entre 15 et 30 ans
       else if (duree_jours %/% 365 <= 29) {
-        break_date_max <- "5 years"
+        break_date_max <- paste0(ceiling(5*coef_axes_date)," years")
         dateformat <- "%b%Y"
       }
       # durée >30 ans
       else {
-        break_date_max <- "10 years"
+        break_date_max <- paste0(ceiling(10*coef_axes_date)," years")
         dateformat <- "%b%Y"
       }
 
