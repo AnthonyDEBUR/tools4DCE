@@ -1,7 +1,7 @@
-#' calcule_SEEE_I2M2
+#' calcule_SEEE_IBG_DCE
 #'
 #' fonction pour traiter une liste I2M2 via le script diagnostic invertébrés du SEEE
-#' voir : https://seee.eaufrance.fr/ outil d'évaluation I2M2 v1.0.6
+#' voir : https://seee.eaufrance.fr/ outil de diagnostic invertébrés v. 1.0.2
 #'
 #' Les colonnes à passer impérativement dans la table d'entrée sont celles prévues dans le script :
 #' -  CODE_OPERATION : identifiant unique de l'opération
@@ -17,7 +17,7 @@
 #' @param donnees = data.table avec les colonnes requises par le script
 #'
 #'
-#' @return Résultats outil I2M2 invertébrés SEEE
+#' @return Résultats outil IBG-DCE invertébrés SEEE
 #'
 #' @examples stations_op<-import_hubeau_indices_hbio(liste_stations = "04207400", indice="inv")
 #' @examples stations_op<-stations_op%>%subset(CdParametre=="7613")
@@ -33,11 +33,11 @@
 #' @examples donnees$RESULTAT <- donnees$resultat_taxon
 #' @examples donnees$CODE_REMARQUE <- donnees$code_type_resultat
 #' @examples donnees <- donnees %>% select(CODE_OPERATION, CODE_STATION, DATE, TYPONATIONALE, CODE_PHASE, CODE_TAXON, RESULTAT, CODE_REMARQUE)
-#' @examples calcule_SEEE_I2M2(donnees)
+#' @examples calcule_SEEE_IBG_DCE(donnees)
 #'
 #' @export
 
-calcule_SEEE_I2M2 <- function(donnees)
+calcule_SEEE_IBG_DCE <- function(donnees)
 {
   if (!("data.frame" %in% class(donnees))) {
     stop("donnees doit etre un data.frame")
@@ -67,7 +67,7 @@ calcule_SEEE_I2M2 <- function(donnees)
 
 
   url_base <-
-    paste0("https://seee.eaufrance.fr/api/calcul?indicateur=I2M2&version=1.0.6")
+    paste0("https://seee.eaufrance.fr/api/calcul?indicateur=IBG-DCE&version=1.0.6")
 
 
   fichier_tmp <- tempfile(fileext = ".csv")

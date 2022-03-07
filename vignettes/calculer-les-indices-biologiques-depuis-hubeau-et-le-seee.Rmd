@@ -35,7 +35,7 @@ donnees<-donnees%>%subset(date_prelevement%in%stations_op$DatePrel)
 
 ```
 
-On met en forme les listes conformément au format d'entrée du script du SEEE Outil diagnostic invertébrés (https://seee.eaufrance.fr/api/indicateurs/ODInvertebres/1.0.2) 
+On met en forme les listes conformément au format d'entrée du script du SEEE Outil diagnostic invertébrés (https://seee.eaufrance.fr/api/indicateurs/ODInvertebres/1.0.2) - format identique à celui du script I2M2 v1.0.6
 
 
 ```{r}
@@ -86,10 +86,83 @@ calcule_SEEE_ODinvertebres(donnees)
 ```
 
 
+# IBG-DCE
+
+Script du SEEE pour le calcul de l'IBG-DCE
+
+
+```{r}
+calcule_SEEE_IBG_DCE(donnees)
+```
+
+
+# IBG Grand cours d'eau
 
 
 
 
+Liste des opérations avec IBG Grand cours d'eau (IBG-GCE)
+```{r}
+
+station_etudiee<-"04216000"
+
+stations_op<-import_hubeau_indices_hbio(liste_stations = station_etudiee, indice="inv")
+stations_op<-stations_op%>%subset(CdParametre=="6951")
+
+```
+
+On importe les listes faunistiques depuis HubEau et on ne retient que les données qui correspondent à une date où l'IBG-GCE est calculé.
+
+```{r}
+donnees<-import_hubeau_liste_hbio(liste_stations = c(station_etudiee), indice="inv")
+donnees<-donnees%>%subset(date_prelevement%in%stations_op$DatePrel)
+
+```
+
+On met en forme les listes conformément au format d'entrée du script du SEEE MGCE.
 
 
+```{r}
+donnees$CODE_OPERATION <-
+  paste0(donnees$code_station_hydrobio, "*", donnees$date_prelevement)
+donnees$CODE_STATION <- donnees$code_station_hydrobio
+donnees$DATE <- format(donnees$date_prelevement, "%d/%m/%Y")
+donnees$TYPO_NATIONALE <- "G12-A"
+donnees$CODE_PHASE <- donnees$code_lot
+donnees$CODE_TAXON <- donnees$code_appel_taxon
+donnees$RESULTAT <- donnees$resultat_taxon
+donnees$CODE_REMARQUE <- donnees$code_type_resultat
+
+donnees <-
+  donnees %>% select(
+    CODE_OPERATION,
+    CODE_STATION,
+    DATE,
+    TYPO_NATIONALE,
+    CODE_PHASE,
+    CODE_TAXON,
+    RESULTAT,
+    CODE_REMARQUE
+  )
+
+
+```
+
+On regroupe les codes lots conformément à la nomenclature 480 du SANDRE qui prévoit que ces codes valent A, B ou C.
+
+```{r}
+donnees$CODE_PHASE<-substr(donnees$CODE_PHASE,1,1)
+donnees<-donnees%>%group_by(CODE_OPERATION, CODE_PHASE, CODE_TAXON, CODE_REMARQUE, CODE_STATION, DATE, TYPO_NATIONALE)%>%dplyr::summarise(RESULTAT=sum(RESULTAT, na.rm=T))
+  
+```
+
+
+
+
+Appel de l'API du SEEE pour le calcul de l'IBG-GCE
+
+
+```{r}
+calcule_SEEE_MGCE(donnees)
+```
 
