@@ -13,7 +13,7 @@ library(tools4DCE)
 ```
 Ce document explique comment récupérer des listes floristiques ou faunistiques depuis Hubeau (https://hubeau.eaufrance.fr/page/api-hydrobiologie) et de les transmettre à l'API SEEE pour divers calculs d'indicateurs (https://www.seee.eaufrance.fr/).
 
-# Chargement de donnees hydrobiologiques depuis Hubeau
+# Chargement puis mise en forme de donnees hydrobiologiques depuis Hubeau
 
 A partir de la plateforme Hubeau, on télécharge les listes faunistiques invertébrés disponibles sur la station 04207400. On se limite aux opérations pour lesquels un indice I2M2 a été calculé (faute de pouvoir rapatrier le protocole de prélèvement depuis hubeau).
 
@@ -64,14 +64,23 @@ donnees <-
 
 ```
 
+# Indice invertébrés I2M2
+
 Appel de l'API sur le SEEE
 
+```{r}
 
+calcule_SEEE_I2M2(donnees)
+
+
+```
+
+
+# Outil diagnostic invertébrés I2M2 (inclus sorties optionnelles)
 
 ```{r}
 
 calcule_SEEE_ODinvertebres(donnees)
-
 
 
 ```

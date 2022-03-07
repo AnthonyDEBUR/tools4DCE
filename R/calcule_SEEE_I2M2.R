@@ -1,4 +1,4 @@
-#' calcule_SEEE_ODinvertebres
+#' calcule_SEEE_I2M2
 #'
 #' fonction pour traiter une liste I2M2 via le script diagnostic invertébrés du SEEE
 #' voir : https://seee.eaufrance.fr/ outil de diagnostic invertébrés v. 1.0.2
@@ -16,7 +16,8 @@
 #'
 #' @param donnees = data.table avec les colonnes requises par le script
 #'
-#' @return Résultats outil diagnostic invertébrés SEEE
+#'
+#' @return Résultats outil I2M2 invertébrés SEEE
 #'
 #' @examples stations_op<-import_hubeau_indices_hbio(liste_stations = "04207400", indice="inv")
 #' @examples stations_op<-stations_op%>%subset(CdParametre=="7613")
@@ -32,13 +33,13 @@
 #' @examples donnees$RESULTAT <- donnees$resultat_taxon
 #' @examples donnees$CODE_REMARQUE <- donnees$code_type_resultat
 #' @examples donnees <- donnees %>% select(CODE_OPERATION, CODE_STATION, DATE, TYPONATIONALE, CODE_PHASE, CODE_TAXON, RESULTAT, CODE_REMARQUE)
-#' @examples calcule_SEEE_ODinvertebres(donnees)
+#' @examples calcule_SEEE_I2M2(donnees)
 #'
 #' @export
 
-calcule_SEEE_ODinvertebres <- function(donnees)
+calcule_SEEE_I2M2 <- function(donnees)
 {
-  if (!("data.frame"%in% class(donnees))) {
+  if (!("data.frame" %in% class(donnees))) {
     stop("donnees doit etre un data.frame")
   }
 
@@ -66,9 +67,7 @@ calcule_SEEE_ODinvertebres <- function(donnees)
 
 
   url_base <-
-    paste0(
-      "https://seee.eaufrance.fr/api/calcul?indicateur=ODInvertebres&version=1.0.2"
-    )
+    paste0("https://seee.eaufrance.fr/api/calcul?indicateur=I2M2&version=1.0.6")
 
 
   fichier_tmp <- tempfile(fileext = ".csv")
@@ -77,7 +76,6 @@ calcule_SEEE_ODinvertebres <- function(donnees)
   test <-
     POST(
       url_base,
-      query = list(`sortie[complementaire]` = "1"),
       body = list(`multipart/form-data` = upload_file(fichier_tmp, type = ".csv")) ,
       encode = "multipart"
     )
@@ -88,17 +86,19 @@ calcule_SEEE_ODinvertebres <- function(donnees)
   data <- test %>%
     httr::content(as = 'text')
 
-  data <- strsplit(data, '\n[1] \"Fichier\"\n', fixed = TRUE)
+  data <- read.csv2(text = data, skip = 1)
 
-  data_base <- read.csv2(text = data[[1]][1], skip = 1)
-  data_comp <- read.csv2(text = data[[1]][2], skip = 1)
 
-  data <- left_join(data_base, data_comp, by = "CODE_OPERATION")
-  if(length(unique(donnees$CODE_OPERATION))>nrow(data)){warning("Attention, certains résultats d'opération ne figurent pas dans le fichier résultat.")}
+  if (length(unique(donnees$CODE_OPERATION)) >length(unique(data$CODE_OPERATION))) {
+    warning(
+      "Attention, certains résultats d'opération ne figurent pas dans le fichier résultat."
+    )
+  }
 
   # mise en forme des résultats
-  data<-data%>% mutate(across(4:last_col(), ~as.numeric(.)))
-  data$CODE_STATION<-paste0("0", data$CODE_STATION)
+  data$RESULTAT <- data$RESULTAT%>%as.numeric()
+  data$CODE_STATION <- paste0("0", data$CODE_STATION)
+  data$CODE_PAR<-as.character(data$CODE_PAR)
 
   return(data)
 }
