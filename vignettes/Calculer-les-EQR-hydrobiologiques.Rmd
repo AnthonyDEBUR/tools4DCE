@@ -63,4 +63,31 @@ donnees_IBD$CLASSE<-sapply(donnees_IBD$EQR, function(x){affecte_une_classe(x, se
 ```
 
 
+# Chargement des listes floristiques depus Hubeau et recalcule de l'IBD via le SEEE
+
+## Import des listes floristiques
+```{r}
+liste_flo<-import_hubeau_liste_hbio(liste_stations = "04195400", indice="dia")
+str(head(liste_flo, 3))
+
+```
+## Mise en forme des données
+
+```{r}
+liste_flo$CODE_OPERATION <-paste0(liste_flo$code_station_hydrobio, "*", liste_flo$date_prelevement)
+liste_flo$CODE_STATION <- liste_flo$code_station_hydrobio
+liste_flo$DATE <- format(liste_flo$date_prelevement, "%d/%m/%Y")
+liste_flo$CODE_TAXON <- liste_flo$code_appel_taxon
+liste_flo$RESULTAT <- liste_flo$resultat_taxon
+liste_flo <- liste_flo %>% select(CODE_OPERATION, CODE_STATION, DATE, CODE_TAXON, RESULTAT)
+liste_flo<-liste_flo%>%subset(!is.na(CODE_TAXON))
+
+```
+
+## Appel du SEEE pour calculer l'indicateur IBD
+
+```{r}
+calcule_SEEE_IBD(liste_flo)
+```
+
 
