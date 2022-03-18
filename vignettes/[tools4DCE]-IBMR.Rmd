@@ -1,0 +1,101 @@
+---
+title: "[tools4DCE]-IBMR"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{[tools4DCE]-IBMR}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+
+```{r message=FALSE, warning = FALSE}
+library(tools4DCE)
+```
+Ce document explique comment télécharger des indices hydrobiologiques depuis Hubeau, convertir IBMR en EQR, affecter une classe de qualité aux résultats selon la typologie des stations de mesures.
+Il explique également comment recalculer un IBMR à partir d'une liste floristique.
+
+# Chargement de donnees hydrobiologiques depuis Hubeau
+
+A partir de la plateforme Hubeau, on télécharge les données hydrobiologiques disponibles sur la station 04207400.
+
+```{r}
+donnees<-import_hubeau_indices_hbio(liste_stations = c("04207400"), indice="mphy")
+str(donnees)
+```
+
+
+# Conversion des notes IBMR en EQR
+
+Le package tools4DCE fournit une table avec les paramètres nécessaires au calcul des EQR selon la typologie de cours d'eau, conformément à l'arrêté ministériel du 25 janvier 2010 modifié.
+
+```{r}
+str(head(base_ref_eqr,3))
+
+
+```
+## Calcul des EQR
+
+Le package contient une fonction pour calculer les EQR.
+
+```{r}
+donnees_IBMR<-donnees%>%subset(CdParametre=="2928" & !is.na(RsAna))
+donnees_IBMR$EQR<-sapply(donnees_IBMR$RsAna, function(x){calcule_EQR_hbio(x, CdParametre='2928', typologie="P12-A")})
+
+```
+
+## Graphique des résultats
+Le package permet de mettre facilement les résultats sous forme graphique
+
+Création d'un seuil qualité :
+```{r, fig.width=6}
+seuil_IBMR<-makeSeuils(CdParametre = "2928", type_seuil = "DCE")
+graphDCE_points(donnees_IBMR, col_valeurs = "EQR", seuils=seuil_IBMR, ymini=0, ymaxi=1) + ylab("EQR")
+
+
+```
+
+## Calcul de la classe de qualité correspondant à chaque résultat
+Il permet également d'affecter une classe de qualité à chaque résultat.
+
+Création d'un seuil qualité :
+```{r}
+donnees_IBMR$CLASSE<-sapply(donnees_IBMR$EQR, function(x){affecte_une_classe(x, seuil_IBMR)})
+
+```
+
+
+# Chargement des listes floristiques depus Hubeau et recalcule de l'IBMR via le SEEE
+
+## Import des listes floristiques
+```{r}
+liste_flo<-import_hubeau_liste_hbio(liste_stations = "04207400", indice="mphy")
+str(head(liste_flo, 3))
+
+```
+## Mise en forme des données
+
+ATTENTION : Naïades et Hub Eau ne fournissent pas à ce jour les pourcentages de recouvrement des faciès.
+Ils ne permettent donc pas le calcule de l'IBMR sans complément d'information.
+
+```{r}
+liste_flo<-liste_flo%>%subset(libelle_type_resultat=="RecTax")
+liste_flo$CODE_OPERATION <-paste0(liste_flo$code_station_hydrobio, "*", liste_flo$date_prelevement)
+liste_flo$CODE_STATION <- liste_flo$code_station_hydrobio
+liste_flo$DATE <- format(liste_flo$date_prelevement, "%d/%m/%Y")
+liste_flo$UR<-liste_flo$code_lot
+liste_flo$CODE_TAXON <- liste_flo$code_appel_taxon
+liste_flo$RESULTAT <- liste_flo$resultat_taxon
+liste_flo$POURCENTAGE_FACIES <-ifelse(liste_flo$UR=="FU", 100, 50)
+
+liste_flo <- liste_flo %>% select(CODE_OPERATION, CODE_STATION, DATE, CODE_TAXON, RESULTAT, UR, POURCENTAGE_FACIES)
+liste_flo<-liste_flo%>%subset(!is.na(CODE_TAXON))
+
+```
+
+## Appel du SEEE pour calculer l'indicateur IBMR
+
+```{r}
+calcule_SEEE_IBMR(liste_flo)
+```
+
+

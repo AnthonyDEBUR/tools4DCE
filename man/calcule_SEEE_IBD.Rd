@@ -22,11 +22,8 @@ Les colonnes à passer impérativement dans la table d'entrée sont celles prév
 \item CODE_OPERATION : identifiant unique de l'opération
 \item CODE_STATION : code SANDRE de la station de mesure
 \item DATE : date de l'opération (format "\%d/\%m/\%Y")
-\item TYPONATIONALE : Typologie nationale de la station (ex. TP12-A)
-\item CODE_PHASE : code de la phase de prélèvement (A, B ou C)
 \item CODE_TAXON : code SANDRE du taxon
 \item RESULTAT : effectif du taxon
-\item CODE_REMARQUE : code remarque selon le SANDRE
 }
 }
 \examples{
