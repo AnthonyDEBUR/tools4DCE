@@ -26,6 +26,10 @@
 #' - Somme de l'Alachlor OXA et de l'Acetochlor OXA 8101	= Alachlor OXA 6855 + Acetochlor OXA 6862
 #' - Somme de Fluazifop-P-butyl (1404) et de Fluazifop-butyl (1825)
 #' - Sulfosate (2077) = sel du glyphosate (1506). Pour calculer la concentration en glyphosate à partir du sulfosate, il faut multiplier cette dernière par 0.690
+#' - Endosulfan (1743) = Endosulfan alpha (1178) + Endosulfan bêta (1179)
+#' - Chlordane (1132) = Chlrodane alpha (7010) + chlordane bêta (1757)
+#' - Déméton (1550) = Déméton-O (1150) + Déméton-S (1152)
+#' - Mépiquat chlorure (2089) = sel du mepiquat (1969). Pour calculer la concentration en mepiquat à partir du Mépiquat chlorure, il faut multiplier cette dernière par 0.763
 
 #'
 #' @param data tableau de données avec les résultats d'analyse
@@ -110,15 +114,15 @@ calcule_somme_pesticides <-
 
     # on applique la strategie LQ
     if (valeur_inf_LQ == "0") {
-      data1[data1$CdRqAna != "1", ]$RsAna <- 0
+      try(data1[data1$CdRqAna != "1", ]$RsAna <- 0, silent=T)
     }
     if (valeur_inf_LQ == "LQ/2") {
-      data1[data1$CdRqAna != "1", ]$RsAna <-
-        data1[data1$CdRqAna != "1", ]$LqAna / 2
+      try(data1[data1$CdRqAna != "1", ]$RsAna <-
+        data1[data1$CdRqAna != "1", ]$LqAna / 2, silent=T)
     }
     if (valeur_inf_LQ == "LQ") {
-      data1[data1$CdRqAna != "1", ]$RsAna <-
-        data1[data1$CdRqAna != "1", ]$LqAna
+      try(data1[data1$CdRqAna != "1", ]$RsAna <-
+        data1[data1$CdRqAna != "1", ]$LqAna, silent=T)
     }
 
     # on fait un tableau croise par date / code station
@@ -302,10 +306,35 @@ calcule_somme_pesticides <-
           ifelse(all(is.na(x)), NA , max(x, na.rm = T))
 
         })
-      # on supprime les colonnes hors Glyphosate
-      data2 <- data2 %>% select(-par_1506)
+      # on supprime les colonnes hors sulfosate
+      data2 <- data2 %>% select(-par_2077)
 
     }
+
+
+    #' -	Mépiquat chlorure (2089) = sel du mepiquat (1969). Pour calculer la concentration en mepiquat à partir du Mépiquat chlorure, il faut multiplier cette dernière par 0.763
+    if ("1969"%in% liste_pesticides) {
+      if (!("par_1969" %in% names(data2))) {
+        data2 <- data2 %>% add_column(par_6545 = NA)
+      }
+    }
+    if ("par_1969" %in% names(data2)) {
+      if (!("par_2089" %in% names(data2))) {
+        data2 <- data2 %>% add_column(par_2089 = 0)
+      }
+
+      # on converti les résultats du 	Mépiquat chlorure en mepiquat et on conserve le max entre les 2 valeurs (qu'on assigne à la colonne Mépiquat)
+      data2$par_2089 <- 0.7631*data2$par_2089
+      data2$par_1969 <-
+        apply(data2[, c("par_1969", "par_2089")], 1, function(x) {
+          ifelse(all(is.na(x)), NA , max(x, na.rm = T))
+
+        })
+      # on supprime les colonnes hors Mépiquat chlorure
+      data2 <- data2 %>% select(-par_2089)
+
+    }
+
 
 
 
@@ -443,6 +472,26 @@ calcule_somme_pesticides <-
     data2 <-
       remplace_somme(code_somme = "8101",
                      vecteur_codes_a_sommer = c("6855", "6862"))
+
+    # Somme de Endosulfan (1743) = Endosulfan alpha (1178) + Endosulfan bêta (1179)
+    data2 <-
+      remplace_somme(code_somme = "1743",
+                     vecteur_codes_a_sommer = c("1178", "1179"))
+
+
+    # Somme de Chlordane (1132) = Chlrodane alpha (7010) + chlordane bêta (1757)
+    data2 <-
+      remplace_somme(code_somme = "1132",
+                     vecteur_codes_a_sommer = c("7010", "1757"))
+
+
+    # Somme de Déméton (1550) = Déméton-O (1150) + Déméton-S (1152)
+    data2 <-
+      remplace_somme(code_somme = "1550",
+                     vecteur_codes_a_sommer = c("1150", "1152"))
+
+
+
 
     # calcul de la somme de pesticides
     data2 <-
