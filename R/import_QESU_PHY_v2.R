@@ -257,8 +257,15 @@ import_QESU_PHY_v2 <- function(x) {
             valeurs2[grep("<CdParametre>", valeurs2)] %>% xml_contents() %>% xml_contents()
           CdParametre <- CdParametre[1] %>% as.character
           if (length(CdParametre) == 0) {
+            CdParametre <-
+              valeurs2[grep('<CdParametre schemeAgencyID="SANDRE">', valeurs2)] %>% xml_contents() %>% xml_contents()
+            CdParametre <- CdParametre[1] %>% as.character
+          }
+          if (length(CdParametre) == 0) {
             CdParametre <- NA
           }
+
+
           RsAna <-
             valeurs2[grep("<RsAna>", valeurs2)] %>% xml_contents()
           RsAna <- RsAna[1] %>% as.character %>% as.numeric

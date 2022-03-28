@@ -11,6 +11,7 @@
 #' @param taille_axes taille police des axes (par défaut 11)
 #' @param tri_donnees booleen vrai par défaut. Si il est vrai, les résultats sont affichés par ordre du plus dégradé au moins dégradé (au sens des dépassement de seuils). Si non, les résultats sont affichés dans l'ordre alphabétique des noms de paramètres.
 #' @param tri_croissant booleen vrai par défaut. Si faux, l'ordre du tri est inversé. Paramètre sans effet si tri_donnees=FALSE
+#' @param ordre_facteurs optionnel : vecteur avec les levels des résultats classés par odre de priorité de classement (par défaut du plus dégradé au moins dégradé)
 #' @param nb_top : optionnel. Si renseigné, le graph n'affiche que le nb de paramètres indiqués en affichant en priorité les + dégradés
 #' @return la fonction renvoie un objet ggplot avec le graphique de distribution
 #'
@@ -25,12 +26,13 @@ graphDCE_distribution <-
   function(donnees,
            titre = "",
            taille_titre = 12,
-           taille_axes=11,
+           taille_axes = 11,
            legende_LQ = c("NON QUANTIFIE", "QUANTIFIE"),
-           affiche_valeurs = T,
+           affiche_valeurs = TRUE,
            min_affiche = 0.1,
-           tri_donnees = T,
-           tri_croissant = T,
+           tri_donnees = TRUE,
+           tri_croissant = TRUE,
+           ordre_facteurs = NULL,
            nb_top = NULL) {
     sous_titre <- ""
 
@@ -43,10 +45,15 @@ graphDCE_distribution <-
       donnees %>% group_by(parametre) %>% dplyr::summarise(total = sum(nb))
     donnees <- donnees %>% left_join(seuil_param, by = "parametre")
 
-# tri des données
+    # tri des données
     if (tri_donnees) {
       donnees$parametre <-
-        donnees$parametre %>% as.character %>% factor(levels = tri_molecules(donnees, tri_croissant=tri_croissant))
+        donnees$parametre %>% as.character %>% factor(levels = tri_molecules(
+          donnees,
+          tri_croissant = tri_croissant,
+          ordre_facteurs = ordre_facteurs
+        ))
+
     } else{
       donnees$parametre <- factor(donnees$parametre)
     }
@@ -100,7 +107,7 @@ graphDCE_distribution <-
         plot.subtitle = element_text(size = taille_titre),
         legend.box = "vertical",
         legend.margin = margin(),
-        axis.text = element_text(size=taille_axes)
+        axis.text = element_text(size = taille_axes)
       )
     # guides(fill=guide_legend(nrow=2,byrow=TRUE))
 

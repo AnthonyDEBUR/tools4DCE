@@ -71,11 +71,13 @@ paramètres incluant d'autres paramètres :
 \item Somme du DDDpp', DDEpp', DDTop', DDTpp' 7146 = DDDpp' 1144 + DDEpp' 1146 + DDTop' 1147 + DDTpp' 1148
 \item Somme de l'Alachlor OXA et de l'Acetochlor OXA 8101	= Alachlor OXA 6855 + Acetochlor OXA 6862
 \item Somme de Fluazifop-P-butyl (1404) et de Fluazifop-butyl (1825)
-\item Sulfosate (2077) = sel du glyphosate (1506). Pour calculer la concentration en glyphosate à partir du sulfosate, il faut multiplier cette dernière par 0.690
+\item Sulfosate (2077) = sel du glyphosate (1506).
+Pour calculer la concentration en glyphosate à partir du sulfosate, il faut multiplier cette dernière par 0.690
 \item Endosulfan (1743) = Endosulfan alpha (1178) + Endosulfan bêta (1179)
 \item Chlordane (1132) = Chlrodane alpha (7010) + chlordane bêta (1757)
 \item Déméton (1550) = Déméton-O (1150) + Déméton-S (1152)
-\item Mépiquat chlorure (2089) = sel du mepiquat (1969). Pour calculer la concentration en mepiquat à partir du Mépiquat chlorure, il faut multiplier cette dernière par 0.763
+\item Mépiquat chlorure (2089) = sel du mepiquat (1969).
+Pour calculer la concentration en mepiquat à partir du Mépiquat chlorure, il faut multiplier cette dernière par 0.763.
 }
 }
 \examples{

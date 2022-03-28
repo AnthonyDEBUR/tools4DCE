@@ -10,10 +10,11 @@ graphDCE_distribution(
   taille_titre = 12,
   taille_axes = 11,
   legende_LQ = c("NON QUANTIFIE", "QUANTIFIE"),
-  affiche_valeurs = T,
+  affiche_valeurs = TRUE,
   min_affiche = 0.1,
-  tri_donnees = T,
-  tri_croissant = T,
+  tri_donnees = TRUE,
+  tri_croissant = TRUE,
+  ordre_facteurs = NULL,
   nb_top = NULL
 )
 }
@@ -35,6 +36,8 @@ graphDCE_distribution(
 \item{tri_donnees}{booleen vrai par défaut. Si il est vrai, les résultats sont affichés par ordre du plus dégradé au moins dégradé (au sens des dépassement de seuils). Si non, les résultats sont affichés dans l'ordre alphabétique des noms de paramètres.}
 
 \item{tri_croissant}{booleen vrai par défaut. Si faux, l'ordre du tri est inversé. Paramètre sans effet si tri_donnees=FALSE}
+
+\item{ordre_facteurs}{optionnel : vecteur avec les levels des résultats classés par odre de priorité de classement (par défaut du plus dégradé au moins dégradé)}
 
 \item{nb_top}{: optionnel. Si renseigné, le graph n'affiche que le nb de paramètres indiqués en affichant en priorité les + dégradés}
 }

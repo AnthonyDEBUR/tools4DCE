@@ -4,12 +4,14 @@
 \alias{tri_molecules}
 \title{tri_molecules}
 \usage{
-tri_molecules(donnees, tri_croissant = T)
+tri_molecules(donnees, tri_croissant = TRUE, ordre_facteurs = NULL)
 }
 \arguments{
 \item{donnees}{un data.frame avec les colonnes obtenues en sortie de la fonction groupe_tableau_distribution}
 
 \item{tri_croissant}{booleen vrai par défaut. Si faux, l'ordre du tri est inversé.}
+
+\item{ordre_facteurs}{: vecteur optionnel qui ordonne les levels si on ne veut pas retenir le classement par défaut}
 }
 \value{
 la fonction renvoie un vecteur contenant les paramètres les plus impactés. Le tri se fait sur la base suivant : en 1er est renvoyé le parametre qui a été quantifié le plus souvent au niveau le plus dégradé (en pourcentage de quantification sur nb total_tri de mesures)

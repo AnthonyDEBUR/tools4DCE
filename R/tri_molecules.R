@@ -6,6 +6,7 @@
 #'
 #' @param donnees un data.frame avec les colonnes obtenues en sortie de la fonction groupe_tableau_distribution
 #' @param tri_croissant booleen vrai par défaut. Si faux, l'ordre du tri est inversé.
+#' @param ordre_facteurs : vecteur optionnel qui ordonne les levels si on ne veut pas retenir le classement par défaut
 #'
 #' @return la fonction renvoie un vecteur contenant les paramètres les plus impactés. Le tri se fait sur la base suivant : en 1er est renvoyé le parametre qui a été quantifié le plus souvent au niveau le plus dégradé (en pourcentage de quantification sur nb total_tri de mesures)
 #'
@@ -17,10 +18,24 @@
 #' @examples tri_molecules(donnees)
 #' @export
 tri_molecules <- function(donnees,
-                          tri_croissant = T) {
+                          tri_croissant = TRUE,
+                          ordre_facteurs=NULL) {
+
+  if(!is.null(ordre_facteurs))
+  {if(!("character"%in%class(ordre_facteurs))){stop("ordre_facteurs doit être un vecteur de character listant les classes à partir desquelles trier les données")}
+    if(!(all(ordre_facteurs%in%donnees$CLASSE))){warning(paste0(paste(ordre_facteurs[!(ordre_facteurs%in%donnees$CLASSE)], collapse = ", ")), " absent de la liste des classes")}
+    if(!(all(levels(donnees$CLASSE)%in%ordre_facteurs))){warning(paste0(paste(levels(donnees$CLASSE)[!(levels(donnees$CLASSE)%in%ordre_facteurs)], collapse = ", ")), " absent de ordre_facteurs")}
+    donnees$CLASSE<-factor(donnees$CLASSE, levels=ordre_facteurs)
+
+      }
+
+
   # creation d'un tableau de correspondance CATEGORIE - LEGENDE
   cat_leg <-
     donnees %>% select(CLASSE, NOM_COULEUR) %>% distinct %>% arrange(CLASSE)
+
+
+
 
   # nb total de donnees
   seuil_param <-
@@ -29,6 +44,8 @@ tri_molecules <- function(donnees,
 
   # pourcentage
   donnees000$pc <- donnees000$nb / donnees000$total_tri
+
+
 
 
   if (tri_croissant) {
