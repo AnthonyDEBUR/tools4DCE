@@ -60,7 +60,7 @@ paramètres incluant d'autres paramètres :
 \item Somme Heptachlore époxyde cis/trans
 \item Somme du DDE 44' et de la dieldrine
 \item Somme des metabolites des dithiocarbamates (6235) = Ethylenethiouree (5648) + Ethyluree (5484) + Propylene thiouree (6214)
-\item Somme de Ethylamine + Diméthylamine (	7887) = Ethylamine (6993) + Diméthylamine (2773)
+\item Somme de Ethylamine + Diméthylamine (7887) = Ethylamine (6993) + Diméthylamine (2773)
 \item Somme du Fenvalerate RR et Esfenvalerate SS (6613) = Fenvalerate RR 6606 + Esfenvalerate SS 6608
 \item Somme des chloroanilines (m+p) 5502	= Chloroaniline-4 1591 + Chloroaniline-3 1592
 \item Somme Acétochlore ESA + Alachlore ESA (7750) = Acétochlore ESA 6856 + Alachlore ESA 6800
@@ -69,15 +69,31 @@ paramètres incluant d'autres paramètres :
 \item Somme parathion ethyl+methyl 6947	= parathion éthyl 1232 + parathion methyl 1233
 \item Somme du DDD 24', DDE 24', DDT 24', DDT 44' 7170 =  DDD 24' 1143 + DDE 24' 1145 + DDT 24' 1147 + DDT 44' 1148
 \item Somme du DDDpp', DDEpp', DDTop', DDTpp' 7146 = DDDpp' 1144 + DDEpp' 1146 + DDTop' 1147 + DDTpp' 1148
+\item Somme DDT (3268) = DDT 24' (1147) + DDT 44' (1148)
+\item Somme DDT et métabolites DDE DDD (6497) = DDDop' (1143) + DDDpp' (1144) + DDEop' (1145) + DDEpp' (1146) + DDTop' (1147) + DDTpp' (1148)
+\item Somme DDT et métabolites DDE DDD (6497) = DDDpp' (1144) + DDEpp' (1146) + Somme du DDD 24', DDE 24', DDT 24', DDT 44' (7170)
 \item Somme de l'Alachlor OXA et de l'Acetochlor OXA 8101	= Alachlor OXA 6855 + Acetochlor OXA 6862
 \item Somme de Fluazifop-P-butyl (1404) et de Fluazifop-butyl (1825)
+\item Métalaxyl (1706) (inclus les formes métalaxyl-M = Méfénoxam (2987) )
+\item (Somme du Fenvalerate RR et Esfenvalerate SS ( 6613 ))= Fenvalerate RR (6606) + Esfenvalerate SS (6608)
+\item (Somme du Fenvalerate RS et Esfenvalerate SR (6614)) = Fenvalerate RS (6607) + Esfenvalerate SR (6609)
+\item (Somme du Fenvalerate et du Esfenvalerate 	(8592)) = Fenvalerate (1701) + Esfenvalerate (1809)
+\item =  Fenvalerate RR (6606) + Esfenvalerate SS (6608) + Fenvalerate RS (6607) + Esfenvalerate SR (6609)
+\item = Somme du Fenvalerate RR et Esfenvalerate SS ( 6613 ) + Somme du Fenvalerate RS et Esfenvalerate SR (6614)
+\item HCH alpha+beta+delta+gamma (5537) = HCH delta (1202) + HCH alpha (1200)+ HCH béta (1201)+ HCH gamma (lindane) (1203)
+\item Permethrin (somme)(1523)= Permethrin cis (5682) +Permethrin trans (5683)
 \item Sulfosate (2077) = sel du glyphosate (1506).
 Pour calculer la concentration en glyphosate à partir du sulfosate, il faut multiplier cette dernière par 0.690
 \item Endosulfan (1743) = Endosulfan alpha (1178) + Endosulfan bêta (1179)
+\item Somme de Endosulfan alpha, Endosulfan bêta et Endosulfan sulfate (8129) = Endosulfan alpha (1178) + Endosulfan bêta (1179) + Endosulfan sulfate (1742)
 \item Chlordane (1132) = Chlrodane alpha (7010) + chlordane bêta (1757)
 \item Déméton (1550) = Déméton-O (1150) + Déméton-S (1152)
 \item Mépiquat chlorure (2089) = sel du mepiquat (1969).
-Pour calculer la concentration en mepiquat à partir du Mépiquat chlorure, il faut multiplier cette dernière par 0.763.
+Pour calculer la concentration en mepiquat à partir du Mépiquat chlorure, il faut multiplier cette dernière par 0.7631.
+\item Chlordane (cis + trans) (1132) = chlordane alpha (7010) +  chlordane bêta (1757)
+\item Demeton O+S (1550) = déméton-O (code Sandre n°1150) + déméton-S (code Sandre n°1152)
+\item Heptachlore époxyde (cis+trans) (1198) = Heptachlore époxyde exo cis (1748) + Heptachlore époxyde endo trans (1749)
+\item Spinosad (A+D) (spinosyne) (5610) = Spinosad A (7438) + Spinosad D (7439)
 }
 }
 \examples{

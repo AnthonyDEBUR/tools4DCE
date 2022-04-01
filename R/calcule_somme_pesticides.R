@@ -14,7 +14,7 @@
 #' - Somme Heptachlore époxyde cis/trans
 #' - Somme du DDE 44' et de la dieldrine
 #' - Somme des metabolites des dithiocarbamates (6235) = Ethylenethiouree (5648) + Ethyluree (5484) + Propylene thiouree (6214)
-#' - Somme de Ethylamine + Diméthylamine (	7887) = Ethylamine (6993) + Diméthylamine (2773)
+#' - Somme de Ethylamine + Diméthylamine (7887) = Ethylamine (6993) + Diméthylamine (2773)
 #' - Somme du Fenvalerate RR et Esfenvalerate SS (6613) = Fenvalerate RR 6606 + Esfenvalerate SS 6608
 #' - Somme des chloroanilines (m+p) 5502	= Chloroaniline-4 1591 + Chloroaniline-3 1592
 #' - Somme Acétochlore ESA + Alachlore ESA (7750) = Acétochlore ESA 6856 + Alachlore ESA 6800
@@ -23,15 +23,31 @@
 #' - Somme parathion ethyl+methyl 6947	= parathion éthyl 1232 + parathion methyl 1233
 #' - Somme du DDD 24', DDE 24', DDT 24', DDT 44' 7170 =  DDD 24' 1143 + DDE 24' 1145 + DDT 24' 1147 + DDT 44' 1148
 #' - Somme du DDDpp', DDEpp', DDTop', DDTpp' 7146 = DDDpp' 1144 + DDEpp' 1146 + DDTop' 1147 + DDTpp' 1148
+#' - Somme DDT (3268) = DDT 24' (1147) + DDT 44' (1148)
+#' - Somme DDT et métabolites DDE DDD (6497) = DDDop' (1143) + DDDpp' (1144) + DDEop' (1145) + DDEpp' (1146) + DDTop' (1147) + DDTpp' (1148)
+#' - Somme DDT et métabolites DDE DDD (6497) = DDDpp' (1144) + DDEpp' (1146) + Somme du DDD 24', DDE 24', DDT 24', DDT 44' (7170)
 #' - Somme de l'Alachlor OXA et de l'Acetochlor OXA 8101	= Alachlor OXA 6855 + Acetochlor OXA 6862
 #' - Somme de Fluazifop-P-butyl (1404) et de Fluazifop-butyl (1825)
-#' - Sulfosate (2077) = sel du glyphosate (1506).
+#'  - Métalaxyl (1706) (inclus les formes métalaxyl-M = Méfénoxam (2987) )
+#' - (Somme du Fenvalerate RR et Esfenvalerate SS ( 6613 ))= Fenvalerate RR (6606) + Esfenvalerate SS (6608)
+#' -  (Somme du Fenvalerate RS et Esfenvalerate SR (6614)) = Fenvalerate RS (6607) + Esfenvalerate SR (6609)
+#'-  (Somme du Fenvalerate et du Esfenvalerate 	(8592)) = Fenvalerate (1701) + Esfenvalerate (1809)
+#' -  =  Fenvalerate RR (6606) + Esfenvalerate SS (6608) + Fenvalerate RS (6607) + Esfenvalerate SR (6609)
+#'-   = Somme du Fenvalerate RR et Esfenvalerate SS ( 6613 ) + Somme du Fenvalerate RS et Esfenvalerate SR (6614)
+#'  - HCH alpha+beta+delta+gamma (5537) = HCH delta (1202) + HCH alpha (1200)+ HCH béta (1201)+ HCH gamma (lindane) (1203)
+#'  - Permethrin (somme)(1523)= Permethrin cis (5682) +Permethrin trans (5683)
+#'- Sulfosate (2077) = sel du glyphosate (1506).
 #' Pour calculer la concentration en glyphosate à partir du sulfosate, il faut multiplier cette dernière par 0.690
 #' - Endosulfan (1743) = Endosulfan alpha (1178) + Endosulfan bêta (1179)
+#' - Somme de Endosulfan alpha, Endosulfan bêta et Endosulfan sulfate (8129) = Endosulfan alpha (1178) + Endosulfan bêta (1179) + Endosulfan sulfate (1742)
 #' - Chlordane (1132) = Chlrodane alpha (7010) + chlordane bêta (1757)
 #' - Déméton (1550) = Déméton-O (1150) + Déméton-S (1152)
 #' - Mépiquat chlorure (2089) = sel du mepiquat (1969).
-#' Pour calculer la concentration en mepiquat à partir du Mépiquat chlorure, il faut multiplier cette dernière par 0.763.
+#' Pour calculer la concentration en mepiquat à partir du Mépiquat chlorure, il faut multiplier cette dernière par 0.7631.
+#' - Chlordane (cis + trans) (1132) = chlordane alpha (7010) +  chlordane bêta (1757)
+#' - Demeton O+S (1550) = déméton-O (code Sandre n°1150) + déméton-S (code Sandre n°1152)
+#' - Heptachlore époxyde (cis+trans) (1198) = Heptachlore époxyde exo cis (1748) + Heptachlore époxyde endo trans (1749)
+#' - Spinosad (A+D) (spinosyne) (5610) = Spinosad A (7438) + Spinosad D (7439)
 #'
 #' @param data tableau de données avec les résultats d'analyse
 #' @param liste_pesticides vecteur qui contient les identifiants des pesticides à prendre en compte. Si NULL, toutes les molécules du tableau sont prises en compte.
@@ -115,15 +131,15 @@ calcule_somme_pesticides <-
 
     # on applique la strategie LQ
     if (valeur_inf_LQ == "0") {
-      try(data1[data1$CdRqAna != "1",]$RsAna <- 0, silent = T)
+      try(data1[data1$CdRqAna != "1", ]$RsAna <- 0, silent = T)
     }
     if (valeur_inf_LQ == "LQ/2") {
-      try(data1[data1$CdRqAna != "1",]$RsAna <-
-            data1[data1$CdRqAna != "1",]$LqAna / 2, silent = T)
+      try(data1[data1$CdRqAna != "1", ]$RsAna <-
+            data1[data1$CdRqAna != "1", ]$LqAna / 2, silent = T)
     }
     if (valeur_inf_LQ == "LQ") {
-      try(data1[data1$CdRqAna != "1",]$RsAna <-
-            data1[data1$CdRqAna != "1",]$LqAna, silent = T)
+      try(data1[data1$CdRqAna != "1", ]$RsAna <-
+            data1[data1$CdRqAna != "1", ]$LqAna, silent = T)
     }
 
     # on fait un tableau croise par date / code station
@@ -138,204 +154,57 @@ calcule_somme_pesticides <-
         values_fill = NA
       )
 
-    # cas du métolachlore
-    #  Métolachlore total (1221) > S-Métolachlore (2974) > Métolachlore énantiomère S (8070) +  Métolachlore énantiomère R (8071)
-    if (any(c("1221", "2974") %in% liste_pesticides)) {
-      if (!("par_1221" %in% names(data2))) {
-        data2 <- data2 %>% add_column(par_1221 = NA)
+    # Fonction de remplacement d'une substance par une qui la contient
+    # exemple Mécoprop (1214) > Mécoprop-P (2084)
+    # exemple f_remplace_inclus_dedans(2084, 1214)
+    # l'énantiomère peut aussi être un sel
+    # coef conversion = coef pour convertir un sel en la molécule mère (ex sulfosate en glyphosate)
+    # ex f_remplace_inclus_dedans("2077", "1506", 0.690)
+    f_remplace_inclus_dedans <-
+      function(cd_sandre_enantiomere,
+               cd_sandre_molecule_supra,
+               coef_conversion = 1)
+      {
+        if (cd_sandre_molecule_supra %in% liste_pesticides) {
+          if (!(paste0("par_", cd_sandre_molecule_supra) %in% names(data2))) {
+            data2 <-
+              data2 %>% add_column(paste0("par_", cd_sandre_molecule_supra) := NA)
+          }
+        }
+        if (paste0("par_", cd_sandre_molecule_supra) %in% names(data2)) {
+          if (!(paste0("par_", cd_sandre_enantiomere) %in% names(data2))) {
+            data2 <-
+              data2 %>% add_column(paste0("par_", cd_sandre_enantiomere) := 0)
+          }
+
+          # cas de sels : on converti le paramètre sel
+          nom_col_enamt <- paste0("par_", cd_sandre_enantiomere)
+
+          data2 <- data2 %>% mutate({
+            {
+              nom_col_enamt
+            }
+          } := . * coef_conversion)
+
+          # on prend le max entre l'énantiomère et la molécule totale
+          data2$maxi_par <-
+            apply(data2[, c(
+              paste0("par_", cd_sandre_enantiomere),
+              paste0("par_", cd_sandre_molecule_supra)
+            )], 1, function(x) {
+              ifelse(all(is.na(x)), NA , max(x, na.rm = T))
+
+            })
+          data2 <-
+            data2 %>% mutate("par_{cd_sandre_molecule_supra}" := maxi_par)
+
+          # on supprime les colonnes hors molécule totale
+          data2 <-
+            data2 %>% select(-paste0("par_", cd_sandre_enantiomere)) %>% select(-maxi_par)
+
+        }
+        return(data2)
       }
-    }
-    if ("par_1221" %in% names(data2)) {
-      if (!("par_2974" %in% names(data2))) {
-        data2 <- data2 %>% add_column(par_2974 = 0)
-      }
-      if (!("par_8070" %in% names(data2))) {
-        data2 <- data2 %>% add_column(par_8070 = 0)
-      }
-      if (!("par_8071" %in% names(data2))) {
-        data2 <- data2 %>% add_column(par_8071 = 0)
-      }
-      # on somme les 2 énantiomères
-      data2$par_80708071 <-
-        rowSums(data2[, c("par_8070", "par_8071")], na.rm = TRUE)
-      # on prend le max entre les 2 énantiomères et le S-métolachlore
-      data2$par_80708071 <-
-        apply(data2[, c("par_80708071", "par_2974")], 1, function(x) {
-          ifelse(all(is.na(x)), NA , max(x, na.rm = T))
-        })
-      # on remplace le paramètre Métolachlore total s'il n'est pas renseigné
-      data2 <-
-        data2 %>% mutate(par_1221 = ifelse(!is.na(par_1221),
-                                           par_1221,
-                                           par_80708071))
-      # on supprime les colonnes hors métolachlore total
-      data2 <- data2 %>% select(-par_2974, -par_8070, -par_8071)
-    }
-
-    # cas du mecoprop
-    #  Mécoprop (1214) > Mécoprop-P (2084)
-    if ("1214" %in% liste_pesticides) {
-      if (!("par_1214" %in% names(data2))) {
-        data2 <- data2 %>% add_column(par_1214 = NA)
-      }
-    }
-    if ("par_1214" %in% names(data2)) {
-      if (!("par_2084" %in% names(data2))) {
-        data2 <- data2 %>% add_column(par_2084 = 0)
-      }
-
-      # on prend le max entre l'énantiomère et la molécule totale
-      data2$par_1214 <-
-        apply(data2[, c("par_1214", "par_2084")], 1, function(x) {
-          ifelse(all(is.na(x)), NA , max(x, na.rm = T))
-
-        })
-      # on supprime les colonnes hors Mécoprop
-      data2 <- data2 %>% select(-par_2084)
-
-    }
-
-    # cas du diméthénamide
-    #  Diméthénamide (1678) > Diméthénamide-P (5617)
-    if ("1678" %in% liste_pesticides) {
-      if (!("par_1678" %in% names(data2))) {
-        data2 <- data2 %>% add_column(par_1678 = NA)
-      }
-    }
-    if ("par_1678" %in% names(data2)) {
-      if (!("par_5617" %in% names(data2))) {
-        data2 <- data2 %>% add_column(par_5617 = 0)
-      }
-
-      # on prend le max entre l'énantiomère et la molécule totale
-      data2$par_1678 <-
-        apply(data2[, c("par_1678", "par_5617")], 1, function(x) {
-          ifelse(all(is.na(x)), NA , max(x, na.rm = T))
-
-        })
-      # on supprime les colonnes hors diméthénamide
-      data2 <- data2 %>% select(-par_5617)
-
-    }
-
-    # cas du Dichlorprop
-    #  Dichlorprop (1169) > Dichlorprop-P (2544)
-    if ("1169" %in% liste_pesticides) {
-      if (!("par_1169" %in% names(data2))) {
-        data2 <- data2 %>% add_column(par_1169 = NA)
-      }
-    }
-    if ("par_1169" %in% names(data2)) {
-      if (!("par_2544" %in% names(data2))) {
-        data2 <- data2 %>% add_column(par_2544 = 0)
-      }
-
-      # on prend le max entre l'énantiomère et la molécule totale
-      data2$par_1169 <-
-        apply(data2[, c("par_1169", "par_2544")], 1, function(x) {
-          ifelse(all(is.na(x)), NA , max(x, na.rm = T))
-
-        })
-      # on supprime les colonnes hors Dichlorprop
-      data2 <- data2 %>% select(-par_2544)
-
-    }
-
-    # cas du Uniconizole
-    #  Uniconizole (7482) > Uniconizole-P (	5845)
-    if ("7482" %in% liste_pesticides) {
-      if (!("par_7482" %in% names(data2))) {
-        data2 <- data2 %>% add_column(par_7482 = NA)
-      }
-    }
-    if ("par_7482" %in% names(data2)) {
-      if (!("par_5845" %in% names(data2))) {
-        data2 <- data2 %>% add_column(par_5845 = 0)
-      }
-
-      # on prend le max entre l'énantiomère et la molécule totale
-      data2$par_7482 <-
-        apply(data2[, c("par_7482", "par_5845")], 1, function(x) {
-          ifelse(all(is.na(x)), NA , max(x, na.rm = T))
-
-        })
-      # on supprime les colonnes hors Uniconizole
-      data2 <- data2 %>% select(-par_5845)
-
-    }
-
-    # cas du Fluazifop
-    #  Fluazifop (6545) > Fluazifop-P (5634)
-    if ("6545" %in% liste_pesticides) {
-      if (!("par_6545" %in% names(data2))) {
-        data2 <- data2 %>% add_column(par_6545 = NA)
-      }
-    }
-    if ("par_6545" %in% names(data2)) {
-      if (!("par_5634" %in% names(data2))) {
-        data2 <- data2 %>% add_column(par_5634 = 0)
-      }
-
-      # on prend le max entre l'énantiomère et la molécule totale
-      data2$par_6545 <-
-        apply(data2[, c("par_6545", "par_5634")], 1, function(x) {
-          ifelse(all(is.na(x)), NA , max(x, na.rm = T))
-
-        })
-      # on supprime les colonnes hors Fluazifop
-      data2 <- data2 %>% select(-par_5634)
-
-    }
-
-
-    # cas du sulfosate, sel du glyphosate (on converti le résultat en glyphosate si ce dernier n'est pas déjà mesuré)
-    # Sulfosate (2077) = sel du glyphosate (1506). Pour calculer la concentration en glyphosate à partir du sulfosate, il faut multiplier cette dernière par 0.690
-    if ("1506" %in% liste_pesticides) {
-      if (!("par_1506" %in% names(data2))) {
-        data2 <- data2 %>% add_column(par_6545 = NA)
-      }
-    }
-    if ("par_1506" %in% names(data2)) {
-      if (!("par_2077" %in% names(data2))) {
-        data2 <- data2 %>% add_column(par_2077 = 0)
-      }
-
-      # on converti les résultats du sulfosate en glyphosate et on conserve le max entre les 2 valeurs
-      data2$par_2077 <- 0.690 * data2$par_2077
-      data2$par_1506 <-
-        apply(data2[, c("par_1506", "par_2077")], 1, function(x) {
-          ifelse(all(is.na(x)), NA , max(x, na.rm = T))
-
-        })
-      # on supprime les colonnes hors sulfosate
-      data2 <- data2 %>% select(-par_2077)
-
-    }
-
-
-    #	Mepiquat chlorure (2089) = sel du mepiquat (1969). Pour calculer la concentration en mepiquat à partir du Mépiquat chlorure, il faut multiplier cette dernière par 0.763
-    if ("1969" %in% liste_pesticides) {
-      if (!("par_1969" %in% names(data2))) {
-        data2 <- data2 %>% add_column(par_1969 = NA)
-      }
-    }
-    if ("par_1969" %in% names(data2)) {
-      if (!("par_2089" %in% names(data2))) {
-        data2 <- data2 %>% add_column(par_2089 = 0)
-      }
-
-      # on converti les résultats du 	Mépiquat chlorure en mepiquat et on conserve le max entre les 2 valeurs (qu'on assigne à la colonne Mépiquat)
-      data2$par_2089 <- 0.7631 * data2$par_2089
-      data2$par_1969 <-
-        apply(data2[, c("par_1969", "par_2089")], 1, function(x) {
-          ifelse(all(is.na(x)), NA , max(x, na.rm = T))
-
-        })
-      # on supprime les colonnes hors Mépiquat chlorure
-      data2 <- data2 %>% select(-par_2089)
-
-    }
-
 
 
 
@@ -384,6 +253,50 @@ calcule_somme_pesticides <-
       }
       return(data2)
     }
+
+
+
+
+
+    # cas du métolachlore
+    #  Métolachlore total (1221) > S-Métolachlore (2974) > Métolachlore énantiomère S (8070) +  Métolachlore énantiomère R (8071)
+
+    # Métolachlore total (1221) = Métolachlore énantiomère S (8070) +  Métolachlore énantiomère R (8071)
+    data2 <-
+      remplace_somme(code_somme = "1221",
+                     vecteur_codes_a_sommer = c("8070", "8071"))
+    #  S-Métolachlore (2974) est inclus dans Métolachlore total (1221)
+    data2 <- f_remplace_inclus_dedans("2974", "1221")
+
+
+    # cas du mecoprop
+    #  Mécoprop (1214) > Mécoprop-P (2084)
+    data2 <- f_remplace_inclus_dedans("2084", "1214")
+
+
+    # cas du diméthénamide
+    #  Diméthénamide (1678) > Diméthénamide-P (5617)
+    data2 <- f_remplace_inclus_dedans("5617", "1678")
+
+
+    # cas du Dichlorprop
+    #  Dichlorprop (1169) > Dichlorprop-P (2544)
+    data2 <- f_remplace_inclus_dedans("2544", "1169")
+
+    # cas du Uniconizole
+    #  Uniconizole (7482) > Uniconizole-P (	5845)
+    data2 <- f_remplace_inclus_dedans("5845", "7482")
+
+    # cas du Fluazifop
+    #  Fluazifop (6545) > Fluazifop-P (5634)
+    data2 <- f_remplace_inclus_dedans("5634", "6545")
+
+    # cas du sulfosate, sel du glyphosate (on converti le résultat en glyphosate si ce dernier n'est pas déjà mesuré)
+    # Sulfosate (2077) = sel du glyphosate (1506). Pour calculer la concentration en glyphosate à partir du sulfosate, il faut multiplier cette dernière par 0.690
+    data2 <- f_remplace_inclus_dedans("2077", "1506", 0.690)
+
+    #	Mepiquat chlorure (2089) = sel du mepiquat (1969). Pour calculer la concentration en mepiquat à partir du Mépiquat chlorure, il faut multiplier cette dernière par 0.7631
+    data2 <- f_remplace_inclus_dedans("2089", "1969", 0.7631)
 
 
     # Somme des Hexachlorocyclohexanes (5537) = Hexachlorocyclohexane alpha (1200)
@@ -441,6 +354,22 @@ calcule_somme_pesticides <-
       remplace_somme(code_somme = "6496",
                      vecteur_codes_a_sommer = c("1144", "1147"))
 
+    # Somme DDT (3268) = DDT 24' (1147) + DDT 44' (1148)
+    data2 <-
+      remplace_somme(code_somme = "3268",
+                     vecteur_codes_a_sommer = c("1147", "1148"))
+
+
+    # Somme DDT et métabolites DDE DDD (6497) = DDDop' (1143) + DDDpp' (1144) + DDEop' (1145) + DDEpp' (1146) + DDTop' (1147) + DDTpp' (1148)
+    data2 <-
+      remplace_somme(code_somme = "6497",
+                     vecteur_codes_a_sommer = c("1143", "1144", "1145", "1146", "1147", "1148"))
+
+    # Somme DDT et métabolites DDE DDD (6497) = DDDpp' (1144) + DDEpp' (1146) + Somme du DDD 24', DDE 24', DDT 24', DDT 44' (7170)
+    data2 <-
+      remplace_somme(code_somme = "6497",
+                     vecteur_codes_a_sommer = c( "1144", "1146", "7170"))
+
     # Somme Metacresol, Orthocresol et Paracrésol 6341 = ortho-crésol 1640 + méta-crésol 1639 + para-crésol 1638
     data2 <-
       remplace_somme(
@@ -472,11 +401,23 @@ calcule_somme_pesticides <-
       remplace_somme(code_somme = "8101",
                      vecteur_codes_a_sommer = c("6855", "6862"))
 
+
     # Somme de Endosulfan (1743) = Endosulfan alpha (1178) + Endosulfan bêta (1179)
     data2 <-
       remplace_somme(code_somme = "1743",
                      vecteur_codes_a_sommer = c("1178", "1179"))
 
+    # Somme de Endosulfan alpha, Endosulfan bêta et Endosulfan sulfate (8129) = Endosulfan alpha (1178) + Endosulfan bêta (1179) + Endosulfan sulfate (1742)
+    data2 <-
+      remplace_somme(
+        code_somme = "8129",
+        vecteur_codes_a_sommer = c("1178", "1179", "1742")
+      )
+
+    # Somme de Endosulfan alpha, Endosulfan bêta et Endosulfan sulfate (8129) = (Somme de Endosulfan (1743)) + Endosulfan sulfate (1742)
+    data2 <-
+      remplace_somme(code_somme = "8129",
+                     vecteur_codes_a_sommer = c("1743", "1742"))
 
     # Somme de Chlordane (1132) = Chlrodane alpha (7010) + chlordane bêta (1757)
     data2 <-
@@ -488,6 +429,84 @@ calcule_somme_pesticides <-
     data2 <-
       remplace_somme(code_somme = "1550",
                      vecteur_codes_a_sommer = c("1150", "1152"))
+
+
+
+    # Métalaxyl (1706) (inclus les formes métalaxyl-M = Méfénoxam (2987) )
+    data2 <- f_remplace_inclus_dedans("2987", "1706")
+
+    # HCH alpha+beta+delta+gamma (5537) = HCH delta (1202) + HCH alpha (1200)+ HCH béta (1201)+ HCH gamma (lindane) (1203)
+    data2 <-
+      remplace_somme(
+        code_somme = "5537",
+        vecteur_codes_a_sommer = c("1200", "1201", "1202", "1203")
+      )
+
+
+    # Permethrin (somme)(1523)= Permethrin cis (5682) +Permethrin trans (5683)
+    data2 <-
+      remplace_somme(code_somme = "1523",
+                     vecteur_codes_a_sommer = c("5682", "5683"))
+
+    # Fenvalerate (1701) =  Fenvalerate RR (6606) + Fenvalerate RS (6607)
+    data2 <-
+      remplace_somme(code_somme = "1701",
+                     vecteur_codes_a_sommer = c("6606", "6607"))
+
+
+    # Esfenvalerate (1809)= Esfenvalerate SS (6608) +  Esfenvalerate SR (6609)
+    data2 <-
+      remplace_somme(code_somme = "1809",
+                     vecteur_codes_a_sommer = c("6608", "6609"))
+
+    # (Somme du Fenvalerate RR et Esfenvalerate SS ( 6613 ))= Fenvalerate RR (6606) + Esfenvalerate SS (6608)
+    data2 <-
+      remplace_somme(code_somme = "6613",
+                     vecteur_codes_a_sommer = c("6606", "6608"))
+
+    # (Somme du Fenvalerate RS et Esfenvalerate SR (6614)) = Fenvalerate RS (6607) + Esfenvalerate SR (6609)
+    data2 <-
+      remplace_somme(code_somme = "6614",
+                     vecteur_codes_a_sommer = c("6607", "6609"))
+
+    # (Somme du Fenvalerate et du Esfenvalerate 	(8592)) = Fenvalerate (1701) + Esfenvalerate (1809)
+    data2 <-
+      remplace_somme(code_somme = "8592",
+                     vecteur_codes_a_sommer = c("1701", "1809"))
+
+
+    # (Somme du Fenvalerate et du Esfenvalerate 	(8592)) = Somme du Fenvalerate RR et Esfenvalerate SS ( 6613 ) + Somme du Fenvalerate RS et Esfenvalerate SR (6614)
+    data2 <-
+      remplace_somme(code_somme = "8592",
+                     vecteur_codes_a_sommer = c("6613", "6614"))
+
+    # (Somme du Fenvalerate et du Esfenvalerate 	(8592)) =  Fenvalerate RR (6606) + Esfenvalerate SS (6608) + Fenvalerate RS (6607) + Esfenvalerate SR (6609)
+    data2 <-
+      remplace_somme(
+        code_somme = "8592",
+        vecteur_codes_a_sommer = c("6606", "6608", "6607", "6609")
+      )
+
+
+    # Chlordane (cis + trans) (1132) = chlordane alpha (7010) +  chlordane bêta (1757)
+    data2 <-
+      remplace_somme(code_somme = "1132",
+                     vecteur_codes_a_sommer = c("7010", "1757"))
+
+    # Demeton O+S (1550) = déméton-O (code Sandre n°1150) + déméton-S (code Sandre n°1152)
+    data2 <-
+      remplace_somme(code_somme = "1550",
+                     vecteur_codes_a_sommer = c("1150", "1152"))
+
+    # Heptachlore époxyde (cis+trans) (1198) = Heptachlore époxyde exo cis (1748) + Heptachlore époxyde endo trans (1749)
+    data2 <-
+      remplace_somme(code_somme = "1198",
+                     vecteur_codes_a_sommer = c("1748", "1749"))
+
+    # Spinosad (A+D) (spinosyne) (5610) = Spinosad A (7438) + Spinosad D (7439)
+    data2 <-
+      remplace_somme(code_somme = "5610",
+                     vecteur_codes_a_sommer = c("7438", "7439"))
 
 
 
