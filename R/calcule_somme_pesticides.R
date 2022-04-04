@@ -131,15 +131,15 @@ calcule_somme_pesticides <-
 
     # on applique la strategie LQ
     if (valeur_inf_LQ == "0") {
-      try(data1[data1$CdRqAna != "1", ]$RsAna <- 0, silent = T)
+      try(data1[data1$CdRqAna != "1",]$RsAna <- 0, silent = T)
     }
     if (valeur_inf_LQ == "LQ/2") {
-      try(data1[data1$CdRqAna != "1", ]$RsAna <-
-            data1[data1$CdRqAna != "1", ]$LqAna / 2, silent = T)
+      try(data1[data1$CdRqAna != "1",]$RsAna <-
+            data1[data1$CdRqAna != "1",]$LqAna / 2, silent = T)
     }
     if (valeur_inf_LQ == "LQ") {
-      try(data1[data1$CdRqAna != "1", ]$RsAna <-
-            data1[data1$CdRqAna != "1", ]$LqAna, silent = T)
+      try(data1[data1$CdRqAna != "1",]$RsAna <-
+            data1[data1$CdRqAna != "1",]$LqAna, silent = T)
     }
 
     # on fait un tableau croise par date / code station
@@ -180,11 +180,12 @@ calcule_somme_pesticides <-
           # cas de sels : on converti le paramètre sel
           nom_col_enamt <- paste0("par_", cd_sandre_enantiomere)
 
-          data2 <- data2 %>% mutate({
-            {
-              nom_col_enamt
-            }
-          } := . * coef_conversion)
+          data2 <-
+            data2 %>% mutate({
+              {
+                nom_col_enamt
+              }
+            }  :=  .data[[nom_col_enamt]] * coef_conversion)
 
           # on prend le max entre l'énantiomère et la molécule totale
           data2$maxi_par <-
@@ -362,13 +363,17 @@ calcule_somme_pesticides <-
 
     # Somme DDT et métabolites DDE DDD (6497) = DDDop' (1143) + DDDpp' (1144) + DDEop' (1145) + DDEpp' (1146) + DDTop' (1147) + DDTpp' (1148)
     data2 <-
-      remplace_somme(code_somme = "6497",
-                     vecteur_codes_a_sommer = c("1143", "1144", "1145", "1146", "1147", "1148"))
+      remplace_somme(
+        code_somme = "6497",
+        vecteur_codes_a_sommer = c("1143", "1144", "1145", "1146", "1147", "1148")
+      )
 
     # Somme DDT et métabolites DDE DDD (6497) = DDDpp' (1144) + DDEpp' (1146) + Somme du DDD 24', DDE 24', DDT 24', DDT 44' (7170)
     data2 <-
-      remplace_somme(code_somme = "6497",
-                     vecteur_codes_a_sommer = c( "1144", "1146", "7170"))
+      remplace_somme(
+        code_somme = "6497",
+        vecteur_codes_a_sommer = c("1144", "1146", "7170")
+      )
 
     # Somme Metacresol, Orthocresol et Paracrésol 6341 = ortho-crésol 1640 + méta-crésol 1639 + para-crésol 1638
     data2 <-
