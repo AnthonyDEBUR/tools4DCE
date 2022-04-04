@@ -222,8 +222,10 @@ calcule_somme_pesticides <-
           for (z in 1:length(vecteur_codes_a_sommer))
           {
             if (!(paste0("par_", vecteur_codes_a_sommer[z]) %in% names(data2))) {
+              colonne_tmp<-paste0("par_",vecteur_codes_a_sommer[z])
+
               data2 <-
-                data2 %>% add_column(!!"par_{vecteur_codes_a_sommer[z]}" :=  0)
+                data2 %>% add_column({{colonne_tmp}} :=  0)
             }
           }
         }
