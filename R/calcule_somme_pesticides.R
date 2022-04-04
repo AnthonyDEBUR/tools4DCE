@@ -168,13 +168,13 @@ calcule_somme_pesticides <-
         if (cd_sandre_molecule_supra %in% liste_pesticides) {
           if (!(paste0("par_", cd_sandre_molecule_supra) %in% names(data2))) {
             data2 <-
-              data2 %>% add_column(paste0("par_", cd_sandre_molecule_supra) := NA)
+              data2 %>% add_column(!!paste0("par_", cd_sandre_molecule_supra) := NA)
           }
         }
         if (paste0("par_", cd_sandre_molecule_supra) %in% names(data2)) {
           if (!(paste0("par_", cd_sandre_enantiomere) %in% names(data2))) {
             data2 <-
-              data2 %>% add_column(paste0("par_", cd_sandre_enantiomere) := 0)
+              data2 %>% add_column(!!paste0("par_", cd_sandre_enantiomere) := 0)
           }
 
           # cas de sels : on converti le paramètre sel
@@ -214,7 +214,7 @@ calcule_somme_pesticides <-
       # si le paramètre est dans la liste des pesticides
       if (code_somme %in% liste_pesticides) {
         if (!(paste0("par_", code_somme) %in% names(data2))) {
-          data2 <- data2 %>% add_column("par_{code_somme}" := NA)
+          data2 <- data2 %>% add_column(!!"par_{code_somme}" := NA)
         }
 
         if (paste0("par_", code_somme) %in% names(data2)) {
@@ -222,7 +222,7 @@ calcule_somme_pesticides <-
           {
             if (!(paste0("par_", vecteur_codes_a_sommer[z]) %in% names(data2))) {
               data2 <-
-                data2 %>% add_column("par_{vecteur_codes_a_sommer[z]}" :=  0)
+                data2 %>% add_column(!!"par_{vecteur_codes_a_sommer[z]}" :=  0)
             }
           }
         }

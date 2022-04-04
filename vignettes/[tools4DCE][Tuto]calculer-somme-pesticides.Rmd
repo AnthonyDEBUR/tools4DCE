@@ -1,0 +1,78 @@
+---
+title: "[tools4DCE][Tuto]calculer-somme-pesticides"
+author: "Anthony DE BURGHRAVE"
+date: "01/04/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Installer R, R studio et le package tools4DCE
+## Pour installer R et Rstudio
+Voir par exemple : https://larmarange.github.io/analyse-R/installation-de-R-et-RStudio.html
+
+Pour exécuter des commandes sous Rstudio lire : https://thinkr.fr/debuter-avec-r-et-rstudio/
+
+## Pour installer tools4DCE
+Lancer Rstudio
+
+Installer le package devtools en exécutant la commande
+```{r}
+install.packages("devtools")
+```
+
+Ce package te permet de télécharger des packages non officiels comme tools4DCE depuis le site github.
+
+Pour installer tools4DCE exécuter :
+```{r}
+library(devtools)
+install_github("AnthonyDEBUR/tools4DCE")
+```
+
+Ensuite, lors des utilisations suivantes, on lance tools4DCE en exécutant la commande :
+```{r}
+library("tools4DCE")
+```
+
+# Calculer une somme de pesticides à partir de fichiers excel
+## Formater le fichier EXCEL de la manière suivante:
+
+Dans un onglet intitulé : DATA
+
+1ère ligne du fichier = ligne de titre
+lignes suivantes = données
+
+Les données sont regroupées par colonnes. 
+Les intitulés suivants dans les colonnes sont obligatoires (attention, R différencie majuscules et minuscules).
+
+- CdStationMesureEauxSurface : code SANDRE des stations de mesure
+- CdSupport : code SANDRE du support d'analyse (3 pour eau)
+- CdFractionAnalysee : code SANDRE de la fraction analysée
+- DatePrel : date du prélèvement
+- CdParametre : code SANDRE du paramètre
+- CdUniteMesure : code SANDRE de l'unité de mesure
+- CdRqAna : code remarque selon la nomenclature du SANDRE 
+- LqAna : limite de quantification
+
+<i>Nota : si certaines colonnes sont vides, il faut néanmoins prévoir le nom de colonne dans le fichier, tout en laissant la colonne vide.</i>
+
+Un fichier exemple est téléchargeable au lien suivant : https://github.com/AnthonyDEBUR/tools4DCE/blob/maj/demonstration/exemple.xlsx
+
+## Charger le fichier excel en mémoire
+
+La commande "file.choose()" ouvre une fenêtre permettant de sélectionner un fichier. Sélectionner le fichier excel avec les résultats.
+
+La commande read_excel permet de charger le contenu du fichier (onglet DATA) en mémoire sous R
+
+```{r}
+library("tools4DCE")
+
+fichier<-file.choose()
+donnees<-read_xlsx(fichier, sheet = "DATA")
+
+str(donnees)
+
+```
+
