@@ -63,7 +63,7 @@
 #'
 #' @return la fonction renvoie une dataframe avec les informations sur la station, la date, l'unité et la valeur de la somme des pesticides ainsi qu'une colonne avec chaque pesticide constituant la somme.
 #'
-#'@examples data<-data.frame(DatePrel=Sys.Date() + rep(sort(sample(1:500, 10)),3), RsAna=c(round(runif(60,0,0.5), 2)), LqAna=c(0.1), CdStationMesureEauxSurface=c("A","B","C"), CdParametre=c("1200","1201"), CdUniteMesure="133")
+#'@examples data<-data.frame(DatePrel=Sys.Date() + rep(sort(sample(1:500, 10)),3), RsAna=c(round(runif(60,0,0.5), 2)), LqAna=c(0.1), CdStationMesureEauxSurface=c("A","B","C"), CdParametre=c("1200","1506"), CdUniteMesure="133")
 #'@examples data$CdRqAna<-ifelse(data$RsAna>=data$LqAna, "1","10")
 #' @examples calcule_somme_pesticides(data)
 #' @export
@@ -208,14 +208,13 @@ calcule_somme_pesticides <-
       }
 
 
-
     # fonction pour sommer les paramètres individuels qui sont groupés dans un paramètre somme
     remplace_somme <- function(code_somme, vecteur_codes_a_sommer)
     {
       # si le paramètre est dans la liste des pesticides
       if (code_somme %in% liste_pesticides) {
         if (!(paste0("par_", code_somme) %in% names(data2))) {
-          data2 <- data2 %>% add_column(!!"par_{code_somme}" := NA)
+          data2 <- data2 %>% add_column(!!paste0("par_",code_somme) := NA)
         }
 
         if (paste0("par_", code_somme) %in% names(data2)) {
