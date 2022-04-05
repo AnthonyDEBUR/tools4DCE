@@ -131,15 +131,15 @@ calcule_somme_pesticides <-
 
     # on applique la strategie LQ
     if (valeur_inf_LQ == "0") {
-      try(data1[data1$CdRqAna != "1",]$RsAna <- 0, silent = T)
+      try(data1[data1$CdRqAna != "1", ]$RsAna <- 0, silent = T)
     }
     if (valeur_inf_LQ == "LQ/2") {
-      try(data1[data1$CdRqAna != "1",]$RsAna <-
-            data1[data1$CdRqAna != "1",]$LqAna / 2, silent = T)
+      try(data1[data1$CdRqAna != "1", ]$RsAna <-
+            data1[data1$CdRqAna != "1", ]$LqAna / 2, silent = T)
     }
     if (valeur_inf_LQ == "LQ") {
-      try(data1[data1$CdRqAna != "1",]$RsAna <-
-            data1[data1$CdRqAna != "1",]$LqAna, silent = T)
+      try(data1[data1$CdRqAna != "1", ]$RsAna <-
+            data1[data1$CdRqAna != "1", ]$LqAna, silent = T)
     }
 
     # on fait un tableau croise par date / code station
@@ -153,6 +153,8 @@ calcule_somme_pesticides <-
         values_fn = max,
         values_fill = NA
       )
+
+
 
     # Fonction de remplacement d'une substance par une qui la contient
     # exemple Mécoprop (1214) > Mécoprop-P (2084)
@@ -204,27 +206,31 @@ calcule_somme_pesticides <-
             data2 %>% select(-paste0("par_", cd_sandre_enantiomere)) %>% select(-maxi_par)
 
         }
-        # return(data2)
+        return(data2)
       }
 
 
     # fonction pour sommer les paramètres individuels qui sont groupés dans un paramètre somme
     remplace_somme <- function(code_somme, vecteur_codes_a_sommer)
     {
-      # si le paramètre est dans la liste des pesticides
+      # si le paramètre code somme n'est pas dans la liste des pesticides, on ne procède pas aux remplacements
       if (code_somme %in% liste_pesticides) {
         if (!(paste0("par_", code_somme) %in% names(data2))) {
-          data2 <- data2 %>% add_column(!!paste0("par_",code_somme) := NA)
+          data2 <- data2 %>% add_column(!!paste0("par_", code_somme) := NA)
         }
 
         if (paste0("par_", code_somme) %in% names(data2)) {
           for (z in 1:length(vecteur_codes_a_sommer))
           {
             if (!(paste0("par_", vecteur_codes_a_sommer[z]) %in% names(data2))) {
-              colonne_tmp<-paste0("par_",vecteur_codes_a_sommer[z])
+              colonne_tmp <- paste0("par_", vecteur_codes_a_sommer[z])
 
               data2 <-
-                data2 %>% add_column({{colonne_tmp}} :=  0)
+                data2 %>% add_column({
+                  {
+                    colonne_tmp
+                  }
+                } :=  0)
             }
           }
         }
@@ -253,7 +259,7 @@ calcule_somme_pesticides <-
         data2 <-
           data2 %>% select(-all_of(cc)) %>% select(-par_somme_tmp)
       }
-      # return(data2)
+      return(data2)
     }
 
 
@@ -268,7 +274,8 @@ calcule_somme_pesticides <-
       remplace_somme(code_somme = "1221",
                      vecteur_codes_a_sommer = c("8070", "8071"))
     #  S-Métolachlore (2974) est inclus dans Métolachlore total (1221)
-    data2 <- f_remplace_inclus_dedans("2974", "1221")
+    data2 <- f_remplace_inclus_dedans(cd_sandre_enantiomere="2974", cd_sandre_molecule_supra="1221")
+
 
 
     # cas du mecoprop
