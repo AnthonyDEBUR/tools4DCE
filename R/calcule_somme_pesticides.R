@@ -204,7 +204,7 @@ calcule_somme_pesticides <-
             data2 %>% select(-paste0("par_", cd_sandre_enantiomere)) %>% select(-maxi_par)
 
         }
-        return(data2)
+        # return(data2)
       }
 
 
@@ -254,7 +254,7 @@ calcule_somme_pesticides <-
         data2 <-
           data2 %>% select(-all_of(cc)) %>% select(-par_somme_tmp)
       }
-      return(data2)
+      # return(data2)
     }
 
 
