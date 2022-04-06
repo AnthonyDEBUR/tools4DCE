@@ -46,7 +46,7 @@ graphDCE_bar <-
     data1 <- as.data.frame(data)
     data1$ANNEE<-data1[[col_annee]]
     data1$RsAna<-data1[[col_valeurs]]
-    if (is.factor(data1$ANNEE)) {
+    if (is.factor(data1$ANNEE) | is.character(data1$ANNEE)) {
       data1$ANNEE <- as.numeric(as.character(data1$ANNEE))
       warning("colonne col_annee transformée de facteur en numerique")
     }
