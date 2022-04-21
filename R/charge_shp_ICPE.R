@@ -47,7 +47,7 @@ charge_shp_ICPE <- function(crs = 2154, shp_emprise = NULL) {
     shp_emprise <- st_transform(shp_emprise, crs = 2154)
 
     # on découpe par rapport à l'emprise de l'objet shp_emprise
-    bel_regions <- bel_regions[shp_emprise, ]
+    bel_regions <- bel_regions[shp_emprise,]
   }
 
   # on projette dans le crs de sortie
@@ -60,19 +60,33 @@ charge_shp_ICPE <- function(crs = 2154, shp_emprise = NULL) {
            "' target='_blank'>Lien georisques</a>")
 
   bel_regions <-
-    bel_regions %>% select(
+    bel_regions %>% dplyr::select(
       -c(
         "x",
         "y",
-        "epsg",
+        "code_epsg",
         "num_dep":"code_naf",
-        "regime",
+        "cd_regime",
         "seveso",
-        "rayon",
-        "precis_loc",
         "url_fiche"
       )
     )
+
+  # création d'une colonne famille_ic à partir des types d'activités (pour remettre en conformité avec ancien format de fichiers)
+ bel_regions$famille_ic<-"Industries"
+
+   bel_regions<-bel_regions%>%mutate(
+    famille_ic = case_when(
+      bovins ==
+        1 ~
+        "Bovins",
+      porcs == 1 ~ "Porcs",
+      volailles == 1 ~ "Volailles",
+      carriere == 1 ~ "Carrières",
+      T ~ famille_ic
+    )
+  )
+
 
   # On recode les élevages soumis à autorisation dans les familles d'élevage et non dans la rubrique "Industries"
   bel_regions <- bel_regions %>% mutate(
@@ -83,7 +97,7 @@ charge_shp_ICPE <- function(crs = 2154, shp_emprise = NULL) {
       lib_naf == "Élevage de porcins" ~ "Porcs",
       lib_naf == "Élevage d'autres bovins et de buffles" ~ "Bovins",
       lib_naf == "Élevage de vaches laitières" ~ "Bovins",
-
+      lib_naf == "Autres industries extractives" ~"Carrières",
       T ~ famille_ic
     )
   )
@@ -145,7 +159,7 @@ charge_shp_ICPE <- function(crs = 2154, shp_emprise = NULL) {
   emissions$identifiant <-
     paste0(
       substr(emissions$identifiant, 1, nchar(emissions$identifiant) - 5),
-      ".",
+   #   ".",
       substr(
         emissions$identifiant,
         nchar(emissions$identifiant) - 4,
@@ -165,22 +179,27 @@ charge_shp_ICPE <- function(crs = 2154, shp_emprise = NULL) {
   emissions <-
     emissions %>% subset(
       milieu %in% c("Eau (indirect)", "Eau (direct)") &
-        identifiant %in% bel_regions$code_s3ic
+        identifiant %in% bel_regions$code_aiot
     )
 
   emissions <-
     emissions %>%  group_by(identifiant, polluant) %>%
     pivot_wider(names_from = annee_emission, values_from = quantite)
 
-  emissions <- emissions %>% select(-nom_etablissement)
+  emissions <- emissions %>% dplyr::select(-nom_etablissement)
 
 
-  prelevements$identifiant <- gsub("[^0-9]", "", prelevements$identifiant)
+  prelevements$identifiant <-
+    gsub("[^0-9]", "", prelevements$identifiant)
 
   prelevements$identifiant <-
     paste0(
-      substr(prelevements$identifiant, 1, nchar(prelevements$identifiant) - 5),
-      ".",
+      substr(
+        prelevements$identifiant,
+        1,
+        nchar(prelevements$identifiant) - 5
+      ),
+   #   ".",
       substr(
         prelevements$identifiant,
         nchar(prelevements$identifiant) - 4,
@@ -197,7 +216,7 @@ charge_shp_ICPE <- function(crs = 2154, shp_emprise = NULL) {
     ),
     prelevements$identifiant)
   prelevements <-
-    prelevements %>% subset(identifiant %in% bel_regions$code_s3ic)
+    prelevements %>% subset(identifiant %in% bel_regions$code_aiot)
 
   prelevements <-
     prelevements %>% pivot_longer(
@@ -209,7 +228,8 @@ charge_shp_ICPE <- function(crs = 2154, shp_emprise = NULL) {
   prelevements <- prelevements %>% group_by(identifiant, milieu) %>%
     pivot_wider(names_from = annee, values_from = value)
 
-  prelevements <- prelevements %>% select(-nom_etablissement)
+  prelevements <- prelevements %>% dplyr::select(-nom_etablissement)
+
 
 
   # ajout d'un tableau avec les emissions dans bel_regions
@@ -217,28 +237,31 @@ charge_shp_ICPE <- function(crs = 2154, shp_emprise = NULL) {
   bel_regions$emissions <- NA
 
   id_em <- unique(emissions$identifiant)
-  for (i in 1:length(id_em))
+  if (length(id_em) > 0)
   {
-    print(paste0(i, " sur ", length(id_em)))
+    for (i in 1:length(id_em))
+    {
+      print(paste0(i, " sur ", length(id_em)))
 
-    # on choisit les emissions du site concerné.
-    tmp <- emissions %>% subset(identifiant == id_em[i])
+      # on choisit les emissions du site concerné.
+      tmp <- emissions %>% subset(identifiant == id_em[i])
 
-    # On ne conserve que les colonnes de date non totalement vides
-    tmp <- tmp %>% select_if(~ !all(is.na(.))) %>% ungroup
+      # On ne conserve que les colonnes de date non totalement vides
+      tmp <- tmp %>% dplyr::select_if( ~ !all(is.na(.))) %>% ungroup
 
-    # selection des 3 dernières années renseignées
-    tmp <-
-      tmp %>% select(milieu:unite,
-                     names(tmp) %>% as.numeric %>% sort %>% tail(4) %>% as.character)
+      # selection des 3 dernières années renseignées
+      tmp <-
+        tmp %>% dplyr::select(milieu:unite,
+                              names(tmp) %>% as.numeric %>% sort %>% tail(4) %>% as.character)
 
-    # On supprime les lignes composées exclusivement de NA
-    tmp <- tmp %>% filter(if_any(starts_with("20"), ~ !is.na(.)))
+      # On supprime les lignes composées exclusivement de NA
+      tmp <- tmp %>% filter(if_any(starts_with("20"), ~ !is.na(.)))
 
-    bel_regions[bel_regions$code_s3ic == id_em[i],]$emissions <-
-      tmp %>%
-      tableHTML() %>% as.character
+      bel_regions[bel_regions$code_s3ic == id_em[i], ]$emissions <-
+        tmp %>%
+        tableHTML() %>% as.character
 
+    }
   }
 
 
@@ -247,28 +270,31 @@ charge_shp_ICPE <- function(crs = 2154, shp_emprise = NULL) {
   bel_regions$prelevements <- NA
 
   id_em <- unique(prelevements$identifiant)
-  for (i in 1:length(id_em))
-  {
-    print(paste0(i, " sur ", length(id_em)))
 
-    # on choisit les prelevements du site concerné.
-    tmp <- prelevements %>% subset(identifiant == id_em[i])
+  if (length(id_em) > 0) {
+    for (i in 1:length(id_em))
+    {
+      print(paste0(i, " sur ", length(id_em)))
 
-    # On ne conserve que les colonnes de date non totalement vides
-    tmp <- tmp %>% select_if(~ !all(is.na(.))) %>% ungroup
+      # on choisit les prelevements du site concerné.
+      tmp <- prelevements %>% subset(identifiant == id_em[i])
 
-    # selection des 3 dernières années renseignées
-    tmp <-
-      tmp %>% select(milieu,
-                     names(tmp) %>% as.numeric %>% sort %>% tail(4) %>% as.character)
+      # On ne conserve que les colonnes de date non totalement vides
+      tmp <- tmp %>% dplyr::select_if( ~ !all(is.na(.))) %>% ungroup
 
-    # On supprime les lignes composées exclusivement de NA
-    tmp <- tmp %>% filter(if_any(starts_with("20"), ~ !is.na(.)))
+      # selection des 3 dernières années renseignées
+      tmp <-
+        tmp %>% dplyr::select(milieu,
+                              names(tmp) %>% as.numeric %>% sort %>% tail(4) %>% as.character)
 
-    bel_regions[bel_regions$code_s3ic == id_em[i],]$prelevements <-
-      tmp %>%
-      tableHTML() %>% as.character
+      # On supprime les lignes composées exclusivement de NA
+      tmp <- tmp %>% filter(if_any(starts_with("20"), ~ !is.na(.)))
 
+      bel_regions[bel_regions$code_s3ic == id_em[i], ]$prelevements <-
+        tmp %>%
+        tableHTML() %>% as.character
+
+    }
   }
 
 

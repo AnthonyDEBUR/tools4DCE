@@ -21,7 +21,7 @@ ajoute_nom_param <-
     colonne <-
       ifelse(type_nom == "long", "NomParametre", "LbCourtParametre")
     parametres_sandre <-
-      parametres_sandre %>% select(CdParametre, ends_with(colonne))
+      parametres_sandre %>% dplyr::select(CdParametre, ends_with(colonne))
 
     return(left_join(x, parametres_sandre, by = setNames("CdParametre", col_parametre)))
   }

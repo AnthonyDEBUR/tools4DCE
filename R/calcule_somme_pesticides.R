@@ -131,15 +131,15 @@ calcule_somme_pesticides <-
 
     # on applique la strategie LQ
     if (valeur_inf_LQ == "0") {
-      try(data1[data1$CdRqAna != "1", ]$RsAna <- 0, silent = T)
+      try(data1[data1$CdRqAna != "1",]$RsAna <- 0, silent = T)
     }
     if (valeur_inf_LQ == "LQ/2") {
-      try(data1[data1$CdRqAna != "1", ]$RsAna <-
-            data1[data1$CdRqAna != "1", ]$LqAna / 2, silent = T)
+      try(data1[data1$CdRqAna != "1",]$RsAna <-
+            data1[data1$CdRqAna != "1",]$LqAna / 2, silent = T)
     }
     if (valeur_inf_LQ == "LQ") {
-      try(data1[data1$CdRqAna != "1", ]$RsAna <-
-            data1[data1$CdRqAna != "1", ]$LqAna, silent = T)
+      try(data1[data1$CdRqAna != "1",]$RsAna <-
+            data1[data1$CdRqAna != "1",]$LqAna, silent = T)
     }
 
     # on fait un tableau croise par date / code station
@@ -203,7 +203,7 @@ calcule_somme_pesticides <-
 
           # on supprime les colonnes hors molécule totale
           data2 <-
-            data2 %>% select(-paste0("par_", cd_sandre_enantiomere)) %>% select(-maxi_par)
+            data2 %>% dplyr::select(-paste0("par_", cd_sandre_enantiomere)) %>% dplyr::select(-maxi_par)
 
         }
         return(data2)
@@ -257,7 +257,7 @@ calcule_somme_pesticides <-
 
         # on supprime les colonnes des paramètres individuels
         data2 <-
-          data2 %>% select(-all_of(cc)) %>% select(-par_somme_tmp)
+          data2 %>% dplyr::select(-all_of(cc)) %>% dplyr::select(-par_somme_tmp)
       }
       return(data2)
     }
@@ -274,7 +274,9 @@ calcule_somme_pesticides <-
       remplace_somme(code_somme = "1221",
                      vecteur_codes_a_sommer = c("8070", "8071"))
     #  S-Métolachlore (2974) est inclus dans Métolachlore total (1221)
-    data2 <- f_remplace_inclus_dedans(cd_sandre_enantiomere="2974", cd_sandre_molecule_supra="1221")
+    data2 <-
+      f_remplace_inclus_dedans(cd_sandre_enantiomere = "2974",
+                               cd_sandre_molecule_supra = "1221")
 
 
 
@@ -526,8 +528,8 @@ calcule_somme_pesticides <-
 
     # calcul de la somme de pesticides
     data2 <-
-      data2 %>% mutate(par_6276 = select(., starts_with('par_')) %>% rowSums(na.rm =
-                                                                               T))
+      data2 %>% mutate(par_6276 = dplyr::select(., starts_with('par_')) %>% rowSums(na.rm =
+                                                                                      T))
 
     # si option resultat_seul, on supprime toutes les colonnes intermédiaires
     if (resultat_seul) {

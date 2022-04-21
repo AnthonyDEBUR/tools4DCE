@@ -28,7 +28,7 @@ ajoute_nom_unite <-
         "LblUniteMesure"
       )
     unites_sandre <-
-      unites_sandre %>% select(CdUniteMesure, ends_with(colonne))
+      unites_sandre %>% dplyr::select(CdUniteMesure, ends_with(colonne))
 
     return(left_join(x, unites_sandre,
                      by = setNames("CdUniteMesure", col_unite))

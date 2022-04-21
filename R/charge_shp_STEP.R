@@ -135,7 +135,7 @@ charge_shp_STEP <-
 
     # suppression des informations non nécessaires
     sispea <-
-      sispea %>% select(-c("DPT du siège de la coll.":"Id SISPEA ouvrage",-"Nom ouvrage"))
+      sispea %>% dplyr::select(-c("DPT du siège de la coll.":"Id SISPEA ouvrage",-"Nom ouvrage"))
 
     # on ajoute les infos SISPEA au fichier SANDRE
     bel_regions <-
@@ -197,7 +197,7 @@ charge_shp_STEP <-
 
 
     tmp <- tmp %>%
-      select(-CdOuvrageDepollution) %>%
+      dplyr::select(-CdOuvrageDepollution) %>%
       pmap(make_line) %>%
       st_as_sfc(crs = crs) %>%
       {

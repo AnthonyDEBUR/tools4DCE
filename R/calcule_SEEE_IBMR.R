@@ -64,7 +64,7 @@ calcule_SEEE_IBMR <- function(donnees)
 
   # conversion des codes taxon du SANDRE vers OMNIDIA
   ref_taxo_sandre0 <-
-    tools4DCE::ref_taxo_sandre %>% select(CdAppelTaxon, MPHYT_IRSTEA)
+    tools4DCE::ref_taxo_sandre %>% dplyr::select(CdAppelTaxon, MPHYT_IRSTEA)
 
   donnees <-
     donnees %>% left_join(ref_taxo_sandre0, by = c("CODE_TAXON" = "CdAppelTaxon"))
