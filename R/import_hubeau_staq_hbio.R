@@ -112,7 +112,7 @@ import_hubeau_staq_hbio <-
       jsonlite::fromJSON() %>%
       .$data
 
-    data<-data%>%select(-geometry)
+    data<-data%>%dplyr::select(-geometry)
 
     # on sélectionne les stations qui ont des données sur la période d'intérêt
     data$date_premier_prelevement <-

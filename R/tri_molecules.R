@@ -32,7 +32,7 @@ tri_molecules <- function(donnees,
 
   # creation d'un tableau de correspondance CATEGORIE - LEGENDE
   cat_leg <-
-    donnees %>% select(CLASSE, NOM_COULEUR) %>% distinct %>% arrange(CLASSE)
+    donnees %>% dplyr::select(CLASSE, NOM_COULEUR) %>% distinct %>% arrange(CLASSE)
 
 
 

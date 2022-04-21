@@ -30,7 +30,7 @@ PercentileDCE <- function(A, type = 0.9, na.rm = T)
       "Une valeur dans le vecteur d'entrée n'est pas un nombre. Utiliser le paramètre na.rm=TRUE pour ne pas prendre en compte les valeurs manquantes."
     )
   }
-  A<-A[!is.na(A)]
+  A <- A[!is.na(A)]
   Nb <- length(A)
   RangP90 <- arrondi((Nb * type) + 0.5)
   B <- sort(A)

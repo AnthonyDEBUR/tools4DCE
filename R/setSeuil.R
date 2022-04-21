@@ -30,7 +30,7 @@ setSeuils <-
            code_unite = "",
            bornesinfinclue = T,
            specificites = "",
-           id_=NULL,
+           id_ = NULL,
            base_seuils_color)
   {
     #browser()
@@ -38,20 +38,20 @@ setSeuils <-
       stop (
         "Erreur interne, base_seuils_color devrait être un tibble, avez vous réussi à charger base_seuils ?"
       )
-    if(is.null(id_)){
+    if (is.null(id_)) {
       warning("Paramètre id_ non renseigné dans la fonction setSeuils.")
-      id_<-1
-      base_seuils_color$id<-1
+      id_ <- 1
+      base_seuils_color$id <- 1
     }
     if (!is.numeric(id_))
       stop("id_ doit être un entier")
-    if (id_%%1!=0)
+    if (id_ %% 1 != 0)
       stop("id_ doit être un entier")
     if (length(id_) != 1)
       stop("id_ doit être de longueur 1")
     seuil <- base_seuils_color %>%
-       filter(id == id_) %>%
-      select(SEUILMIN, SEUILMAX, CLASSE, NOM_COULEUR) %>%
+      filter(id == id_) %>%
+      dplyr::select(SEUILMIN, SEUILMAX, CLASSE, NOM_COULEUR) %>%
       data.frame()
     seuil$CLASSE <-
       factor(seuil$CLASSE, levels = ordre_facteurs_qualite[, "CLASSE"]) %>% droplevels()

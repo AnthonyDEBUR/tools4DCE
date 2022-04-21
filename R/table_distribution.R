@@ -55,7 +55,7 @@ table_distribution <-
     # couleurs
     donnees <-
       left_join(donnees,
-                seuil@seuils %>% select(CLASSE, NOM_COULEUR),
+                seuil@seuils %>% dplyr::select(CLASSE, NOM_COULEUR),
                 by = c("CLASSE"))
     donnees$NOM_COULEUR <- replace_na(donnees$NOM_COULEUR, "white")
     donnees$ALPHA <- ifelse(donnees$CdRqAna == 1, 1, 0.2)

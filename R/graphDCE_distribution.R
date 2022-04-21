@@ -38,7 +38,7 @@ graphDCE_distribution <-
 
     # creation d'un tableau de correspondance CATEGORIE - LEGENDE
     cat_leg <-
-      donnees %>% select(CLASSE, NOM_COULEUR) %>% distinct %>% arrange(CLASSE)
+      donnees %>% dplyr::select(CLASSE, NOM_COULEUR) %>% distinct %>% arrange(CLASSE)
 
     # ajout d'une colonne pour savoir si on doit afficher les étiquettes de valeurs
     seuil_param <-

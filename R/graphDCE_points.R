@@ -245,7 +245,7 @@ graphDCE_points <-
         data1 <-
           left_join(
             data1,
-            seuils[[1]]@seuils %>% select(CLASSE, NOM_COULEUR),
+            seuils[[1]]@seuils %>% dplyr::select(CLASSE, NOM_COULEUR),
             by = c("classe_pt" = "CLASSE")
           )
         names(data1)[names(data1) == "NOM_COULEUR"] <-

@@ -58,35 +58,35 @@ tmp_dir<-tempdir()
   analyses<-lit_fichier_naiades(paste0(tmp_dir,"/Analyses.csv"))
 
   # extraction des codes remarques (non disponibles sous forme de données de référence sous le SANDRE)
-  CdRqAna<-analyses%>%select(CdRqAna, MnemoRqAna)%>%distinct
+  CdRqAna<-analyses%>%dplyr::select(CdRqAna, MnemoRqAna)%>%distinct
 
   # extraction des codes unités (non disponibles sous forme de données de référence sous le SANDRE au 03/12/2020)
-  CdUniteMesure<-analyses%>%select(CdUniteMesure, SymUniteMesure)%>%distinct
+  CdUniteMesure<-analyses%>%dplyr::select(CdUniteMesure, SymUniteMesure)%>%distinct
 
   # extraction des codes analyses insitu ou pas
-  CdInsituAna<-analyses%>%select(CdInsituAna, LbInsituAna)%>%distinct
+  CdInsituAna<-analyses%>%dplyr::select(CdInsituAna, LbInsituAna)%>%distinct
 
   # extraction des codes acréditation analyse
-  CdAccreAna<-analyses%>%select(CdAccreAna, MnemoAccredAna)%>%distinct
+  CdAccreAna<-analyses%>%dplyr::select(CdAccreAna, MnemoAccredAna)%>%distinct
 
   # conversion de l'information analyse agréée en booléen comme prévu au SANDRE
   analyses$AgreAna<-ifelse(analyses$AgreAna=="1",T,F)
 
   # extraction des codes statuts analyse
-  CdStatutAna<-analyses%>%select(CdStatutAna, MnemoStatutAna)%>%distinct
+  CdStatutAna<-analyses%>%dplyr::select(CdStatutAna, MnemoStatutAna)%>%distinct
 
   # extraction des codes qualification analyse
-  CdQualAna<-analyses%>%select(CdQualAna, LbQualAna)%>%distinct
+  CdQualAna<-analyses%>%dplyr::select(CdQualAna, LbQualAna)%>%distinct
 
 
   # extraction des codes statuts analyse
-  CdDifficulteAna<-analyses%>%select(CdDifficulteAna, MnemoDifficulteAna)%>%distinct
+  CdDifficulteAna<-analyses%>%dplyr::select(CdDifficulteAna, MnemoDifficulteAna)%>%distinct
 
   # extraction des codes Producteur et Noms producteurs
-  CdProducteur<-analyses%>%select(CdProducteur, NomProducteur)%>%distinct
+  CdProducteur<-analyses%>%dplyr::select(CdProducteur, NomProducteur)%>%distinct
 
     # on ne conserve que les colonnes indispensables
-  analyses<-analyses%>%select("CdStationMesureEauxSurface", "CdSupport", "CdFractionAnalysee", "CdPrelevement", "DatePrel", "HeurePrel", "DateAna", "HeureAna",
+  analyses<-analyses%>%dplyr::select("CdStationMesureEauxSurface", "CdSupport", "CdFractionAnalysee", "CdPrelevement", "DatePrel", "HeurePrel", "DateAna", "HeureAna",
                               "CdParametre", "RsAna", "CdUniteMesure", "CdRqAna", "CdInsituAna", "ProfondeurPrel","CdDifficulteAna",
                               "LdAna", "LqAna", "LsAna", "IncertAna","CdMetFractionnement", "CdMethode", "RdtExtraction", "CdMethodeExtraction", "CdAccreAna",
                               "AgreAna", "CdStatutAna", "CdQualAna", "CommentairesAna", "ComResultatAna", "CdRdd", "CdProducteur","CdPreleveur", "CdLaboratoire")
@@ -98,7 +98,7 @@ tmp_dir<-tempdir()
   ConditionsEnvironnementales<-lit_fichier_naiades(paste0(tmp_dir,"/ConditionsEnvironnementales.csv"))
 
   # on ne conserve que les colonnes indispensables
-  ConditionsEnvironnementales<-ConditionsEnvironnementales%>%select("CdStationMesureEauxSurface", "DatePrel", "CdParametreEnv", "RsParEnv", "CdUniteMesure", "CdRqParEn",
+  ConditionsEnvironnementales<-ConditionsEnvironnementales%>%dplyr::select("CdStationMesureEauxSurface", "DatePrel", "CdParametreEnv", "RsParEnv", "CdUniteMesure", "CdRqParEn",
                                                                     "CdStatutParEn", "CdQualParEnv", "ComParEnv", "DateParEnv", "HeureParEnv", "CdMethodeParEnv", "CdProducteur", "CdPreleveur")
 
 
@@ -108,7 +108,7 @@ tmp_dir<-tempdir()
   Operations<-lit_fichier_naiades(paste0(tmp_dir,"/Operations.csv"))
 
   # on ne conserve que les colonnes indispensables
-  Operations<-Operations%>%select("CdStationMesureEauxSurface", "CdPrelevement", "CoordXPrel", "CoordYPrel", "ProjectPrel",
+  Operations<-Operations%>%dplyr::select("CdStationMesureEauxSurface", "CdPrelevement", "CoordXPrel", "CoordYPrel", "ProjectPrel",
                                   "CdSupport", "CdMethode", "DatePrel", "HeurePrel", "DateFinPrel", "HeureFinPrel", "CdZoneVerticaleProspectee",
                                   "ProfondeurPrel", "CdDifficultePrel", "CdAccredPrel", "AgrePrel", "CdFinalitePrel",
                                   "CommentairesPrel", "CdRdd")

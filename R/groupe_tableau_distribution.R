@@ -83,7 +83,7 @@ groupe_tableau_distribution <-
     names(detail_seuil) <- c("indice_seuil123456", groupes)
 
     # on supprime les colonnes remplies de NA
-    detail_seuil <- detail_seuil %>% select(where( ~ !all(is.na(.x))))
+    detail_seuil <- detail_seuil %>% dplyr::select(where( ~ !all(is.na(.x))))
     groupes <- groupes[groupes %in% names(detail_seuil)]
 
     # lorsque une des colonnes de sélection des paramètres contient un NA, on remplace ce NA par autant de ligne qu'il existe de valeur distincte de ce paramèter (astuce pour ne pas filtrer sur les NA)
@@ -92,7 +92,7 @@ groupe_tableau_distribution <-
       for (i in 2:ncol(detail_seuil)) {
         if (any(is.na(detail_seuil[, i]))) {
           jointure <-
-            donnees %>% select(names(detail_seuil)[i]) %>% distinct %>% mutate(col_jointure =
+            donnees %>% dplyr::select(names(detail_seuil)[i]) %>% distinct %>% mutate(col_jointure =
                                                                                  NA)
           yname <- (names(detail_seuil)[i])
           xname <- "col_jointure"
@@ -101,11 +101,11 @@ groupe_tableau_distribution <-
                                        by = setNames(xname, yname),
                                        na_matches = "na")
           detail_seuil <-
-            detail_seuil %>% mutate(test = select(., c(
+            detail_seuil %>% mutate(test = dplyr::select(., c(
               all_of(yname), paste0(yname, ".y")
             )) %>% do.call(coalesce, .))
           detail_seuil <-
-            detail_seuil %>% select(-all_of(yname),-all_of(paste0(yname, ".y"))) %>% rename(setNames(yname, "test"))
+            detail_seuil %>% dplyr::select(-all_of(yname),-all_of(paste0(yname, ".y"))) %>% rename(setNames(yname, "test"))
         }
       }
 

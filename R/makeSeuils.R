@@ -119,7 +119,7 @@ makeSeuils <-
     # les lignes sont répétées dans le tableau initial ici on ne veut qu'une ligne par élément du tableau
     # seuils_demandes, les colonnes choisies ne sont pas répétées
     base_seuils_paronly <- base_seuils %>%
-      select(
+      dplyr::select(
         NOM,
         SUPPORT,
         FRACTION,
