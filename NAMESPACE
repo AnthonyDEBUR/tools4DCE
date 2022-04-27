@@ -2,7 +2,10 @@
 
 export(PercentileDCE)
 export(affecte_une_classe)
+export(ajoute_nom_fraction)
 export(ajoute_nom_param)
+export(ajoute_nom_station)
+export(ajoute_nom_support)
 export(ajoute_nom_unite)
 export(arrondi)
 export(calcule_EQR_hbio)
