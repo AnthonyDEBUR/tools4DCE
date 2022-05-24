@@ -1,6 +1,7 @@
 #' calcule_somme_pesticides
 #'
 #' fonction pour calculer la somme des concentrations en pesticides.
+
 #' Si pour une même station et une même date il y a plusieurs résultats du même paramètre alors on retient la valeur max de ces résultats.
 #' Si pour une même station et une même date on trouve un paramètre inclus dans un deuxième (ex. S-métolachlore et métolachlore total), alors seule la valeur du paramètre qui englobe l'autre (métolachore total par ex.) est retenu.
 #' paramètres incluant d'autres paramètres :

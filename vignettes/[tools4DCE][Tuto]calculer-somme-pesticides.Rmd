@@ -9,29 +9,10 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-# Installer R, R studio et le package tools4DCE
-## Pour installer R et Rstudio
-Voir par exemple : https://larmarange.github.io/analyse-R/installation-de-R-et-RStudio.html
 
-Pour exécuter des commandes sous Rstudio lire : https://thinkr.fr/debuter-avec-r-et-rstudio/
+# Lancer Rstudio et charger la library tools4DCE
 
-## Pour installer tools4DCE
-Lancer Rstudio
 
-Installer le package devtools en exécutant la commande
-```{r}
-install.packages("devtools")
-```
-
-Ce package te permet de télécharger des packages non officiels comme tools4DCE depuis le site github.
-
-Pour installer tools4DCE exécuter :
-```{r}
-library(devtools)
-install_github("AnthonyDEBUR/tools4DCE")
-```
-
-Ensuite, lors des utilisations suivantes, on lance tools4DCE en exécutant la commande :
 ```{r}
 library("tools4DCE")
 ```
@@ -58,7 +39,7 @@ Les intitulés suivants dans les colonnes sont obligatoires (attention, R diffé
 
 <i>Nota : si certaines colonnes sont vides, il faut néanmoins prévoir le nom de colonne dans le fichier, tout en laissant la colonne vide.</i>
 
-Un fichier exemple est téléchargeable au lien suivant : https://github.com/AnthonyDEBUR/tools4DCE/blob/maj/demonstration/exemple.xlsx
+Un fichier exemple est téléchargeable au lien suivant : https://github.com/AnthonyDEBUR/tools4DCE/raw/4b606165757d2db58511de15b9d886f7e19473d7/demonstration/exemple.xlsx
 
 ## Charger le fichier excel en mémoire
 
@@ -67,10 +48,9 @@ La commande "file.choose()" ouvre une fenêtre permettant de sélectionner un fi
 La commande read_excel permet de charger le contenu du fichier (onglet DATA) en mémoire sous R
 
 ```{r}
-library("tools4DCE")
 
-fichier<-file.choose()
-donnees<-read_xlsx(fichier, sheet = "DATA")
+
+donnees<-read_xlsx("https://github.com/AnthonyDEBUR/tools4DCE/raw/4b606165757d2db58511de15b9d886f7e19473d7/demonstration/exemple.xlsx", sheet = "DATA")
 
 str(donnees)
 

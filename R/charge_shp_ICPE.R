@@ -257,7 +257,7 @@ charge_shp_ICPE <- function(crs = 2154, shp_emprise = NULL) {
       # On supprime les lignes composées exclusivement de NA
       tmp <- tmp %>% filter(if_any(starts_with("20"), ~ !is.na(.)))
 
-      bel_regions[bel_regions$code_s3ic == id_em[i], ]$emissions <-
+      bel_regions[bel_regions$code_aiot == id_em[i], ]$emissions <-
         tmp %>%
         tableHTML() %>% as.character
 
@@ -290,7 +290,7 @@ charge_shp_ICPE <- function(crs = 2154, shp_emprise = NULL) {
       # On supprime les lignes composées exclusivement de NA
       tmp <- tmp %>% filter(if_any(starts_with("20"), ~ !is.na(.)))
 
-      bel_regions[bel_regions$code_s3ic == id_em[i], ]$prelevements <-
+      bel_regions[bel_regions$code_aiot == id_em[i], ]$prelevements <-
         tmp %>%
         tableHTML() %>% as.character
 
