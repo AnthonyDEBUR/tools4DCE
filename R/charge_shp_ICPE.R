@@ -147,7 +147,7 @@ charge_shp_ICPE <-
             0))
           try(eolienne <-
                 ifelse(sum(
-                  tableau_autorisation[tableau_autorisation$`Code rubrique` %in% c("2510"),]$Volume %>%
+                  tableau_autorisation[tableau_autorisation$`Code rubrique` %in% c("2980"),]$Volume %>%
                     parse_number(),
                   na.rm = T
                 ) > 0,
