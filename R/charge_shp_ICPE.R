@@ -51,7 +51,7 @@ charge_shp_ICPE <-
       shp_emprise <- st_transform(shp_emprise, crs = 2154)
 
       # on découpe par rapport à l'emprise de l'objet shp_emprise
-      bel_regions <- bel_regions[shp_emprise, ]
+      bel_regions <- bel_regions[shp_emprise,]
     }
 
     # on projette dans le crs de sortie
@@ -72,6 +72,7 @@ charge_shp_ICPE <-
       bel_regions$nomenclature_IC <- ""
 
       for (i in 1:nrow(bel_regions)) {
+        print(paste0("recuperation donnees site", i, " sur ", nrow(bel_regions)))
         webpage <- rvest::read_html(bel_regions$url_fiche[i])
         etat_activite <-
           webpage %>% html_nodes('.mb-5') %>% html_nodes("p") %>% html_text()
@@ -88,44 +89,81 @@ charge_shp_ICPE <-
         IED_MTD <-
           sub('.* : ', "", etat_activite[grepl("IED - MTD", etat_activite)][1])
 
-
-        tableau_autorisation <- rvest::html_table(webpage)[[2]]
-        bovins <-
-          sum(tableau_autorisation[tableau_autorisation$`Code rubrique` %in% c("2101"), ]$Volume %>%
-                parse_number(), na.rm = T)
-        porcs <-
-          sum(tableau_autorisation[tableau_autorisation$`Code rubrique` %in% c("2102"), ]$Volume %>%
-                parse_number(), na.rm = T)
-        volailles <-
-          sum(tableau_autorisation[tableau_autorisation$`Code rubrique` %in% c("2111"), ]$Volume %>%
-                parse_number(), na.rm = T)
-        pisciculture <-
-          sum(tableau_autorisation[tableau_autorisation$`Code rubrique` %in% c("2130"), ]$Volume %>%
-                parse_number(), na.rm = T)
-        autre_elevage <-
-          ifelse(sum(tableau_autorisation[tableau_autorisation$`Code rubrique` %in% c("2110", "2113", "2120", "2140", "2150"), ]$Volume %>%
-                       parse_number(), na.rm = T) > 0,
-                 "oui",
-                 "non")
-        carriere <-
-          ifelse(sum(tableau_autorisation[tableau_autorisation$`Code rubrique` %in% c("2510"), ]$Volume %>%
-                       parse_number(), na.rm = T) > 0,
-                 1,
-                 0)
-
-
         bel_regions$lib_seveso[i] <- seveso
         bel_regions$num_siret[i] <- SIRET
         bel_regions$actif[i] <- actif
         bel_regions$lib_regime[i] <- regime
         bel_regions$priorite_n[i] <- ifelse(Prio_FR == "Oui", 1, 0)
-        bel_regions$ied[n] <- ifelse(IED_MTD == "Oui", 1, 0)
+        bel_regions$ied[i] <- ifelse(IED_MTD == "Oui", 1, 0)
 
-        bel_regions$bovins[i] <- bovins
-        bel_regions$porcs[i] <- porcs
-        bel_regions$volailles[i] <- volailles
-        bel_regions$piscicultures[i] <- pisciculture
-        bel_regions$autre_elevages[i] <- autre_elevage
+
+        tableau_autorisation <-
+          webpage %>% rvest::html_elements(xpath = '//*[@id="situation-administrative"]') %>%
+          rvest::html_table()
+        tableau_autorisation<-tableau_autorisation[[1]]
+
+
+        if (!all(is.na(tableau_autorisation))) {
+          bovins<-NA
+          porcs<-NA
+          volailles<-NA
+          pisciculture<-NA
+          autre_elevage<-NA
+          eolienne<-NA
+
+          try(bovins <-
+            sum(tableau_autorisation[tableau_autorisation$`Code rubrique` %in% c("2101"),]$Volume %>%
+                  parse_number(),
+                na.rm = T))
+          try(porcs <-
+            sum(tableau_autorisation[tableau_autorisation$`Code rubrique` %in% c("2102"),]$Volume %>%
+                  parse_number(),
+                na.rm = T))
+          try(volailles <-
+            sum(tableau_autorisation[tableau_autorisation$`Code rubrique` %in% c("2111"),]$Volume %>%
+                  parse_number(),
+                na.rm = T))
+          try(pisciculture <-
+            sum(tableau_autorisation[tableau_autorisation$`Code rubrique` %in% c("2130"),]$Volume %>%
+                  parse_number(),
+                na.rm = T))
+          try(autre_elevage <-
+            ifelse(
+              sum(
+                tableau_autorisation[tableau_autorisation$`Code rubrique` %in% c("2110", "2113", "2120", "2140", "2150"),]$Volume %>%
+                  parse_number(),
+                na.rm = T
+              ) > 0,
+              "oui",
+              "non"
+            ))
+          try(carriere <-
+            ifelse(sum(
+              tableau_autorisation[tableau_autorisation$`Code rubrique` %in% c("2510"),]$Volume %>%
+                parse_number(),
+              na.rm = T
+            ) > 0,
+            1,
+            0))
+          try(eolienne <-
+                ifelse(sum(
+                  tableau_autorisation[tableau_autorisation$`Code rubrique` %in% c("2510"),]$Volume %>%
+                    parse_number(),
+                  na.rm = T
+                ) > 0,
+                1,
+                0))
+
+
+          bel_regions$bovins[i] <- bovins
+          bel_regions$porcs[i] <- porcs
+          bel_regions$volailles[i] <- volailles
+          bel_regions$piscicultures[i] <- pisciculture
+          bel_regions$autre_elevages[i] <- autre_elevage
+          bel_regions$eolienne[i]<-eolienne
+        }
+
+        rm(bovins, porcs, volailles, pisciculture, autre_elevage, eolienne)
 
         bel_regions$nomenclature_IC[i] <- tableau_autorisation %>%
           tableHTML() %>% as.character
@@ -219,7 +257,8 @@ charge_shp_ICPE <-
     }
 
     # mise en forme des tableaux d'emissions et de prélèvements
-    emissions$identifiant <- gsub("[^0-9]", "", emissions$identifiant)
+    emissions$identifiant <-
+      gsub("[^0-9]", "", emissions$identifiant)
 
     emissions$identifiant <-
       paste0(
@@ -290,10 +329,12 @@ charge_shp_ICPE <-
         names_prefix = "prelevements_",
         values_drop_na = T
       )
-    prelevements <- prelevements %>% group_by(identifiant, milieu) %>%
+    prelevements <-
+      prelevements %>% group_by(identifiant, milieu) %>%
       pivot_wider(names_from = annee, values_from = value)
 
-    prelevements <- prelevements %>% dplyr::select(-nom_etablissement)
+    prelevements <-
+      prelevements %>% dplyr::select(-nom_etablissement)
 
 
 
@@ -312,7 +353,8 @@ charge_shp_ICPE <-
         tmp <- emissions %>% subset(identifiant == id_em[i])
 
         # On ne conserve que les colonnes de date non totalement vides
-        tmp <- tmp %>% dplyr::select_if(~ !all(is.na(.))) %>% ungroup
+        tmp <-
+          tmp %>% dplyr::select_if( ~ !all(is.na(.))) %>% ungroup
 
         # selection des 3 dernières années renseignées
         tmp <-
@@ -320,9 +362,10 @@ charge_shp_ICPE <-
                                 names(tmp) %>% as.numeric %>% sort %>% tail(4) %>% as.character)
 
         # On supprime les lignes composées exclusivement de NA
-        tmp <- tmp %>% filter(if_any(starts_with("20"), ~ !is.na(.)))
+        tmp <-
+          tmp %>% filter(if_any(starts_with("20"), ~ !is.na(.)))
 
-        bel_regions[bel_regions$code_aiot == id_em[i],]$emissions <-
+        bel_regions[bel_regions$code_aiot == id_em[i], ]$emissions <-
           tmp %>%
           tableHTML() %>% as.character
 
@@ -345,7 +388,8 @@ charge_shp_ICPE <-
         tmp <- prelevements %>% subset(identifiant == id_em[i])
 
         # On ne conserve que les colonnes de date non totalement vides
-        tmp <- tmp %>% dplyr::select_if(~ !all(is.na(.))) %>% ungroup
+        tmp <-
+          tmp %>% dplyr::select_if( ~ !all(is.na(.))) %>% ungroup
 
         # selection des 3 dernières années renseignées
         tmp <-
@@ -353,9 +397,10 @@ charge_shp_ICPE <-
                                 names(tmp) %>% as.numeric %>% sort %>% tail(4) %>% as.character)
 
         # On supprime les lignes composées exclusivement de NA
-        tmp <- tmp %>% filter(if_any(starts_with("20"), ~ !is.na(.)))
+        tmp <-
+          tmp %>% filter(if_any(starts_with("20"), ~ !is.na(.)))
 
-        bel_regions[bel_regions$code_aiot == id_em[i],]$prelevements <-
+        bel_regions[bel_regions$code_aiot == id_em[i], ]$prelevements <-
           tmp %>%
           tableHTML() %>% as.character
 
