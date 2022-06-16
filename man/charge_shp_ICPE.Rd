@@ -4,7 +4,7 @@
 \alias{charge_shp_ICPE}
 \title{charge_shp_ICPE}
 \usage{
-charge_shp_ICPE(crs = 2154, shp_emprise = NULL)
+charge_shp_ICPE(crs = 2154, shp_emprise = NULL, rubrique = TRUE)
 }
 \arguments{
 \item{crs}{valeur du code de projection dans lequel renvoyer le résultat (par défaut Lambert 93, indiquer 4326 pour du wgs84)}

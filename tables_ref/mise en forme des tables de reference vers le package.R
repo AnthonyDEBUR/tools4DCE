@@ -129,6 +129,31 @@ fractions_sandre <-
 save(fractions_sandre, file = "data/fractions_sandre.RData")
 
 
+# Réseaux de mesure
+
+# telechargement du referentiel dispositifs de collecte du sandre
+options(timeout = 5*60)
+
+curl::curl_download(
+  "https://api.sandre.eaufrance.fr/referentiels/v1/dc.csv?outputSchema=SANDREv4&compress=true",
+  "reseaux.csv.gz",
+  mode = "wb"
+)
+
+Sys.setenv("VROOM_CONNECTION_SIZE" = 5000000)
+
+fractions_sandre <-
+  read_delim("reseaux.csv.gz", delim = ";")
+
+file.remove("reseaux.csv.gz")
+
+colnames(fractions_sandre) <-
+  stringi::stri_trans_general(colnames(fractions_sandre), "Latin-ASCII")
+
+fractions_sandre <-
+  fractions_sandre %>% dplyr::select(CdFractionAnalysee, LbFractionAnalysee)
+
+save(fractions_sandre, file = "data/fractions_sandre.RData")
 
 
 # Stations
@@ -144,3 +169,41 @@ stations <-
 
 
 save(stations, file = "data/stations.RData")
+
+
+# Intervenants
+
+# telechargement du referentiel Intervenants sandre
+
+
+download.file(
+  "https://api.sandre.eaufrance.fr/referentiels/v1/int.json?outputSchema=SANDREv2&compress=true",
+  "intervenants.csv.gz",
+  mode = "wb",
+  cacheOK = T,
+  extra=options(timeout=600)
+)
+
+# télécharger à la main le référentiel à l'adresse suivante
+# https://api.sandre.eaufrance.fr/referentiels/v1/int.csv?outputSchema=SANDREv2&compress=true
+
+
+Sys.setenv("VROOM_CONNECTION_SIZE" = 5000000)
+
+# choisir le fichier téléchargé pour le dézipper et le lire
+fichier<-file.choose()
+intervenants<-read_delim(fichier, delim = ";", skip = 0)
+intervenants<-intervenants[2:nrow(intervenants),] # suppression de la 2ème ligne du fichier avec les descriptifs des noms de champs
+#
+# intervenants <-
+#   read_delim("intervenants.csv.gz", delim = ";")
+#
+# file.remove("intervenants.csv.gz")
+
+colnames(intervenants) <-
+  stringi::stri_trans_general(colnames(intervenants), "Latin-ASCII")
+
+intervenants_sandre <-
+  intervenants %>% dplyr::select(CdIntervenant, NomIntervenant, MnIntervenant)
+
+save(intervenants_sandre, file = "data/intervenants_sandre.RData")

@@ -51,7 +51,7 @@ charge_shp_ICPE <-
       shp_emprise <- st_transform(shp_emprise, crs = 2154)
 
       # on découpe par rapport à l'emprise de l'objet shp_emprise
-      bel_regions <- bel_regions[shp_emprise,]
+      bel_regions <- bel_regions[shp_emprise, ]
     }
 
     # on projette dans le crs de sortie
@@ -72,8 +72,20 @@ charge_shp_ICPE <-
       bel_regions$nomenclature_IC <- ""
 
       for (i in 1:nrow(bel_regions)) {
-        print(paste0("recuperation donnees site", i, " sur ", nrow(bel_regions)))
-        webpage <- rvest::read_html(bel_regions$url_fiche[i])
+        print(paste0("recuperation donnees site ", i, " sur ", nrow(bel_regions)))
+
+        tryCatch(
+          webpage <-
+            rvest::read_html(bel_regions$url_fiche[i]),
+          error = function(e) {
+            Sys.sleep(60)
+            try(webpage <-
+                  rvest::read_html(bel_regions$url_fiche[i]))
+          }
+        )
+
+
+
         etat_activite <-
           webpage %>% html_nodes('.mb-5') %>% html_nodes("p") %>% html_text()
         seveso <-
@@ -100,51 +112,70 @@ charge_shp_ICPE <-
         tableau_autorisation <-
           webpage %>% rvest::html_elements(xpath = '//*[@id="situation-administrative"]') %>%
           rvest::html_table()
-        tableau_autorisation<-tableau_autorisation[[1]]
+        tableau_autorisation <- tableau_autorisation[[1]]
 
 
         if (!all(is.na(tableau_autorisation))) {
-          bovins<-NA
-          porcs<-NA
-          volailles<-NA
-          pisciculture<-NA
-          autre_elevage<-NA
-          eolienne<-NA
+          bovins <- NA
+          porcs <- NA
+          volailles <- NA
+          pisciculture <- NA
+          autre_elevage <- NA
+          eolienne <- NA
 
           try(bovins <-
-            sum(tableau_autorisation[tableau_autorisation$`Code rubrique` %in% c("2101"),]$Volume %>%
-                  parse_number(),
-                na.rm = T))
+                sum(tableau_autorisation[tableau_autorisation$`Code rubrique` %in% c("2101"), ]$Volume %>%
+                      parse_number(),
+                    na.rm = T))
           try(porcs <-
-            sum(tableau_autorisation[tableau_autorisation$`Code rubrique` %in% c("2102"),]$Volume %>%
-                  parse_number(),
-                na.rm = T))
+                sum(tableau_autorisation[tableau_autorisation$`Code rubrique` %in% c("2102",), ]$Volume %>%
+                      parse_number(),
+                    na.rm = T))
+          try(porcs <-
+                porcs + sum(tableau_autorisation[(tableau_autorisation$`Code rubrique` %in% c("3660")) &
+                                                   (
+                                                     tableau_autorisation$Libellé.rubrique %in% c(
+                                                       "avec plus de 2 000 emplacements pour les porcs de production (de plus de 30 kg)",
+                                                       "avec plus de 750 emplacements pour les truies"
+                                                     )
+                                                   ), ]$Volume %>%
+                              parse_number(),
+                            na.rm = T))
           try(volailles <-
-            sum(tableau_autorisation[tableau_autorisation$`Code rubrique` %in% c("2111"),]$Volume %>%
-                  parse_number(),
-                na.rm = T))
+                sum(tableau_autorisation[tableau_autorisation$`Code rubrique` %in% c("2111"),]$Volume %>%
+                      parse_number(),
+                    na.rm = T))
+          try(volailles <-
+                volailles + sum(tableau_autorisation[(tableau_autorisation$`Code rubrique` %in% c("3660")) &
+                                                   (
+                                                     tableau_autorisation$Libellé.rubrique %in% c(
+                                                       "avec plus de 40 000 emplacements pour les volailles"
+                                                     )
+                                                   ), ]$Volume %>%
+                              parse_number(),
+                            na.rm = T))
           try(pisciculture <-
-            sum(tableau_autorisation[tableau_autorisation$`Code rubrique` %in% c("2130"),]$Volume %>%
-                  parse_number(),
-                na.rm = T))
+                sum(tableau_autorisation[tableau_autorisation$`Code rubrique` %in% c("2130"),]$Volume %>%
+                      parse_number(),
+                    na.rm = T))
           try(autre_elevage <-
-            ifelse(
-              sum(
-                tableau_autorisation[tableau_autorisation$`Code rubrique` %in% c("2110", "2113", "2120", "2140", "2150"),]$Volume %>%
-                  parse_number(),
-                na.rm = T
-              ) > 0,
-              "oui",
-              "non"
-            ))
+                ifelse(
+                  sum(
+                    tableau_autorisation[tableau_autorisation$`Code rubrique` %in% c("2110", "2113", "2120", "2140", "2150"),]$Volume %>%
+                      parse_number(),
+                    na.rm = T
+                  ) > 0,
+                  "oui",
+                  "non"
+                ))
           try(carriere <-
-            ifelse(sum(
-              tableau_autorisation[tableau_autorisation$`Code rubrique` %in% c("2510"),]$Volume %>%
-                parse_number(),
-              na.rm = T
-            ) > 0,
-            1,
-            0))
+                ifelse(sum(
+                  tableau_autorisation[tableau_autorisation$`Code rubrique` %in% c("2510"),]$Volume %>%
+                    parse_number(),
+                  na.rm = T
+                ) > 0,
+                1,
+                0))
           try(eolienne <-
                 ifelse(sum(
                   tableau_autorisation[tableau_autorisation$`Code rubrique` %in% c("2980"),]$Volume %>%
@@ -160,10 +191,25 @@ charge_shp_ICPE <-
           bel_regions$volailles[i] <- volailles
           bel_regions$piscicultures[i] <- pisciculture
           bel_regions$autre_elevages[i] <- autre_elevage
-          bel_regions$eolienne[i]<-eolienne
+          bel_regions$eolienne[i] <- eolienne
         }
 
-        rm(bovins, porcs, volailles, pisciculture, autre_elevage, eolienne)
+        rm(bovins,
+           porcs,
+           volailles,
+           pisciculture,
+           autre_elevage,
+           eolienne)
+
+        if (i %% 20 == 0) {
+          Sys.sleep(2)
+        }
+        if (i %% 100 == 0) {
+          Sys.sleep(2)
+        }
+        if (i %% 1000 == 0) {
+          Sys.sleep(10)
+        }
 
         bel_regions$nomenclature_IC[i] <- tableau_autorisation %>%
           tableHTML() %>% as.character
@@ -354,7 +400,7 @@ charge_shp_ICPE <-
 
         # On ne conserve que les colonnes de date non totalement vides
         tmp <-
-          tmp %>% dplyr::select_if( ~ !all(is.na(.))) %>% ungroup
+          tmp %>% dplyr::select_if(~ !all(is.na(.))) %>% ungroup
 
         # selection des 3 dernières années renseignées
         tmp <-
@@ -365,7 +411,7 @@ charge_shp_ICPE <-
         tmp <-
           tmp %>% filter(if_any(starts_with("20"), ~ !is.na(.)))
 
-        bel_regions[bel_regions$code_aiot == id_em[i], ]$emissions <-
+        bel_regions[bel_regions$code_aiot == id_em[i],]$emissions <-
           tmp %>%
           tableHTML() %>% as.character
 
@@ -389,7 +435,7 @@ charge_shp_ICPE <-
 
         # On ne conserve que les colonnes de date non totalement vides
         tmp <-
-          tmp %>% dplyr::select_if( ~ !all(is.na(.))) %>% ungroup
+          tmp %>% dplyr::select_if(~ !all(is.na(.))) %>% ungroup
 
         # selection des 3 dernières années renseignées
         tmp <-
@@ -400,7 +446,7 @@ charge_shp_ICPE <-
         tmp <-
           tmp %>% filter(if_any(starts_with("20"), ~ !is.na(.)))
 
-        bel_regions[bel_regions$code_aiot == id_em[i], ]$prelevements <-
+        bel_regions[bel_regions$code_aiot == id_em[i],]$prelevements <-
           tmp %>%
           tableHTML() %>% as.character
 
