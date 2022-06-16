@@ -51,7 +51,7 @@ charge_shp_ICPE <-
       shp_emprise <- st_transform(shp_emprise, crs = 2154)
 
       # on découpe par rapport à l'emprise de l'objet shp_emprise
-      bel_regions <- bel_regions[shp_emprise, ]
+      bel_regions <- bel_regions[shp_emprise,]
     }
 
     # on projette dans le crs de sortie
@@ -85,6 +85,10 @@ charge_shp_ICPE <-
         )
 
 
+        webpage <-
+          rvest::read_html(
+            "https://www.georisques.gouv.fr/risques/installations/donnees/details/0053500137"
+          )
 
         etat_activite <-
           webpage %>% html_nodes('.mb-5') %>% html_nodes("p") %>% html_text()
@@ -123,45 +127,79 @@ charge_shp_ICPE <-
           autre_elevage <- NA
           eolienne <- NA
 
+          # suppression des doublons (pour une même rubrique, le site présente les autorisations actuelles et passées.
+          # La dernière autorisation est affichée en premier dans le tableau)
+          tableau_autorisation <-
+            tableau_autorisation[!(
+              duplicated(tableau_autorisation$`Code rubrique`) &
+                duplicated(tableau_autorisation$Alinéa)
+            ), ]
+
+
+          # suppression des rubriques autorisation si le site est en déclaration ou enregistrement
+          if (regime %in% c("Enregistrement", "Déclaration")) {
+            tableau_autorisation <-
+              tableau_autorisation %>% subset(`Régime autorisé (3)` != "Autorisation")
+          }
+
+          # suppression des rubriques autorisation si le site est en déclaration ou enregistrement
+          if (regime %in% c("Déclaration")) {
+            tableau_autorisation <-
+              tableau_autorisation %>% subset(`Régime autorisé (3)` != "Enregistrement")
+          }
+
+
+          # cas particulier des rubriques 2111 et 3660 alinéa a
+          if (nrow(tableau_autorisation %>% subset(`Code rubrique` == "3660" &
+                                                   Alinéa %in% c("a"))) > 0) {
+            tableau_autorisation <- tableau_autorisation%>%subset(!(`Code rubrique` =="2111"))
+          }
+
+
+
+          # cas particulier des rubriques 2102 et 3660 alinéas b et c
+          if (nrow(tableau_autorisation %>% subset(`Code rubrique` == "3660" &
+                                                   Alinéa %in% c("b", "c"))) > 0) {
+            tableau_autorisation <- tableau_autorisation%>%subset(!(`Code rubrique` =="2102"))
+          }
+
+
           try(bovins <-
                 sum(tableau_autorisation[tableau_autorisation$`Code rubrique` %in% c("2101"), ]$Volume %>%
+                      as.character() %>%
                       parse_number(),
                     na.rm = T))
           try(porcs <-
-                sum(tableau_autorisation[tableau_autorisation$`Code rubrique` %in% c("2102",), ]$Volume %>%
+                sum(tableau_autorisation[tableau_autorisation$`Code rubrique` %in% c("2102"), ]$Volume %>% as.character %>%
                       parse_number(),
                     na.rm = T))
           try(porcs <-
                 porcs + sum(tableau_autorisation[(tableau_autorisation$`Code rubrique` %in% c("3660")) &
-                                                   (
-                                                     tableau_autorisation$Libellé.rubrique %in% c(
-                                                       "avec plus de 2 000 emplacements pour les porcs de production (de plus de 30 kg)",
-                                                       "avec plus de 750 emplacements pour les truies"
-                                                     )
-                                                   ), ]$Volume %>%
+                                                   (tableau_autorisation$Alinéa %in% c("b",
+                                                                                       "c")), ]$Volume %>% as.character() %>%
                               parse_number(),
                             na.rm = T))
           try(volailles <-
                 sum(tableau_autorisation[tableau_autorisation$`Code rubrique` %in% c("2111"),]$Volume %>%
+                      as.character() %>%
                       parse_number(),
                     na.rm = T))
           try(volailles <-
                 volailles + sum(tableau_autorisation[(tableau_autorisation$`Code rubrique` %in% c("3660")) &
-                                                   (
-                                                     tableau_autorisation$Libellé.rubrique %in% c(
-                                                       "avec plus de 40 000 emplacements pour les volailles"
-                                                     )
-                                                   ), ]$Volume %>%
-                              parse_number(),
-                            na.rm = T))
+                                                       (tableau_autorisation$Alinéa %in% c("a")), ]$Volume %>%
+                                  as.character() %>%
+                                  parse_number(),
+                                na.rm = T))
           try(pisciculture <-
                 sum(tableau_autorisation[tableau_autorisation$`Code rubrique` %in% c("2130"),]$Volume %>%
+                      as.character() %>%
                       parse_number(),
                     na.rm = T))
           try(autre_elevage <-
                 ifelse(
                   sum(
                     tableau_autorisation[tableau_autorisation$`Code rubrique` %in% c("2110", "2113", "2120", "2140", "2150"),]$Volume %>%
+                      as.character() %>%
                       parse_number(),
                     na.rm = T
                   ) > 0,
@@ -169,21 +207,27 @@ charge_shp_ICPE <-
                   "non"
                 ))
           try(carriere <-
-                ifelse(sum(
-                  tableau_autorisation[tableau_autorisation$`Code rubrique` %in% c("2510"),]$Volume %>%
-                    parse_number(),
-                  na.rm = T
-                ) > 0,
-                1,
-                0))
+                ifelse(
+                  sum(
+                    tableau_autorisation[tableau_autorisation$`Code rubrique` %in% c("2510"),]$Volume %>%
+                      as.character() %>%
+                      parse_number(),
+                    na.rm = T
+                  ) > 0,
+                  1,
+                  0
+                ))
           try(eolienne <-
-                ifelse(sum(
-                  tableau_autorisation[tableau_autorisation$`Code rubrique` %in% c("2980"),]$Volume %>%
-                    parse_number(),
-                  na.rm = T
-                ) > 0,
-                1,
-                0))
+                ifelse(
+                  sum(
+                    tableau_autorisation[tableau_autorisation$`Code rubrique` %in% c("2980"),]$Volume %>%
+                      as.character() %>%
+                      parse_number(),
+                    na.rm = T
+                  ) > 0,
+                  1,
+                  0
+                ))
 
 
           bel_regions$bovins[i] <- bovins
@@ -400,7 +444,7 @@ charge_shp_ICPE <-
 
         # On ne conserve que les colonnes de date non totalement vides
         tmp <-
-          tmp %>% dplyr::select_if(~ !all(is.na(.))) %>% ungroup
+          tmp %>% dplyr::select_if( ~ !all(is.na(.))) %>% ungroup
 
         # selection des 3 dernières années renseignées
         tmp <-
@@ -411,7 +455,7 @@ charge_shp_ICPE <-
         tmp <-
           tmp %>% filter(if_any(starts_with("20"), ~ !is.na(.)))
 
-        bel_regions[bel_regions$code_aiot == id_em[i],]$emissions <-
+        bel_regions[bel_regions$code_aiot == id_em[i], ]$emissions <-
           tmp %>%
           tableHTML() %>% as.character
 
@@ -435,7 +479,7 @@ charge_shp_ICPE <-
 
         # On ne conserve que les colonnes de date non totalement vides
         tmp <-
-          tmp %>% dplyr::select_if(~ !all(is.na(.))) %>% ungroup
+          tmp %>% dplyr::select_if( ~ !all(is.na(.))) %>% ungroup
 
         # selection des 3 dernières années renseignées
         tmp <-
@@ -446,7 +490,7 @@ charge_shp_ICPE <-
         tmp <-
           tmp %>% filter(if_any(starts_with("20"), ~ !is.na(.)))
 
-        bel_regions[bel_regions$code_aiot == id_em[i],]$prelevements <-
+        bel_regions[bel_regions$code_aiot == id_em[i], ]$prelevements <-
           tmp %>%
           tableHTML() %>% as.character
 
