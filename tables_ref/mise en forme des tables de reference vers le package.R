@@ -3,6 +3,8 @@ library(readxl)
 library(devtools)
 library(stringi)
 library(tools4DCE)
+library(xml2)
+library(downloader) # pour télécharger gros fichiers en https dont paramètres sandre
 
 # base des seuils par paramètre
 base_seuils <-
@@ -30,7 +32,7 @@ save(base_ref_eqr, file = "data/base_ref_eqr.RData")
 
 
 # telechargement du referentiel unites sandre
-download.file(
+download(
   "https://api.sandre.eaufrance.fr/referentiels/v1/urf.csv?compress=true",
   "unites.csv.gz",
   mode = "wb",
@@ -52,27 +54,77 @@ unites_sandre <-
 save(unites_sandre, file = "data/unites_sandre.RData")
 
 # telechargement du referentiel paramètres sandre
-download.file(
-  "https://api.sandre.eaufrance.fr/referentiels/v1/par.csv?outputSchema=SANDREv4&compress=true",
-  "param.csv.gz",
+download(
+  "https://api.sandre.eaufrance.fr/referentiels/v1/par.xml?outputSchema=SANDREv4&compress=true",
+  "param.xml.gz",
   mode = "wb",
   cacheOK = T
 )
-Sys.setenv("VROOM_CONNECTION_SIZE" = 5000000)
+file <- read_xml("param.xml.gz")
+
+
+liste_parametres <-
+  xml_name(file %>%  xml_child(2) %>% xml_contents())
+Parametres <- NA
+
+recupere_parametres <-
+  function(i)
+  {
+    print(i)
+
+    divs <- file %>%  xml_child(2) %>% xml_child(i)
+    liste_rubriques <-
+      file %>%  xml_child(2) %>% xml_child(i) %>% xml_children() %>% xml_name()
+
+    CdParametre <-
+      file %>%  xml_child(2) %>% xml_child(i) %>% xml_child(grep("CdParametre", liste_rubriques)) %>%
+      xml_contents() %>% xml_text()
+
+    NomParametre <-
+      file %>%  xml_child(2) %>% xml_child(i) %>% xml_child(grep("NomParametre", liste_rubriques)) %>%
+      xml_contents() %>% xml_text()
+
+    StParametre <-
+      file %>%  xml_child(2) %>% xml_child(i) %>% xml_child(grep("StParametre", liste_rubriques)) %>%
+      xml_contents() %>% xml_text()
+
+    LbCourtParametre <-
+      file %>%  xml_child(2) %>% xml_child(i) %>% xml_child(grep("LbCourtParametre", liste_rubriques)) %>% xml_contents() %>%
+      xml_text()
+
+    CdCASSubstanceChimique <- NA
+
+    if (any(grepl("ParametreChimique", liste_rubriques))) {
+      liste_rubriques0 <- file %>%
+        xml_child(2) %>% xml_child(i) %>% xml_child(grep("ParametreChimique", liste_rubriques)) %>%
+        xml_children() %>% xml_name()
+
+      if (any(grepl("CdCASSubstanceChimique", liste_rubriques0))) {
+        CdCASSubstanceChimique <-
+          file %>%  xml_child(2) %>% xml_child(i) %>%
+          xml_child(grep("ParametreChimique", liste_rubriques)) %>%
+          xml_child(grep("CdCASSubstanceChimique", liste_rubriques0)) %>%
+          xml_contents() %>%
+          xml_text()
+      }
+    }
+
+
+    ajout <-
+      data.frame(
+        CdParametre = CdParametre,
+        NomParametre = NomParametre,
+        StParametre = StParametre,
+        LbCourtParametre = LbCourtParametre,
+        CdCASSubstanceChimique = CdCASSubstanceChimique
+      )
+  }
 
 parametres_sandre <-
-  read_delim("param.csv.gz", delim = ";")
-
-parametres_sandre <-
-  parametres_sandre %>% subset(CdParametre != "Code du paramètre")
+  lapply(grep("Parametre", liste_parametres),
+    recupere_parametres) %>% bind_rows()
 
 
-parametres_sandre$CdParametre <-
-  as.character(parametres_sandre$CdParametre)
-# suppression des colonnes remplies de NA
-parametres_sandre <-
-  Filter(function(x)
-    ! all(is.na(x)), parametres_sandre)
 file.remove("param.csv.gz")
 save(parametres_sandre, file = "data/parametres_sandre.RData")
 
@@ -81,7 +133,7 @@ save(parametres_sandre, file = "data/parametres_sandre.RData")
 # Support
 
 # telechargement du referentiel support sandre
-download.file(
+download(
   "https://api.sandre.eaufrance.fr/referentiels/v1/sup.csv?outputSchema=SANDREv4&compress=true",
   "support.csv.gz",
   mode = "wb",
@@ -107,7 +159,7 @@ save(supports_sandre, file = "data/supports_sandre.RData")
 # Fraction
 
 # telechargement du referentiel fraction sandre
-download.file(
+download(
   "https://api.sandre.eaufrance.fr/referentiels/v1/fan.csv?outputSchema=SANDREv4&compress=true",
   "fraction.csv.gz",
   mode = "wb",
@@ -132,7 +184,7 @@ save(fractions_sandre, file = "data/fractions_sandre.RData")
 # Réseaux de mesure
 
 # telechargement du referentiel dispositifs de collecte du sandre
-options(timeout = 5*60)
+options(timeout = 5 * 60)
 
 curl::curl_download(
   "https://api.sandre.eaufrance.fr/referentiels/v1/dc.csv?outputSchema=SANDREv4&compress=true",
@@ -176,12 +228,12 @@ save(stations, file = "data/stations.RData")
 # telechargement du referentiel Intervenants sandre
 
 
-download.file(
+download(
   "https://api.sandre.eaufrance.fr/referentiels/v1/int.json?outputSchema=SANDREv2&compress=true",
   "intervenants.csv.gz",
   mode = "wb",
   cacheOK = T,
-  extra=options(timeout=600)
+  extra = options(timeout = 600)
 )
 
 # télécharger à la main le référentiel à l'adresse suivante
@@ -191,9 +243,10 @@ download.file(
 Sys.setenv("VROOM_CONNECTION_SIZE" = 5000000)
 
 # choisir le fichier téléchargé pour le dézipper et le lire
-fichier<-file.choose()
-intervenants<-read_delim(fichier, delim = ";", skip = 0)
-intervenants<-intervenants[2:nrow(intervenants),] # suppression de la 2ème ligne du fichier avec les descriptifs des noms de champs
+fichier <- file.choose()
+intervenants <- read_delim(fichier, delim = ";", skip = 0)
+intervenants <-
+  intervenants[2:nrow(intervenants), ] # suppression de la 2ème ligne du fichier avec les descriptifs des noms de champs
 #
 # intervenants <-
 #   read_delim("intervenants.csv.gz", delim = ";")
