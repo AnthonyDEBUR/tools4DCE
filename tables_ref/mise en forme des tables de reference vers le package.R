@@ -247,7 +247,7 @@ intervenants <-
 # intervenants <-
 #   read_delim("intervenants.csv.gz", delim = ";")
 #
-# file.remove("intervenants.csv.gz")
+file.remove("intervenants.csv.gz")
 
 colnames(intervenants) <-
   stringi::stri_trans_general(colnames(intervenants), "Latin-ASCII")
