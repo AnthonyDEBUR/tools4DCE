@@ -8,7 +8,7 @@ vignette: >
 ---
 
 
-```{r message=FALSE, warning = FALSE}
+```{r init, message=FALSE, warning = FALSE}
 library(tools4DCE)
 ```
 Ce document explique comment récupérer des listes floristiques ou faunistiques depuis Hubeau (https://hubeau.eaufrance.fr/page/api-hydrobiologie) et de les transmettre à l'API SEEE pour divers calculs d'indicateurs (https://www.seee.eaufrance.fr/).
@@ -18,7 +18,7 @@ Ce document explique comment récupérer des listes floristiques ou faunistiques
 A partir de la plateforme Hubeau, on télécharge les listes faunistiques invertébrés disponibles sur la station 04207400. On se limite aux opérations pour lesquels un indice I2M2 a été calculé (faute de pouvoir rapatrier le protocole de prélèvement depuis hubeau).
 
 Liste des opérations avec I2M2
-```{r}
+```{r listeI2M2}
 
 station_etudiee<-"04207400"
 
@@ -29,16 +29,16 @@ stations_op<-stations_op%>%subset(CdParametre=="7613")
 
 On importe les listes faunistiques depuis HubEau et on ne retient que les données qui correspondent à une date où l'I2M2 est calculé.
 
-```{r}
-donnees<-import_hubeau_liste_hbio(liste_stations = c(station_etudiee), indice="inv")
-donnees<-donnees%>%subset(date_prelevement%in%stations_op$DatePrel)
+```{r listefaunistique}
+donnee <- import_hubeau_liste_hbio(liste_stations = c(station_etudiee), indice="inv")
+donnees <- donnees%>%subset(date_prelevement%in%stations_op$DatePrel)
 
 ```
 
 On met en forme les listes conformément au format d'entrée du script du SEEE Outil diagnostic invertébrés (https://seee.eaufrance.fr/api/indicateurs/ODInvertebres/1.0.2) - format identique à celui du script I2M2 v1.0.6
 
 
-```{r}
+```{r formattageseee1}
 donnees$CODE_OPERATION <-
   paste0(donnees$code_station_hydrobio, "*", donnees$date_prelevement)
 donnees$CODE_STATION <- donnees$code_station_hydrobio
@@ -68,7 +68,7 @@ donnees <-
 
 Appel de l'API sur le SEEE
 
-```{r}
+```{r calcule_SEEE_I2M2}
 
 calcule_SEEE_I2M2(donnees)
 
@@ -78,7 +78,7 @@ calcule_SEEE_I2M2(donnees)
 
 # Outil diagnostic invertébrés I2M2 (inclus sorties optionnelles)
 
-```{r}
+```{r calcule_SEEE_ODinvertebres}
 
 calcule_SEEE_ODinvertebres(donnees)
 
@@ -91,7 +91,7 @@ calcule_SEEE_ODinvertebres(donnees)
 Script du SEEE pour le calcul de l'IBG-DCE
 
 
-```{r}
+```{r calculeIBG-DCE}
 calcule_SEEE_IBG_DCE(donnees)
 ```
 
@@ -102,27 +102,27 @@ calcule_SEEE_IBG_DCE(donnees)
 
 
 Liste des opérations avec IBG Grand cours d'eau (IBG-GCE)
-```{r}
+```{r listeoperationIBG}
 
 station_etudiee<-"04216000"
 
-stations_op<-import_hubeau_indices_hbio(liste_stations = station_etudiee, indice="inv")
-stations_op<-stations_op%>%subset(CdParametre=="6951")
+stations_op <- import_hubeau_indices_hbio(liste_stations = station_etudiee, indice="inv")
+stations_op <- stations_op%>%subset(CdParametre=="6951")
 
 ```
 
 On importe les listes faunistiques depuis HubEau et on ne retient que les données qui correspondent à une date où l'IBG-GCE est calculé.
 
-```{r}
-donnees<-import_hubeau_liste_hbio(liste_stations = c(station_etudiee), indice="inv")
-donnees<-donnees%>%subset(date_prelevement%in%stations_op$DatePrel)
+```{r importlistehbio}
+donnees <- import_hubeau_liste_hbio(liste_stations = c(station_etudiee), indice="inv")
+donnees <- donnees%>%subset(date_prelevement%in%stations_op$DatePrel)
 
 ```
 
 On met en forme les listes conformément au format d'entrée du script du SEEE MGCE.
 
 
-```{r}
+```{r formattageseee2}
 donnees$CODE_OPERATION <-
   paste0(donnees$code_station_hydrobio, "*", donnees$date_prelevement)
 donnees$CODE_STATION <- donnees$code_station_hydrobio
@@ -150,7 +150,7 @@ donnees <-
 
 On regroupe les codes lots conformément à la nomenclature 480 du SANDRE qui prévoit que ces codes valent A, B ou C.
 
-```{r}
+```{r groupecodelots}
 donnees$CODE_PHASE<-substr(donnees$CODE_PHASE,1,1)
 donnees<-donnees%>%group_by(CODE_OPERATION, CODE_PHASE, CODE_TAXON, CODE_REMARQUE, CODE_STATION, DATE, TYPO_NATIONALE)%>%dplyr::summarise(RESULTAT=sum(RESULTAT, na.rm=T))
   
@@ -159,10 +159,10 @@ donnees<-donnees%>%group_by(CODE_OPERATION, CODE_PHASE, CODE_TAXON, CODE_REMARQU
 
 
 
-Appel de l'API du SEEE pour le calcul de l'IBG-GCE
+Appel de l'API du SEEE pour le calcul de l'IBG-MGCE
 
 
-```{r}
+```{r calcule_SEEE_MGCE}
 calcule_SEEE_MGCE(donnees)
 ```
 
