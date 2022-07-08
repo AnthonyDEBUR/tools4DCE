@@ -34,3 +34,7 @@ Restrictions AEP
 "[0;seuil distribution]"
 "]seuil distribution; seuil potabilisation]"
 >seuil potabilisation
+[0-10 mg/L]
+]10-30 mg/L]
+]30-50 mg/L]
+>50 mg/L

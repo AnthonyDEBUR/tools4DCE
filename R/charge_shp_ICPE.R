@@ -65,7 +65,7 @@ charge_shp_ICPE <-
 
 
     # parcours des rubriques ICPE par site pour préciser
-    if (rubrique == TRUE) {
+    if (rubrique == TRUE & nrow(bel_regions) > 0) {
       bel_regions$actif <- ""
       bel_regions$piscicultures <- 0
       bel_regions$autre_elevages <- ""
@@ -78,11 +78,13 @@ charge_shp_ICPE <-
           webpage <-
             rvest::read_html(bel_regions$url_fiche[i]),
           error = function(e) {
-            Sys.sleep(60)
+            Sys.sleep(100)
             try(webpage <-
                   rvest::read_html(bel_regions$url_fiche[i]))
           }
         )
+
+
 
 
         webpage <-
@@ -152,7 +154,8 @@ charge_shp_ICPE <-
           # cas particulier des rubriques 2111 et 3660 alinéa a
           if (nrow(tableau_autorisation %>% subset(`Code rubrique` == "3660" &
                                                    Alinéa %in% c("a"))) > 0) {
-            tableau_autorisation <- tableau_autorisation%>%subset(!(`Code rubrique` =="2111"))
+            tableau_autorisation <-
+              tableau_autorisation %>% subset(!(`Code rubrique` == "2111"))
           }
 
 
@@ -160,7 +163,8 @@ charge_shp_ICPE <-
           # cas particulier des rubriques 2102 et 3660 alinéas b et c
           if (nrow(tableau_autorisation %>% subset(`Code rubrique` == "3660" &
                                                    Alinéa %in% c("b", "c"))) > 0) {
-            tableau_autorisation <- tableau_autorisation%>%subset(!(`Code rubrique` =="2102"))
+            tableau_autorisation <-
+              tableau_autorisation %>% subset(!(`Code rubrique` == "2102"))
           }
 
 
@@ -254,7 +258,9 @@ charge_shp_ICPE <-
         if (i %% 1000 == 0) {
           Sys.sleep(10)
         }
-
+        if (i %% 2000 == 0) {
+          Sys.sleep(10)
+        }
         bel_regions$nomenclature_IC[i] <- tableau_autorisation %>%
           tableHTML() %>% as.character
 
