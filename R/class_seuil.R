@@ -61,12 +61,13 @@ setClass(
       )
     } else{
     }
-    if (!all(object@seuils$NOM_COULEUR %in% colors())) {
-      stop(
-        "les couleurs dans la colonne NOM_COULEUR de la dataframe seuils doivent correspondre à des noms de couleur valides"
-      )
-    } else{
-    }
+    # suppression temporaire de la vérification de la syntaxe des couleurs. Il faut ajouter une condition de validité si la couleur est exprimée sous forme de code hexadecimal
+    # if (!all(object@seuils$NOM_COULEUR %in% colors())) {
+    #   stop(
+    #     "les couleurs dans la colonne NOM_COULEUR de la dataframe seuils doivent correspondre à des noms de couleur valides"
+    #   )
+    # } else{
+    # }
     if (!is.logical(object@bornesinfinclue)) {
       stop("bornesinfinclue doit être de type logical")
     } else{
