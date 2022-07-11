@@ -86,12 +86,6 @@ charge_shp_ICPE <-
 
 
 
-
-        webpage <-
-          rvest::read_html(
-            "https://www.georisques.gouv.fr/risques/installations/donnees/details/0053500137"
-          )
-
         etat_activite <-
           webpage %>% html_nodes('.mb-5') %>% html_nodes("p") %>% html_text()
         seveso <-
