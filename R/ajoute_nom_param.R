@@ -17,7 +17,7 @@ ajoute_nom_param <-
   function(x,
            col_parametre = "CdParametre",
            type_nom = "long") {
-    data(parametres_sandre, package = "tools4DCE")
+    data("parametres_sandre", envir=environment())
     colonne <-
       ifelse(type_nom == "long", "NomParametre", "LbCourtParametre")
     parametres_sandre <-

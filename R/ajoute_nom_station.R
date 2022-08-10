@@ -15,7 +15,7 @@
 ajoute_nom_station <-
   function(x,
            col_station = "CdStationMesureEauxSurface") {
-    data(stations, package = "tools4DCE")
+    data("stations", envir=environment())
 
     return(left_join(x, stations, by = setNames("CdStationMesureEauxSurface", col_station)))
   }

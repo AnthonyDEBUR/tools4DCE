@@ -15,7 +15,7 @@
 ajoute_nom_support <-
   function(x,
            col_support = "CdSupport") {
-    data(supports_sandre, package = "tools4DCE")
+    data("supports_sandre", envir=environment())
 
     return(left_join(x, supports_sandre, by = setNames("CdSupport", col_support)))
   }

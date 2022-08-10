@@ -31,7 +31,7 @@ ajoute_nom_intervenant <-
       stop("type doit être de classe character")
     }
 
-    data(intervenants_sandre, package = "tools4DCE")
+    data("intervenants_sandre", envir=environment())
 
     if(type=="nom"){intervenants_sandre<-intervenants_sandre%>%select(CdIntervenant, NomIntervenant)}
     if(type=="mnemo"){intervenants_sandre<-intervenants_sandre%>%select(CdIntervenant, MnIntervenant)}

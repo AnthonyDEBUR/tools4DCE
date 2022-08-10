@@ -20,7 +20,7 @@ ajoute_nom_unite <-
     if (!(type_nom %in% c("symbole", "nom"))) {
       stop("le paramètre type_nom ne correspond pas à un code autorisé")
     }
-    data(unites_sandre, package = "tools4DCE")
+    data("unites_sandre", envir=environment())
     colonne <-
       ifelse(
         type_nom == "symbole",
