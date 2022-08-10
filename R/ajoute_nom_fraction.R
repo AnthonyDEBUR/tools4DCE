@@ -16,6 +16,8 @@ ajoute_nom_fraction <-
   function(x,
            col_fraction = "CdFractionAnalysee") {
 
+    tmp.env <- new.env()
+    assign('fractions_sandre', data(fractions_sandre, package = "tools4DCE", envir="tmp.env"), envir=test.env)
 
-    return(left_join(x, data(fractions_sandre, package = "tools4DCE"), by = setNames("CdFractionAnalysee", col_fraction)))
+    return(left_join(x, get('fractions_sandre', envir=test.env), by = setNames("CdFractionAnalysee", col_fraction)))
   }
