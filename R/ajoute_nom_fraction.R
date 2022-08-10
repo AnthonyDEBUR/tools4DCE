@@ -15,7 +15,7 @@
 ajoute_nom_fraction <-
   function(x,
            col_fraction = "CdFractionAnalysee") {
-    data(fractions_sandre, package = "tools4DCE")
 
-    return(left_join(x, fractions_sandre, by = setNames("CdFractionAnalysee", col_fraction)))
+
+    return(left_join(x, data(fractions_sandre, package = "tools4DCE"), by = setNames("CdFractionAnalysee", col_fraction)))
   }
