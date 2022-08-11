@@ -5,7 +5,7 @@
 \alias{ordre_facteurs_qualite}
 \title{ordre_facteurs_qualite}
 \format{
-An object of class \code{data.frame} with 35 rows and 1 columns.
+An object of class \code{data.frame} with 39 rows and 1 columns.
 }
 \usage{
 data(ordre_facteurs_qualite)

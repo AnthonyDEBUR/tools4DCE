@@ -5,7 +5,7 @@
 \alias{couleurs_classes}
 \title{couleurs_classes}
 \format{
-An object of class \code{data.frame} with 49 rows and 3 columns.
+An object of class \code{data.frame} with 53 rows and 3 columns.
 }
 \usage{
 data(couleurs_classes)

@@ -5,7 +5,7 @@
 #'
 #' @param shp_emprise vecteur (optionnel) objet sf dans lequel on va récupérer les ICPE
 #' @param crs valeur du code de projection dans lequel renvoyer le résultat (par défaut Lambert 93, indiquer 4326 pour du wgs84)
-#' @pram rubrique booléen : si vrai (valeur par défaut), le script appelle chaque page internet d'ICPE pour récupérer les rubriques de classement.
+#' @param rubrique booléen : si vrai (valeur par défaut), le script appelle chaque page internet d'ICPE pour récupérer les rubriques de classement.
 #'
 #' @return la fonction renvoie une liste avec un slot shp = objet sf avec les ICPE de l'emprise indiquée,
 #' @return avec un slot rejets = table avec les rejets référencés dans le registre national des émissions polluantes,

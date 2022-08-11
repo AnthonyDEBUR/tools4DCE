@@ -10,6 +10,8 @@ charge_shp_ICPE(crs = 2154, shp_emprise = NULL, rubrique = TRUE)
 \item{crs}{valeur du code de projection dans lequel renvoyer le résultat (par défaut Lambert 93, indiquer 4326 pour du wgs84)}
 
 \item{shp_emprise}{vecteur (optionnel) objet sf dans lequel on va récupérer les ICPE}
+
+\item{rubrique}{booléen : si vrai (valeur par défaut), le script appelle chaque page internet d'ICPE pour récupérer les rubriques de classement.}
 }
 \value{
 la fonction renvoie une liste avec un slot shp = objet sf avec les ICPE de l'emprise indiquée,

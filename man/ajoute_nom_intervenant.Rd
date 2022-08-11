@@ -27,6 +27,6 @@ la fonction le data.frame complété de la colonne NomParametre
 fonction pour ajouter le nom du paramètre sandre à une data frame qui contient des codes paramètres SANDRE
 }
 \examples{
-test<-data.frame(CdProducteur=c("25440124300012"))
+x<-data.frame(CdProducteur=c("25440124300012"))
 ajoute_nom_intervenant(test, col_intervenant="CdProducteur")
 }
