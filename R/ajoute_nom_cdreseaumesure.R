@@ -14,9 +14,10 @@
 
 ajoute_nom_cdreseaumesure <-
   function(x,
-           col_cdreseau="CdRdd") {
+           col_cdreseau = "CdRdd") {
+    data("reseaux_sandre", envir = environment())
 
-    data("reseaux_sandre", envir=environment())
+    reseaux <- reseaux %>% select(CodeSandreRdd, NomRdd)
 
-    return(left_join(x, reseaux%>%select(CodeSandreRdd, NomRdd), by = setNames("CdRdd", col_cdreseau)))
+    return(left_join(x, reseaux, by = setNames("CdRdd", col_cdreseau)))
   }
