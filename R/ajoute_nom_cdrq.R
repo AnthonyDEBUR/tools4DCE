@@ -2,8 +2,8 @@
 #'
 #' fonction pour ajouter le nom du code remarque sandre à une data frame qui contient des codes remarques SANDRE
 #'
-#' @param x data.frame avec le code paramètre
-#' @param col_rq : nom de la colonne avec le code paramètre. Valeur par défaut : CdRqAna
+#' @param x data.frame avec le code remarque
+#' @param col_rq : nom de la colonne avec le code remarque Valeur par défaut : CdRqAna
 #'
 #'
 #' @return la fonction le data.frame complété de la colonne RqAna
@@ -18,5 +18,5 @@ ajoute_nom_cdrq <-
 
     data("CdRqAna", envir=environment())
 
-    return(left_join(x, fractions_sandre, by = setNames("CdRqAna", col_rq)))
+    return(left_join(x, CdRqAna, by = setNames("CdRqAna", col_rq)))
   }

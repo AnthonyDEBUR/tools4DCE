@@ -2,7 +2,12 @@
 
 export(PercentileDCE)
 export(affecte_une_classe)
+export(ajoute_nom_cdaccreana)
+export(ajoute_nom_cddifficulteana)
+export(ajoute_nom_cdinsituana)
+export(ajoute_nom_cdqualana)
 export(ajoute_nom_cdrq)
+export(ajoute_nom_cdstatutana)
 export(ajoute_nom_fraction)
 export(ajoute_nom_intervenant)
 export(ajoute_nom_param)

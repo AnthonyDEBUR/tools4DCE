@@ -7,9 +7,9 @@
 ajoute_nom_cdrq(x, col_rq = "CdRqAna")
 }
 \arguments{
-\item{x}{data.frame avec le code paramètre}
+\item{x}{data.frame avec le code remarque}
 
-\item{col_rq}{: nom de la colonne avec le code paramètre. Valeur par défaut : CdRqAna}
+\item{col_rq}{: nom de la colonne avec le code remarque Valeur par défaut : CdRqAna}
 }
 \value{
 la fonction le data.frame complété de la colonne RqAna
