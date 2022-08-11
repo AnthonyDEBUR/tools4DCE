@@ -4,12 +4,12 @@
 \alias{ajoute_nom_cdqualana}
 \title{ajoute_nom_cdqualana}
 \usage{
-ajoute_nom_cdqualana(x, col_qualif = "CqQualAna")
+ajoute_nom_cdqualana(x, col_qualif = "CdQualAna")
 }
 \arguments{
 \item{x}{data.frame avec le code paramètre}
 
-\item{col_qualif}{: nom de la colonne avec le code qualification Valeur par défaut : CqQualAna}
+\item{col_qualif}{: nom de la colonne avec le code qualification Valeur par défaut : CdQualAna}
 }
 \value{
 la fonction le data.frame complété de la colonne RqAna
@@ -18,6 +18,6 @@ la fonction le data.frame complété de la colonne RqAna
 fonction pour ajouter le nom du code qualification de l'analyse sandre à une data frame
 }
 \examples{
-test<-data.frame(CqQualAna=c("1", "10"))
-ajoute_nom_cdqualana(test, col_qualif="CqQualAna")
+test<-data.frame(CdQualAna=c("1", "10"))
+ajoute_nom_cdqualana(test, col_qualif="CdQualAna")
 }

@@ -8,8 +8,8 @@
 #'
 #' @return la fonction le data.frame complété de la colonne NomRdd
 #'
-#' @examples test<-data.frame(CdAccreAna2=c("1", "2"))
-#' @examples ajoute_nom_cdreseaumesure(test, col_cdaccredi="CdAccreAna2")
+#' @examples test<-data.frame(CdRdd2=c("0300000209", "0300000211"))
+#' @examples ajoute_nom_cdreseaumesure(test, col_cdreseau="CdRdd2")
 #' @export
 
 ajoute_nom_cdreseaumesure <-
@@ -19,5 +19,5 @@ ajoute_nom_cdreseaumesure <-
 
     reseaux <- reseaux %>% select(CodeSandreRdd, NomRdd)
 
-    return(left_join(x, reseaux, by = setNames("CdRdd", col_cdreseau)))
+    return(left_join(x, reseaux, by = setNames("CodeSandreRdd", col_cdreseau)))
   }

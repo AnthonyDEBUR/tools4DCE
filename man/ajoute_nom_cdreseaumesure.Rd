@@ -18,6 +18,6 @@ la fonction le data.frame complété de la colonne NomRdd
 fonction pour ajouter le nom du code réseau de mesure sandre à une data frame
 }
 \examples{
-test<-data.frame(CdAccreAna2=c("1", "2"))
-ajoute_nom_cdreseaumesure(test, col_cdaccredi="CdAccreAna2")
+test<-data.frame(CdRdd2=c("0300000209", "0300000211"))
+ajoute_nom_cdreseaumesure(test, col_cdreseau="CdRdd2")
 }
