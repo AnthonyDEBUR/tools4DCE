@@ -82,7 +82,7 @@ import_hubeau_staq_hbio <-
     }
 
     url_base <-
-      "https://hubeau.eaufrance.fr/api/vbeta/hydrobio/stations_hydrobio?"
+      "https://hubeau.eaufrance.fr/api/v1/hydrobio/stations_hydrobio?"
 
     if (!is.null(emprise)) {
       data <- httr::GET(url_base,

@@ -62,7 +62,7 @@ import_hubeau_liste_hbio <-
     }
 
     url_base <-
-      "https://hubeau.eaufrance.fr/api/vbeta/hydrobio/taxons?"
+      "https://hubeau.eaufrance.fr/api/v1/hydrobio/taxons?"
 
 
       data <- httr::GET(

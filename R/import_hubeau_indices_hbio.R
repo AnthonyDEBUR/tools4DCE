@@ -64,7 +64,7 @@ import_hubeau_indices_hbio <-
     }
 
     url_base <-
-      "https://hubeau.eaufrance.fr/api/vbeta/hydrobio/indices?"
+      "https://hubeau.eaufrance.fr/api/v1/hydrobio/indices?"
 
 
     data <- httr::GET(
