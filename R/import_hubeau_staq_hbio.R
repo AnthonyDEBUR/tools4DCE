@@ -13,8 +13,8 @@
 #'
 #' @return la fonction renvoie un tibble avec la liste des stations de mesures concernées
 #' @examples Vilaine<-charge_shp_SAGE(nom_sage="Vilaine")
-#' @examples import_hub_eau_staq_hbio(emprise=Vilaine, an_debut=2010)
-#' @examples import_hub_eau_staq_hbio(liste_stations=c("03174000", "04216000"))
+#' @examples import_hubeau_staq_hbio(emprise=Vilaine, an_debut=2010)
+#' @examples import_hubeau_staq_hbio(liste_stations=c("03174000", "04216000"))
 #' @export
 import_hubeau_staq_hbio <-
   function(emprise = NULL,
@@ -90,7 +90,7 @@ import_hubeau_staq_hbio <-
                           bbox = paste0(bbox_emprise, collapse = ","),
                           code_support = paste0(support, collapse = ","),
                           date_debut_prelevement=paste0(an_debut, "-01-01"),
-                          date_fin_prelevement=paste0(an_fin, "-02-31"),
+                          date_fin_prelevement=paste0(an_fin, "-12-31"),
                           size = 10000
                         ))
     } else
@@ -100,7 +100,7 @@ import_hubeau_staq_hbio <-
         query = list(
           code_station_hydrobio = paste0(liste_stations, collapse = ","),
           date_debut_prelevement=paste0(an_debut, "-01-01"),
-          date_fin_prelevement=paste0(an_fin, "-02-31"),
+          date_fin_prelevement=paste0(an_fin, "-12-31"),
           code_support = paste0(support, collapse = ","),
           size = 10000
         )

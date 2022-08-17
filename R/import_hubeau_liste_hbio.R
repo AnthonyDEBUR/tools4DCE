@@ -71,7 +71,7 @@ import_hubeau_liste_hbio <-
           code_station_hydrobio = paste0(liste_stations, collapse = ","),
           code_support = paste0(support, collapse = ","),
           date_debut_prelevement=paste0(an_debut, "-01-01"),
-          date_fin_prelevement=paste0(an_fin, "-02-31"),
+          date_fin_prelevement=paste0(an_fin, "-12-31"),
           size = 10000
         )
       )
