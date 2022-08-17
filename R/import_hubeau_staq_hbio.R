@@ -89,6 +89,8 @@ import_hubeau_staq_hbio <-
                         query = list(
                           bbox = paste0(bbox_emprise, collapse = ","),
                           code_support = paste0(support, collapse = ","),
+                          date_debut_prelevement=paste0(an_debut, "-01-01"),
+                          date_fin_prelevement=paste0(an_fin, "-02-31"),
                           size = 10000
                         ))
     } else
@@ -97,6 +99,8 @@ import_hubeau_staq_hbio <-
         url_base,
         query = list(
           code_station_hydrobio = paste0(liste_stations, collapse = ","),
+          date_debut_prelevement=paste0(an_debut, "-01-01"),
+          date_fin_prelevement=paste0(an_fin, "-02-31"),
           code_support = paste0(support, collapse = ","),
           size = 10000
         )
@@ -114,18 +118,18 @@ import_hubeau_staq_hbio <-
 
     data<-data%>%dplyr::select(-geometry)
 
-    # on sélectionne les stations qui ont des données sur la période d'intérêt
-    data$date_premier_prelevement <-
-      data$date_premier_prelevement %>% as.Date()
-    data$date_dernier_prelevement <-
-      data$date_dernier_prelevement %>% as.Date()
-
-
-    data <-
-      data %>% subset(
-        date_dernier_prelevement >= paste0(an_debut, "-01-01") %>% as.Date() &
-          date_premier_prelevement <= paste0(an_fin, "-12-31") %>% as.Date()
-      )
+    # # on sélectionne les stations qui ont des données sur la période d'intérêt
+    # data$date_premier_prelevement <-
+    #   data$date_premier_prelevement %>% as.Date()
+    # data$date_dernier_prelevement <-
+    #   data$date_dernier_prelevement %>% as.Date()
+    #
+    #
+    # data <-
+    #   data %>% subset(
+    #     date_dernier_prelevement >= paste0(an_debut, "-01-01") %>% as.Date() &
+    #       date_premier_prelevement <= paste0(an_fin, "-12-31") %>% as.Date()
+    #   )
 
 
     # si on souhaite un découpage selon une emprise géographique alors on découpe le tableau de résultat selon cette emprise
