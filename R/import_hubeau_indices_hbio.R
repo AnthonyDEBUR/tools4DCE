@@ -135,7 +135,8 @@ import_hubeau_indices_hbio <-
         CdUniteMesure = unite_indice,
         CdSupport = code_support,
         CdQualAna = code_qualification,
-        CdMethode = code_methode
+        CdMethode = code_methode,
+        CdPrelevement=code_prelevement
       )
 
     data$DatePrel <- as.Date(data$date_prelevement %>% substr(1, 10))
