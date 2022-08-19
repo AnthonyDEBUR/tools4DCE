@@ -22,6 +22,7 @@
 #' @param bilan_annuel si le paramètre vaut TRUE : on ajuste le graphique sur les années civiles. S'il vaut FALSE (valeur par défaut) : on laisse l'échelle graphique libre
 #' @param lignes vecteur permettant d'ajouter des lignes horizontales au graphique. ex c(10, 25)
 #' @param echelleLog booléen : si vrai le graphique est affiché en échelle logarithmique (FALSE par défaut)
+#' @param taille_points numerique avec la taille des points (2 par défaut)
 #' @param taille_legende taille police caractères de la légende
 #' @param taille_axes taille police de caractères des axes
 #' @param liaison option faisant afficher ou pas des lignes pointillées entre les points (défaut = TRUE)
@@ -33,7 +34,7 @@
 #' @return la fonction renvoie un graphique de classe ggplot
 #'
 #' @examples data<-data.frame(DatePrel=c("2020-01-01", "2020-05-03","2020-10-25", "2021-03-25")%>%as.Date, RsAna=c(12,15.5,67,18.3))
-#' @examples graphDCE_points(data, seuils=makeSeuils(CdParametre = "1340", type_seuil="DCE"))
+#' @examples graphDCE_points(data, seuils=makeSeuils(CdParametre = "1340", type_seuil="DCE"), taille_points=5)
 #' @examples graphDCE_points(data, seuils=makeSeuils(CdParametre = "1340", type_seuil="DCE"), ymaxi=51)
 #'
 #' @export
@@ -59,6 +60,7 @@ graphDCE_points <-
            auto_ymaxi = TRUE,
            lignes = NULL,
            echelleLog = FALSE,
+           taille_points = 2,
            taille_legende = 12,
            taille_axes = 11,
            liaison = T,
@@ -70,6 +72,7 @@ graphDCE_points <-
 
     if(class(coef_axes_date)!="numeric"){stop("le paramètre coef_axes_date doit être un nombre strictement positif")}
     if(coef_axes_date<=0){stop("le paramètre coef_axes_date doit être un nombre strictement positif")}
+    if(taille_points<=0){stop("le paramètre taille_points doit être un nombre strictement positif")}
 
 
     #browser()
@@ -536,7 +539,7 @@ graphDCE_points <-
       if (is.null(separ_stations))
       {
         graph1 <-
-          graph1 + geom_point(data = data1, aes(x = DatePrel, y = RsAna))
+          graph1 + geom_point(data = data1, aes(x = DatePrel, y = RsAna), size=taille_points)
       }
       else
       {
@@ -544,7 +547,7 @@ graphDCE_points <-
           text = paste0(
             "graph1<-graph1 + geom_point(data=data1, aes(x=DatePrel, y=RsAna, shape = ",
             separ_stations,
-            "), size=3)"
+            "), size=",taille_points,")"
           )
         ))
       }
