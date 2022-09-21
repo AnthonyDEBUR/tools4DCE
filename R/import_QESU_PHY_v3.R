@@ -7,7 +7,8 @@
 #' @return la fonction renvoie une liste de data.frame avec les résultats contenus dans le fichier
 #'
 #' @examples x<-"C:\\Users\\anthony.deburghrave\\OneDrive - EPTB Vilaine\\Documents\\R_Anthony\\tools4DCE\\exemples xml\\QUESU3_EPTB_VILAINE_2020-11-04 v2.xml"
-#' @examples donnees<-import_QESU_PHY_v3(x)
+#'
+#' donnees<-import_QESU_PHY_v3(x)
 #' @export
 import_QESU_PHY_v3 <- function(x) {
   # lecture et tests sur fichier d'entrée
@@ -22,7 +23,7 @@ import_QESU_PHY_v3 <- function(x) {
   # pour chaque station
   for (z in 2:length(file %>% xml_children()))
   {
-    print(paste0("station" ,z, " sur ", length(file %>% xml_children())))
+    print(paste0("station " ,z-1, " sur ", length(file %>% xml_children())-1))
 
     # extraction des résultats
     divs <- file %>%  xml_child(z) %>% xml_contents()
@@ -234,67 +235,104 @@ import_QESU_PHY_v3 <- function(x) {
         {
           # valeurs2 <- Analyses[j] %>% xml_children()
           valeurs2 <- Analys %>% xml_children()
-          CdFractionAnalysee <-
-            valeurs2[grep("<CdFractionAnalysee", valeurs2)] %>% xml_contents() %>% xml_contents()
-          CdFractionAnalysee <- CdFractionAnalysee[1] %>% as.character
-          if (length(CdFractionAnalysee) == 0) {
-            CdFractionAnalysee <- NA
-          }
+
           DateAna <-
             valeurs2[grep("<DateAna>", valeurs2)] %>% xml_contents()
           DateAna <- DateAna[1] %>% as.character %>% as.Date
           if (length(DateAna) == 0) {
             DateAna <- NA
           }
+
           HeureAna <-
             valeurs2[grep("<HeureAna", valeurs2)] %>% xml_contents()
           HeureAna <- HeureAna[1] %>% as.character %>% substr(12, 19)
           if (length(HeureAna) == 0) {
             HeureAna <- NA
           }
+
           CdParametre <-
             valeurs2[grep("<CdParametre", valeurs2)] %>% xml_contents() %>% xml_contents()
           CdParametre <- CdParametre[1] %>% as.character
           if (length(CdParametre) == 0) {
             CdParametre <- NA
           }
+
+          CdFractionAnalysee <-
+            valeurs2[grep("<CdFractionAnalysee", valeurs2)] %>% xml_contents() %>% xml_contents()
+          CdFractionAnalysee <- CdFractionAnalysee[1] %>% as.character
+          if (length(CdFractionAnalysee) == 0) {
+            CdFractionAnalysee <- NA
+          }
+
           RsAna <-
             valeurs2[grep("<RsAna>", valeurs2)] %>% xml_contents()
           RsAna <- RsAna[1] %>% as.character %>% as.numeric
           if (length(RsAna) == 0) {
             RsAna <- NA
           }
+
           CdUniteMesure <-
             valeurs2[grep("<CdUniteMesure", valeurs2)] %>% xml_contents() %>% xml_contents()
           CdUniteMesure <- CdUniteMesure[1] %>% as.character
           if (length(CdUniteMesure) == 0) {
             CdUniteMesure <- NA
           }
+
           CdRqAna <-
             valeurs2[grep("<RqAna", valeurs2)] %>% xml_contents()
           CdRqAna <- CdRqAna[1] %>% as.character
           if (length(CdRqAna) == 0) {
             CdRqAna <- NA
           }
+
           CdInsituAna <-
             valeurs2[grep("<InsituAna", valeurs2)] %>% xml_contents()
           CdInsituAna <- CdInsituAna[1] %>% as.character
           if (length(CdInsituAna) == 0) {
             CdInsituAna <- NA
           }
-          ProfondeurPrel <-
-            valeurs2[grep("<ProfondeurPrelevement", valeurs2)] %>% xml_contents()
-          ProfondeurPrel <-
-            ProfondeurPrel[1] %>% as.character %>% as.numeric
-          if (length(ProfondeurPrel) == 0) {
-            ProfondeurPrel <- NA
-          }
+
           CdDifficulteAna <-
             valeurs2[grep("<DifficulteAna", valeurs2)] %>% xml_contents()
           CdDifficulteAna <- CdDifficulteAna[1] %>% as.character
           if (length(CdDifficulteAna) == 0) {
             CdDifficulteAna <- NA
           }
+
+          CdQualAna <-
+            valeurs2[grep("<QualAna", valeurs2)] %>% xml_contents()
+          CdQualAna <- CdQualAna[1] %>% as.character
+          if (length(CdQualAna) == 0) {
+            CdQualAna <- "0"
+          }
+
+          CommentairesAna <-
+            valeurs2[grep("<CommentairesAna", valeurs2)] %>% xml_contents()
+          CommentairesAna <- CommentairesAna[1] %>% as.character
+          if (length(CommentairesAna) == 0) {
+            CommentairesAna <- ""
+          }
+          ComResultatAna <-
+            valeurs2[grep("<ComResultatAna", valeurs2)] %>% xml_contents()
+          ComResultatAna <- ComResultatAna[1] %>% as.character
+          if (length(ComResultatAna) == 0) {
+            ComResultatAna <- ""
+          }
+
+          CdStatutAna <-
+            valeurs2[grep("<StatutAna", valeurs2)] %>% xml_contents()
+          CdStatutAna <- CdStatutAna[1] %>% as.character
+          if (length(CdStatutAna) == 0) {
+            CdStatutAna <- NA
+          }
+
+          CdAccreAna <-
+            valeurs2[grep("<AccreAna", valeurs2)] %>% xml_contents() %>% xml_contents()
+          CdAccreAna <- CdAccreAna[1] %>% as.character
+          if (length(CdAccreAna) == 0) {
+            CdAccreAna <- NA
+          }
+
           LdAna <-
             valeurs2[grep("<LDAna", valeurs2)] %>% xml_contents()
           LdAna <- LdAna[1] %>% as.character %>% as.numeric
@@ -313,25 +351,53 @@ import_QESU_PHY_v3 <- function(x) {
           if (length(LsAna) == 0) {
             LsAna <- NA
           }
+
           IncertAna <-
             valeurs2[grep("<IncertAna", valeurs2)] %>% xml_contents()
           IncertAna <- IncertAna[1] %>% as.character
           if (length(IncertAna) == 0) {
             IncertAna <- NA
           }
+
+          AgreAna <-
+            valeurs2[grep("<AgreAna", valeurs2)] %>% xml_contents() %>% xml_contents()
+          AgreAna <- AgreAna[1] %>% as.character
+          if (length(AgreAna) == 0) {
+            AgreAna <- "0"
+          }
+          AgreAna <- ifelse(AgreAna == "1", T, F)
+
           CdMetFractionnement <-
-            valeurs2[grep("<MetFractionnement", valeurs2)] %>% xml_contents() %>% xml_contents()
+            valeurs2[grep("<MetFractionnement", valeurs2)] %>% xml_contents()
+          CdMetFractionnement <-
+            CdMetFractionnement[grep("<CdMethode", CdMetFractionnement)] %>% xml_contents()
           CdMetFractionnement <-
             CdMetFractionnement[1] %>% as.character
           if (length(CdMetFractionnement) == 0) {
             CdMetFractionnement <- NA
           }
+
+
           CdMethode <-
-            valeurs2[grep("<Methode>", valeurs2)] %>% xml_contents() %>% xml_contents()
-          CdMethode <- CdMethode[1] %>% as.character
+            valeurs2[grep("<Methode>", valeurs2)] %>% xml_contents()
+          CdMethode <-
+            CdMethode[grep("<CdMethode", CdMethode)] %>% xml_contents()
+           CdMethode <- CdMethode[1] %>% as.character
           if (length(CdMethode) == 0) {
             CdMethode <- NA
           }
+
+          ProfondeurPrel <-
+            valeurs2[grep("<ProfondeurPrelevement", valeurs2)] %>% xml_contents()
+          ProfondeurPrel <-
+            ProfondeurPrel[1] %>% as.character %>% as.numeric
+          if (length(ProfondeurPrel) == 0) {
+            ProfondeurPrel <- NA
+          }
+
+
+
+
           RdtExtraction <-
             valeurs2[grep("<RdtExtraction", valeurs2)] %>% xml_contents()
           RdtExtraction <-
@@ -342,49 +408,18 @@ import_QESU_PHY_v3 <- function(x) {
           CdMethodeExtraction <-
             valeurs2[grep("<MethExtraction", valeurs2)] %>% xml_contents() %>% xml_contents()
           CdMethodeExtraction <-
+            CdMethodeExtraction[grep("<CdMethode", CdMethodeExtraction)] %>% xml_contents()
+          CdMethodeExtraction <-
             CdMethodeExtraction[1] %>% as.character
           if (length(CdMethodeExtraction) == 0) {
             CdMethodeExtraction <- NA
           }
-          CdAccreAna <-
-            valeurs2[grep("<AccreAna", valeurs2)] %>% xml_contents() %>% xml_contents()
-          CdAccreAna <- CdAccreAna[1] %>% as.character
-          if (length(CdAccreAna) == 0) {
-            CdAccreAna <- NA
-          }
-          AgreAna <-
-            valeurs2[grep("<AgreAna", valeurs2)] %>% xml_contents() %>% xml_contents()
-          AgreAna <- AgreAna[1] %>% as.character
-          if (length(AgreAna) == 0) {
-            AgreAna <- "0"
-          }
-          AgreAna <- ifelse(AgreAna == "1", T, F)
-          CdStatutAna <-
-            valeurs2[grep("<StatutAna", valeurs2)] %>% xml_contents()
-          CdStatutAna <- CdStatutAna[1] %>% as.character
-          if (length(CdStatutAna) == 0) {
-            CdStatutAna <- NA
-          }
-          CdQualAna <-
-            valeurs2[grep("<QualAna", valeurs2)] %>% xml_contents()
-          CdQualAna <- CdQualAna[1] %>% as.character
-          if (length(CdQualAna) == 0) {
-            CdQualAna <- "0"
-          }
-          CommentairesAna <-
-            valeurs2[grep("<CommentairesAna", valeurs2)] %>% xml_contents()
-          CommentairesAna <- CommentairesAna[1] %>% as.character
-          if (length(CommentairesAna) == 0) {
-            CommentairesAna <- ""
-          }
-          ComResultatAna <-
-            valeurs2[grep("<ComResultatAna", valeurs2)] %>% xml_contents()
-          ComResultatAna <- ComResultatAna[1] %>% as.character
-          if (length(ComResultatAna) == 0) {
-            ComResultatAna <- ""
-          }
+
+
           CdLaboratoire <-
-            valeurs2[grep("<Laboratoire", valeurs2)] %>% xml_contents() %>% xml_contents()
+            valeurs2[grep("<Laboratoire", valeurs2)] %>% xml_contents()
+          CdLaboratoire <-
+            CdLaboratoire[grep("<CdIntervenant", CdLaboratoire)] %>% xml_contents()
           CdLaboratoire <- CdLaboratoire[1] %>% as.character
           if (length(CdLaboratoire) == 0) {
             CdLaboratoire <- ""
