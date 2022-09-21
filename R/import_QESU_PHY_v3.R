@@ -444,6 +444,7 @@ import_QESU_PHY_v3 <- function(x) {
               CdAccreAna = CdAccreAna,
               AgreAna = AgreAna,
               CdStatutAna = CdStatutAna,
+              CdQualAna = CdQualAna,
               CommentairesAna = CommentairesAna,
               ComResultatAna = ComResultatAna,
               CdRdd = CdRdd,
