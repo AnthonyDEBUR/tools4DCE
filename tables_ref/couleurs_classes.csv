@@ -52,3 +52,8 @@ SAGE;[0-10 mg/L];#E8BEFF
 SAGE;]10-30 mg/L];#DF73FF
 SAGE;]30-50 mg/L];#8400A8
 SAGE;>50 mg/L;#4C0073
+ECOTOX;<NQE moyen;darkseagreen2
+ECOTOX;[NQE moyen - CMA[;lightgoldenrod1
+ECOTOX;< CMA;green3
+ECOTOX;> CMA;tomato
+ECOTOX;>NQE moyen;lightgoldenrod1

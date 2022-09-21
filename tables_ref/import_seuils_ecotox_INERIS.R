@@ -14,7 +14,7 @@ data("base_seuils")
 base_seuils <- base_seuils %>% subset(TYPE == "NON_DCE")
 donnees_ineris <-
   donnees_ineris %>% subset(!CdParametre %in% base_seuils$PARAMETRE)
-donnees_ineris$TYPE <- "NON_DCE"
+donnees_ineris$TYPE <- "ECOTOX"
 donnees_ineris$NOM_SEUIL <-
   ifelse(
     donnees_ineris$Référence.fiche != "Pas de fiche disponible",
@@ -120,7 +120,7 @@ donnees_ineris$TYPE_BORNE <- "BORNE_INF_INCLUE"
 donnees_ineris$SEUILMIN <- donnees_ineris$SEUILMIN %>% as.character()
 donnees_ineris$SEUILMAX <- donnees_ineris$SEUILMAX %>% as.character()
 
-donnees_ineris$SPECIFICITE <- ""
+donnees_ineris$SPECIFICITE <- "CAS_GENERAL"
 
 donnees_ineris <-
   donnees_ineris %>% select(

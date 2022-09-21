@@ -327,7 +327,7 @@ import_QESU_PHY_v3 <- function(x) {
             CdMetFractionnement <- NA
           }
           CdMethode <-
-            valeurs2[grep("<Methode", valeurs2)] %>% xml_contents() %>% xml_contents()
+            valeurs2[grep("<Methode>", valeurs2)] %>% xml_contents() %>% xml_contents()
           CdMethode <- CdMethode[1] %>% as.character
           if (length(CdMethode) == 0) {
             CdMethode <- NA
@@ -340,7 +340,7 @@ import_QESU_PHY_v3 <- function(x) {
             RdtExtraction <- NA
           }
           CdMethodeExtraction <-
-            valeurs2[grep("<MetExtraction", valeurs2)] %>% xml_contents() %>% xml_contents()
+            valeurs2[grep("<MethExtraction", valeurs2)] %>% xml_contents() %>% xml_contents()
           CdMethodeExtraction <-
             CdMethodeExtraction[1] %>% as.character
           if (length(CdMethodeExtraction) == 0) {
