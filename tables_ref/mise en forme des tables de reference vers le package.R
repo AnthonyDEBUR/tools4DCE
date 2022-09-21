@@ -180,6 +180,31 @@ fractions_sandre <-
 
 save(fractions_sandre, file = "data/fractions_sandre.RData")
 
+# Méthodes
+
+# telechargement du referentiel fraction sandre
+download(
+  "https://api.sandre.eaufrance.fr/referentiels/v1/met.csv?outputSchema=SANDREv4&compress=true",
+  "methodes.csv.gz",
+  mode = "wb",
+  cacheOK = T
+)
+Sys.setenv("VROOM_CONNECTION_SIZE" = 5000000)
+
+methodes_sandre <-
+  read_delim("methodes.csv.gz", delim = ";")
+
+file.remove("methodes.csv.gz")
+
+colnames(methodes_sandre) <-
+  stringi::stri_trans_general(colnames(methodes_sandre), "Latin-ASCII")
+
+methodes_sandre <-
+  methodes_sandre %>% dplyr::select(CdMethode, NomMethode)
+
+save(methodes_sandre, file = "data/methodes_sandre.RData")
+
+
 
 # Réseaux de mesure
 
