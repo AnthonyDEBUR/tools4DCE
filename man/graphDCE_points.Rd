@@ -25,6 +25,7 @@ graphDCE_points(
   auto_ymaxi = TRUE,
   lignes = NULL,
   echelleLog = FALSE,
+  taille_points = 2,
   taille_legende = 12,
   taille_axes = 11,
   liaison = T,
@@ -75,6 +76,8 @@ graphDCE_points(
 
 \item{echelleLog}{booléen : si vrai le graphique est affiché en échelle logarithmique (FALSE par défaut)}
 
+\item{taille_points}{numerique avec la taille des points (2 par défaut)}
+
 \item{taille_legende}{taille police caractères de la légende}
 
 \item{taille_axes}{taille police de caractères des axes}
@@ -97,7 +100,7 @@ fonction pour afficher les graphiques des paramètres en couleurs (mode point)
 }
 \examples{
 data<-data.frame(DatePrel=c("2020-01-01", "2020-05-03","2020-10-25", "2021-03-25")\%>\%as.Date, RsAna=c(12,15.5,67,18.3))
-graphDCE_points(data, seuils=makeSeuils(CdParametre = "1340", type_seuil="DCE"))
+graphDCE_points(data, seuils=makeSeuils(CdParametre = "1340", type_seuil="DCE"), taille_points=5)
 graphDCE_points(data, seuils=makeSeuils(CdParametre = "1340", type_seuil="DCE"), ymaxi=51)
 
 }

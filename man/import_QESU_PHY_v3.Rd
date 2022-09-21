@@ -17,5 +17,6 @@ fonction pour importer un objet xml de type QUESU_PHY_V3 sous forme d'objet R
 }
 \examples{
 x<-"C:\\\\Users\\\\anthony.deburghrave\\\\OneDrive - EPTB Vilaine\\\\Documents\\\\R_Anthony\\\\tools4DCE\\\\exemples xml\\\\QUESU3_EPTB_VILAINE_2020-11-04 v2.xml"
+
 donnees<-import_QESU_PHY_v3(x)
 }

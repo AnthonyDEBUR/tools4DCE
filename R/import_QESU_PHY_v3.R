@@ -327,7 +327,7 @@ import_QESU_PHY_v3 <- function(x) {
           }
 
           CdAccreAna <-
-            valeurs2[grep("<AccreAna", valeurs2)] %>% xml_contents() %>% xml_contents()
+            valeurs2[grep("<AccreAna", valeurs2)] %>% xml_contents()
           CdAccreAna <- CdAccreAna[1] %>% as.character
           if (length(CdAccreAna) == 0) {
             CdAccreAna <- NA

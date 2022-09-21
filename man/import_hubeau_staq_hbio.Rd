@@ -35,6 +35,6 @@ Si les paramètres emprise et liste stations sont présents tous les 2, seul le 
 }
 \examples{
 Vilaine<-charge_shp_SAGE(nom_sage="Vilaine")
-import_hub_eau_staq_hbio(emprise=Vilaine, an_debut=2010)
-import_hub_eau_staq_hbio(liste_stations=c("03174000", "04216000"))
+import_hubeau_staq_hbio(emprise=Vilaine, an_debut=2010)
+import_hubeau_staq_hbio(liste_stations=c("03174000", "04216000"))
 }

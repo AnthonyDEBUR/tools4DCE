@@ -5,7 +5,7 @@
 \alias{parametres_sandre}
 \title{parametres_sandre}
 \format{
-An object of class \code{data.frame} with 5793 rows and 5 columns.
+An object of class \code{data.frame} with 5803 rows and 5 columns.
 }
 \source{
 \url{https://api.sandre.eaufrance.fr/referentiels/v1/par.csv?outputSchema=SANDREv4&compress=true}
