@@ -387,16 +387,6 @@ import_QESU_PHY_v3 <- function(x) {
             CdMethode <- NA
           }
 
-          ProfondeurPrel <-
-            valeurs2[grep("<ProfondeurPrelevement", valeurs2)] %>% xml_contents()
-          ProfondeurPrel <-
-            ProfondeurPrel[1] %>% as.character %>% as.numeric
-          if (length(ProfondeurPrel) == 0) {
-            ProfondeurPrel <- NA
-          }
-
-
-
 
           RdtExtraction <-
             valeurs2[grep("<RdtExtraction", valeurs2)] %>% xml_contents()
