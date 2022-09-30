@@ -70,7 +70,7 @@ Parametres <- NA
 recupere_parametres <-
   function(i)
   {
-    print(i)
+    print(paste0("parametre " ,i))
 
     divs <- file %>%  xml_child(2) %>% xml_child(i)
     liste_rubriques <-

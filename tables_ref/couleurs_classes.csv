@@ -48,8 +48,9 @@ SEDIMENTS;>seuil S1;tomato
 AEP;"[0;seuil distribution]";darkturquoise
 AEP;"]seuil distribution; seuil potabilisation]";darkorange
 AEP;>seuil potabilisation;darkmagenta
-SAGE;[0-10 mg/L];#E8BEFF
-SAGE;]10-30 mg/L];#DF73FF
+SAGE;[0-10 mg/L];#F6E6FF
+SAGE;]10-18 mg/L];#E8BEFF
+SAGE;]18-30 mg/L];#DF73FF
 SAGE;]30-50 mg/L];#8400A8
 SAGE;>50 mg/L;#4C0073
 ECOTOX;<NQE moyen;darkseagreen2

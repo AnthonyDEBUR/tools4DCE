@@ -388,13 +388,6 @@ import_QESU_PHY_v3 <- function(x) {
           }
 
 
-          RdtExtraction <-
-            valeurs2[grep("<RdtExtraction", valeurs2)] %>% xml_contents()
-          RdtExtraction <-
-            RdtExtraction[1] %>% as.character %>% as.numeric
-          if (length(RdtExtraction) == 0) {
-            RdtExtraction <- NA
-          }
           CdMethodeExtraction <-
             valeurs2[grep("<MethExtraction", valeurs2)] %>% xml_contents() %>% xml_contents()
           CdMethodeExtraction <-
@@ -404,6 +397,16 @@ import_QESU_PHY_v3 <- function(x) {
           if (length(CdMethodeExtraction) == 0) {
             CdMethodeExtraction <- NA
           }
+          RdtExtraction <-
+            valeurs2[grep("<MethExtraction", valeurs2)] %>% xml_contents() %>% xml_contents()
+          RdtExtraction <-
+            RdtExtraction[grep("<RdtExtraction", RdtExtraction)] %>% xml_contents()
+          RdtExtraction <-
+            RdtExtraction[1] %>% as.character %>% as.numeric
+          if (length(RdtExtraction) == 0) {
+            RdtExtraction <- NA
+          }
+
 
 
           CdLaboratoire <-
