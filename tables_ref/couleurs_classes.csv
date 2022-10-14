@@ -48,10 +48,10 @@ SEDIMENTS;>seuil S1;tomato
 AEP;"[0;seuil distribution]";darkturquoise
 AEP;"]seuil distribution; seuil potabilisation]";darkorange
 AEP;>seuil potabilisation;darkmagenta
-AEP;"[0; 0,1] µg/L";darkturquoise
-AEP;"]0,1; 0,9] µg/L";darkorange
-AEP;"]0,9; 2] µg/L";#5B3C11
-AEP;>2 µg/L;darkmagenta
+AEP;"[0; 0.1] Âµg/L";darkturquoise
+AEP;"]0.1; 0.9] Âµg/L";darkorange
+AEP;"]0.9; 2] Âµg/L";#5B3C11
+AEP;>2 Âµg/L;darkmagenta
 SAGE;[0-10 mg/L];#F6E6FF
 SAGE;]10-18 mg/L];#E8BEFF
 SAGE;]18-30 mg/L];#DF73FF
