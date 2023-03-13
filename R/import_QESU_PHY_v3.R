@@ -3,6 +3,7 @@
 #' fonction pour importer un objet xml de type QUESU_PHY_V3 sous forme d'objet R
 #'
 #' @param x un fichier xml conforme au scénario d'échange QUESU_PHY_v3 du SANDRE
+#' @param complet booleen FALSE par défaut. S'il est FALSE alors le fichier résultat comporte seulement les informations essentielles. S'il est TRUE, l'ensemble des colonnes sont conservées.
 #'
 #' @return la fonction renvoie une liste de data.frame avec les résultats contenus dans le fichier
 #'
@@ -10,7 +11,7 @@
 #'
 #' donnees<-import_QESU_PHY_v3(x)
 #' @export
-import_QESU_PHY_v3 <- function(x) {
+import_QESU_PHY_v3 <- function(x, complet=FALSE) {
   # lecture et tests sur fichier d'entrée
   if (file_ext(x) != "xml") {
     stop("le fichier d'entrée n'est pas de type xml")
@@ -39,6 +40,15 @@ import_QESU_PHY_v3 <- function(x) {
         CdStationMesureEauxSurface <-
           CdStationMesureEauxSurface[1] %>% as.character()
       }
+      if(complet==TRUE){
+        if (any(grepl("LbStationMesureEauxSurface", divs[i]))) {
+          LbStationMesureEauxSurface <-
+            divs[i] %>% xml_contents() %>% xml_contents()
+          LbStationMesureEauxSurface <-
+            LbStationMesureEauxSurface[1] %>% as.character()
+        }
+       }
+
 
       # noeuds prelevement
       if (grepl("Prelevement", divs[i])) {
@@ -61,12 +71,31 @@ import_QESU_PHY_v3 <- function(x) {
         if (length(CdSupport) == 0) {
           CdSupport <- NA
         }
+        if(complet==TRUE)
+       { LbSupport<-
+          valeurs[grep("<Support>", valeurs)] %>% xml_contents() %>% xml_contents()
+        LbSupport <- LbSupport[2] %>% as.character
+        if (length(LbSupport) == 0) {
+          LbSupport <- NA
+        }}
+
+
         CdProducteur <-
           valeurs[grep("<ProducteurPrelevement>", valeurs)] %>% xml_contents() %>% xml_contents()
         CdProducteur <- CdProducteur[1] %>% as.character
         if (length(CdProducteur) == 0) {
           CdProducteur <- NA
         }
+        if(complet==TRUE)
+        { LbProducteur <-
+          valeurs[grep("<ProducteurPrelevement>", valeurs)] %>% xml_contents() %>% xml_contents()
+        LbProducteur <- LbProducteur[2] %>% as.character
+        if (length(LbProducteur) == 0) {
+          LbProducteur <- NA
+        }}
+
+
+
         CdPreleveur <-
           valeurs[grep("<Preleveur>", valeurs)] %>% xml_contents() %>% xml_contents()
         CdPreleveur <- CdPreleveur[1] %>% as.character

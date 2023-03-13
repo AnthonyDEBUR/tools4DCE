@@ -48,6 +48,7 @@ import_hubeau_data_hydrometrique <-
         date_debut_obs_elab = date_debut_obs_elab,
         date_fin_obs_elab = date_fin_obs_elab,
         size = 5000,
+        grandeur_hydro_elab="QmJ",
         fields = "code_station,date_obs_elab,resultat_obs_elab"
       )
     )
