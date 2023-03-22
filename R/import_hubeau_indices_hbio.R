@@ -126,7 +126,7 @@ import_hubeau_indices_hbio <-
 # mise en forme des données pour respecter le modèle issu de Naïades (et être directement compatible avec les fonctions graphiques du package)
 
     data <-
-      rename(
+      dplyr::rename(
         data,
         CdParametre = code_indice,
         NomParametre = libelle_indice,
