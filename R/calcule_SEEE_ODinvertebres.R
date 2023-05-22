@@ -19,20 +19,20 @@
 #' @return Résultats outil diagnostic invertébrés SEEE
 #'
 #' @examples stations_op<-import_hubeau_indices_hbio(liste_stations = "04207400", indice="inv")
-#' @examples stations_op<-stations_op%>%subset(CdParametre=="7613")
-#' @examples donnees<-import_hubeau_liste_hbio(liste_stations = c(station_etudiee), indice="inv")
-#' @examples donnees<-donnees%>%subset(date_prelevement%in%stations_op$DatePrel)
-#' @examples donnees$CODE_OPERATION <-
-#' @examples paste0(donnees$code_station_hydrobio, "*", donnees$date_prelevement)
-#' @examples donnees$CODE_STATION <- donnees$code_station_hydrobio
-#' @examples donnees$DATE <- format(donnees$date_prelevement, "%d/%m/%Y")
-#' @examples donnees$TYPO_NATIONALE <- "P12-A"
-#' @examples donnees$CODE_PHASE <- donnees$code_lot
-#' @examples donnees$CODE_TAXON <- donnees$code_appel_taxon
-#' @examples donnees$RESULTAT <- donnees$resultat_taxon
-#' @examples donnees$CODE_REMARQUE <- donnees$code_type_resultat
-#' @examples donnees <- donnees %>% select(CODE_OPERATION, CODE_STATION, DATE, TYPONATIONALE, CODE_PHASE, CODE_TAXON, RESULTAT, CODE_REMARQUE)
-#' @examples calcule_SEEE_ODinvertebres(donnees)
+#' @examplesstations_op<-stations_op%>%subset(CdParametre=="7613")
+#' @examplesdonnees<-import_hubeau_liste_hbio(liste_stations = c("04207400"), indice="inv")
+#' @examplesdonnees<-donnees%>%subset(date_prelevement%in%stations_op$DatePrel)
+#' @examplesdonnees$CODE_OPERATION <-
+#' @examples  paste0(donnees$code_station_hydrobio, "*", donnees$date_prelevement)
+#' @examplesdonnees$CODE_STATION <- donnees$code_station_hydrobio
+#' @examplesdonnees$DATE <- format(donnees$date_prelevement, "%d/%m/%Y")
+#' @examplesdonnees$TYPO_NATIONALE <- "P12-A"
+#' @examplesdonnees$CODE_PHASE <- donnees$code_lot
+#' @examplesdonnees$CODE_TAXON <- donnees$code_appel_taxon
+#' @examplesdonnees$RESULTAT <- donnees$resultat_taxon
+#' @examplesdonnees$CODE_REMARQUE <- donnees$code_type_resultat
+#' @examplesdonnees <- donnees %>% select(CODE_OPERATION, CODE_STATION, DATE, TYPO_NATIONALE, CODE_PHASE, CODE_TAXON, RESULTAT, CODE_REMARQUE)
+#' @examplesresultats_OD<-calcule_SEEE_ODinvertebres(donnees)
 #'
 #' @export
 

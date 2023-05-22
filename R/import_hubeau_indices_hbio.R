@@ -35,6 +35,8 @@ import_hubeau_indices_hbio <-
       stop("an_debut doit être inférieur ou égale à an_fin")
     }
 
+    # profondeur de resultat max selon API hubeau
+    limite_api_hubeau <- 10000
 
     # la liste stations l'emporte sur l'emprise
     if (!is.null(liste_stations)) {
@@ -154,6 +156,10 @@ import_hubeau_indices_hbio <-
           "0"
         )
       )
+
+
+
+
 
 
     return(data)

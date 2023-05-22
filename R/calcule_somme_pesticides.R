@@ -38,6 +38,7 @@
 #'  - HCH alpha+beta+delta+gamma (5537) = HCH delta (1202) + HCH alpha (1200)+ HCH béta (1201)+ HCH gamma (lindane) (1203)
 #'  - Permethrin (somme)(1523)= Permethrin cis (5682) +Permethrin trans (5683)
 #'- Sulfosate (2077) = sel du glyphosate (1506).
+#' - propamocarbe HCl (2988) = sel du propamocarbe (6398)
 #' Pour calculer la concentration en glyphosate à partir du sulfosate, il faut multiplier cette dernière par 0.690
 #' - Endosulfan (1743) = Endosulfan alpha (1178) + Endosulfan bêta (1179)
 #' - Somme de Endosulfan alpha, Endosulfan bêta et Endosulfan sulfate (8129) = Endosulfan alpha (1178) + Endosulfan bêta (1179) + Endosulfan sulfate (1742)
@@ -49,6 +50,7 @@
 #' - Demeton O+S (1550) = déméton-O (code Sandre n°1150) + déméton-S (code Sandre n°1152)
 #' - Heptachlore époxyde (cis+trans) (1198) = Heptachlore époxyde exo cis (1748) + Heptachlore époxyde endo trans (1749)
 #' - Spinosad (A+D) (spinosyne) (5610) = Spinosad A (7438) + Spinosad D (7439)
+
 #'
 #' @param data tableau de données avec les résultats d'analyse
 #' @param liste_pesticides vecteur qui contient les identifiants des pesticides à prendre en compte. Si NULL, toutes les molécules du tableau sont prises en compte.
@@ -306,6 +308,9 @@ calcule_somme_pesticides <-
     # cas du sulfosate, sel du glyphosate (on converti le résultat en glyphosate si ce dernier n'est pas déjà mesuré)
     # Sulfosate (2077) = sel du glyphosate (1506). Pour calculer la concentration en glyphosate à partir du sulfosate, il faut multiplier cette dernière par 0.690
     data2 <- f_remplace_inclus_dedans("2077", "1506", 0.690)
+
+    #' propamocarbe HCl (2988) = sel du propamocarbe (6398) (masse molaires respectives 188.271 g/mol et 224.724 g/mol)
+    data2 <- f_remplace_inclus_dedans("6398", "2988", 188.271/224.724)
 
     #	Mepiquat chlorure (2089) = sel du mepiquat (1969). Pour calculer la concentration en mepiquat à partir du Mépiquat chlorure, il faut multiplier cette dernière par 0.7631
     data2 <- f_remplace_inclus_dedans("2089", "1969", 0.7631)
