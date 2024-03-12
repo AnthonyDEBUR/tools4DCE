@@ -318,5 +318,12 @@ graphDCE_points(calcule_somme_pesticides(data), seuils=makeSeuils(CdParametre="6
 
 ```
 
-   
+```{r}   
+## convertir les différentes formes de l'azote 
+data<-data.frame(CdParametre=c("1335", "1339", "1340", "1319"),
+                            RsAna=c(0.5,0.1,30,2),
+                            CdRqAna=c("1","10","1","1"))
 
+calcule_formes_azote(data, CdRqAna="CdRqAna")
+
+```
