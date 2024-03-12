@@ -104,6 +104,13 @@ calcule_formes_phosphore <- function(data,
     )
 
     names(new_row) <- setNames(names(new_row), c(CdParametre, RsAna))
+    # Récupérer les colonnes de data, à l'exception de CdParametre et RsAna
+    cols_to_fill_na <- setdiff(names(data), c(CdParametre, RsAna))
+
+    # Remplir les colonnes avec NA
+    for (col in cols_to_fill_na) {
+      new_row[[col]] <- NA
+    }
 
     data <- rbind(data, new_row)
 
