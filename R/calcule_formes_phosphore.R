@@ -99,9 +99,12 @@ calcule_formes_phosphore <- function(data,
     }
     # ajout ligne Pautre (code Pautre a defaut de code SANDRE)
     new_row <- data.frame(
-      !!CdParametre := "Pautre",
-      !!RsAna := data[data[[CdParametre]] == "1350", RsAna] - data[data[[CdParametre]] == "1433", RsAna]
+      CdParametre = "Pautre",
+      RsAna = data[data[[CdParametre]] == "1350", RsAna] - data[data[[CdParametre]] == "1433", RsAna]
     )
+
+    names(new_row) <- setNames(names(new_row), c(CdParametre, RsAna))
+
     data <- rbind(data, new_row)
 
     data<-data[data[[CdParametre]] != "1350", ]

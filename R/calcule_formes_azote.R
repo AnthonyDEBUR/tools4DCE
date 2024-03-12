@@ -114,9 +114,10 @@ calcule_formes_azote <- function(data,
     }
     # ajout ligne NOrga (code SANDRE  5932) si NH4 et NKJ sont renseignés
     new_row <- data.frame(
-      !!CdParametre := "5932",
-      !!RsAna := data[data[[CdParametre]] == "1319", RsAna] - data[data[[CdParametre]] == "1335", RsAna]
+      CdParametre = "5932",
+      RsAna = data[data[[CdParametre]] == "1319", RsAna] - data[data[[CdParametre]] == "1335", RsAna]
     )
+    names(new_row) <- setNames(names(new_row), c(CdParametre, RsAna))
     data <- rbind(data, new_row)
 
     data<-data[data[[CdParametre]] != "1319", ]
