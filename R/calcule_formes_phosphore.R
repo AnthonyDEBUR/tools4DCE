@@ -1,8 +1,7 @@
-#' calcule_formes_azote
+#' calcule_formes_phosphore
 #'
-#' fonction pour calculer les différentes formes de l'azote
-#' a partir des parametres entrants azote kjeldahl, ammonium (en NH4/L),
-#' nitrites (en NO2/L) et nitrates (en NO3/L)
+#' fonction pour calculer les différentes formes de phosphore
+#' a partir des parametres entrants phosphore total et orthophosphates
 #'
 #' @param donnees data.frame avec les colonnes CdParametre (code sandre du parametre),
 #' RsAna (résultat d'analyses), CdRqAna (code remarque analyse, optionnel)
@@ -12,27 +11,24 @@
 #' parametre SANDRE de l'analyse. Par defaut CdParametre
 #' @param RsAna character indiquant quelle colonne contient le resultat
 #' de l'analyse. Par defaut RsAna
-#' @param data_incomplete_stop : booleen : si TRUE alors la fonction s'arrête s'il
-#' manque un des paramètres d'entrée. Si FALSE alors le calcule continue
 #'
 #'
-#' @return la fonction renvoie un data.frame (en mg N/L) avec les valeurs
-#' d'azote organique, d'azote ammoniacal en N-NH4, de nitrites en N-NO2 et
-#' de nitrates en N-NO3.
+#' @return la fonction renvoie un data.frame (en mg P/L) avec les valeurs
+#' de phosphore sous forme PO4 et des autres formes de phosphores. La ligne autres formes de phosphore
+#' n'exite pas sousle SANDRE. Il est indique Pautre
 #' Une valeur avec code remarque différent de 1 est prise comme nulle
 #'
-#' @examples data<-data.frame(CdParametre=c("1335", "1339", "1340", "1319"),
-#'                             RsAna=c(0.5,0.1,30,2),
-#'                             CdRqAna=c("1","10","1","1"))
-#' @examples calcule_formes_azote(data)
+#' @examples data<-data.frame(CdParametre=c("1350", "1433"),
+#'                             RsAna=c(0.6,0.5),
+#'                             CdRqAna=c("1","1"))
+#' @examples calcule_formes_phosphore(data)
 #'
 #' @export
 #'
-calcule_formes_azote <- function(data,
+calcule_formes_phosphore <- function(data,
                                  CdRqAna = NULL,
                                  CdParametre = "CdParametre",
-                                 RsAna = "RsAna",
-                                 data_incomplete_stop = TRUE)
+                                 RsAna = "RsAna")
 {
   if (!(exists(CdParametre, where = environment()) &&
         CdParametre %in% names(data))) {
@@ -52,11 +48,6 @@ calcule_formes_azote <- function(data,
            " n'existe pas dans le data.frame data.")
     }
   }
-  if (!missing(data_incomplete_stop) &&
-      !is.logical(data_incomplete_stop)) {
-    stop("Le paramètre data_incomplete_stop doit être un booléen.")
-  }
-
 
   # on remplace valeurs avec CdRqAna différent de 1 par 0
   if (!is.null(CdRqAna)) {
@@ -66,16 +57,10 @@ calcule_formes_azote <- function(data,
   }
 
   # Vérifier la présence des paramètres spécifiques
-  parametres <- c("1335", "1339", "1340", "1319")
+  parametres <- c("1433", "1350")
   if (!all(parametres %in% data[[CdParametre]])) {
-    if (data_incomplete_stop)
-    {
-      stop("Certains des paramètres spécifiques ne sont pas présents dans la dataframe.")
-    } else
-    {
-      warning("Certains des paramètres spécifiques ne sont pas présents dans la dataframe.")
-    }
-  }
+    stop("Certains des paramètres spécifiques ne sont pas présents dans la dataframe.")
+     }
 
   # Vérifier s'il existe plus d'une ligne pour chaque paramètre spécifique
   for (parametre in parametres) {
@@ -88,8 +73,8 @@ calcule_formes_azote <- function(data,
 
   # facteurs de conversion
   convert <- data.frame(
-    CdParametre = c("1335", "1339", "1340", "1319"),
-    conversion = c(0.776, 0.304, 0.2259, 1)
+    CdParametre = c("1433", "1350"),
+    conversion = c(0.3261, 1)
   )
 
   # Fusionner les données de conversion avec le dataframe
@@ -107,19 +92,19 @@ calcule_formes_azote <- function(data,
   # Supprimer la colonne de conversion (si vous ne souhaitez pas la conserver)
   data$conversion <- NULL
 
-  #  si NH4 et NKJ sont renseignés, calcule de N orga + test (si NH4>NKJ alors warning)
-  if (any(data[[CdParametre]] == "1335") && any(data[[CdParametre]] == "1319")) {
-    if (data[data[[CdParametre]] == "1335", RsAna] > data[data[[CdParametre]] == "1319", RsAna]) {
-      warning(paste("Ammonium (", data[data[[CdParametre]] == "1335", RsAna], ") supérieur à azote Kjeldahl (", data[data[[CdParametre]] == "1319", RsAna], ")"))
+  #  test (si PO4>Ptot alors warning)
+  if (any(data[[CdParametre]] == "1433") && any(data[[CdParametre]] == "1350")) {
+    if (data[data[[CdParametre]] == "1433", RsAna] > data[data[[CdParametre]] == "1350", RsAna]) {
+      warning(paste("P-PO4 (", data[data[[CdParametre]] == "1433", RsAna], ") supérieur à P tot (", data[data[[CdParametre]] == "1350", RsAna], ")"))
     }
-    # ajout ligne NOrga (code SANDRE  5932) si NH4 et NKJ sont renseignés
+    # ajout ligne Pautre (code Pautre a defaut de code SANDRE)
     new_row <- data.frame(
-      !!CdParametre := "5932",
-      !!RsAna := data[data[[CdParametre]] == "1319", RsAna] - data[data[[CdParametre]] == "1335", RsAna]
+      !!CdParametre := "Pautre",
+      !!RsAna := data[data[[CdParametre]] == "1350", RsAna] - data[data[[CdParametre]] == "1433", RsAna]
     )
     data <- rbind(data, new_row)
 
-    data<-data[data[[CdParametre]] != "1319", ]
+    data<-data[data[[CdParametre]] != "1350", ]
   }
   return(data)
 }
