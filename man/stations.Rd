@@ -5,7 +5,7 @@
 \alias{stations}
 \title{stations}
 \format{
-An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 33867 rows and 2 columns.
+An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 34299 rows and 2 columns.
 }
 \usage{
 data(stations)

@@ -83,6 +83,7 @@ paramètres incluant d'autres paramètres :
 \item HCH alpha+beta+delta+gamma (5537) = HCH delta (1202) + HCH alpha (1200)+ HCH béta (1201)+ HCH gamma (lindane) (1203)
 \item Permethrin (somme)(1523)= Permethrin cis (5682) +Permethrin trans (5683)
 \item Sulfosate (2077) = sel du glyphosate (1506).
+\item propamocarbe HCl (2988) = sel du propamocarbe (6398)
 Pour calculer la concentration en glyphosate à partir du sulfosate, il faut multiplier cette dernière par 0.690
 \item Endosulfan (1743) = Endosulfan alpha (1178) + Endosulfan bêta (1179)
 \item Somme de Endosulfan alpha, Endosulfan bêta et Endosulfan sulfate (8129) = Endosulfan alpha (1178) + Endosulfan bêta (1179) + Endosulfan sulfate (1742)
@@ -100,4 +101,5 @@ Pour calculer la concentration en mepiquat à partir du Mépiquat chlorure, il f
 data<-data.frame(DatePrel=Sys.Date() + rep(sort(sample(1:500, 10)),3), RsAna=c(round(runif(60,0,0.5), 2)), LqAna=c(0.1), CdStationMesureEauxSurface=c("A","B","C"), CdParametre=c("1200","1506"), CdUniteMesure="133")
 data$CdRqAna<-ifelse(data$RsAna>=data$LqAna, "1","10")
 calcule_somme_pesticides(data)
+
 }

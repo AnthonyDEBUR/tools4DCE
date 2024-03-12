@@ -32,10 +32,10 @@ Les colonnes à passer impérativement dans la table d'entrée sont celles prév
 \examples{
 stations_op<-import_hubeau_indices_hbio(liste_stations = "04207400", indice="inv")
 stations_op<-stations_op\%>\%subset(CdParametre=="7613")
-donnees<-import_hubeau_liste_hbio(liste_stations = c(station_etudiee), indice="inv")
+donnees<-import_hubeau_liste_hbio(liste_stations = c("04207400"), indice="inv")
 donnees<-donnees\%>\%subset(date_prelevement\%in\%stations_op$DatePrel)
 donnees$CODE_OPERATION <-
-paste0(donnees$code_station_hydrobio, "*", donnees$date_prelevement)
+ paste0(donnees$code_station_hydrobio, "*", donnees$date_prelevement)
 donnees$CODE_STATION <- donnees$code_station_hydrobio
 donnees$DATE <- format(donnees$date_prelevement, "\%d/\%m/\%Y")
 donnees$TYPO_NATIONALE <- "P12-A"
@@ -43,7 +43,7 @@ donnees$CODE_PHASE <- donnees$code_lot
 donnees$CODE_TAXON <- donnees$code_appel_taxon
 donnees$RESULTAT <- donnees$resultat_taxon
 donnees$CODE_REMARQUE <- donnees$code_type_resultat
-donnees <- donnees \%>\% select(CODE_OPERATION, CODE_STATION, DATE, TYPONATIONALE, CODE_PHASE, CODE_TAXON, RESULTAT, CODE_REMARQUE)
-calcule_SEEE_ODinvertebres(donnees)
+donnees <- donnees \%>\% select(CODE_OPERATION, CODE_STATION, DATE, TYPO_NATIONALE, CODE_PHASE, CODE_TAXON, RESULTAT, CODE_REMARQUE)
+resultats_OD<-calcule_SEEE_ODinvertebres(donnees)
 
 }

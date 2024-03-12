@@ -4,10 +4,12 @@
 \alias{import_QESU_PHY_v3}
 \title{import_QESU_PHY_v3}
 \usage{
-import_QESU_PHY_v3(x)
+import_QESU_PHY_v3(x, complet = FALSE)
 }
 \arguments{
 \item{x}{un fichier xml conforme au scénario d'échange QUESU_PHY_v3 du SANDRE}
+
+\item{complet}{booleen FALSE par défaut. S'il est FALSE alors le fichier résultat comporte seulement les informations essentielles. S'il est TRUE, l'ensemble des colonnes sont conservées.}
 }
 \value{
 la fonction renvoie une liste de data.frame avec les résultats contenus dans le fichier

@@ -37,7 +37,7 @@
 #'-   = Somme du Fenvalerate RR et Esfenvalerate SS ( 6613 ) + Somme du Fenvalerate RS et Esfenvalerate SR (6614)
 #'  - HCH alpha+beta+delta+gamma (5537) = HCH delta (1202) + HCH alpha (1200)+ HCH béta (1201)+ HCH gamma (lindane) (1203)
 #'  - Permethrin (somme)(1523)= Permethrin cis (5682) +Permethrin trans (5683)
-#'- Sulfosate (2077) = sel du glyphosate (1506).
+#' - Sulfosate (2077) = sel du glyphosate (1506).
 #' - propamocarbe HCl (2988) = sel du propamocarbe (6398)
 #' Pour calculer la concentration en glyphosate à partir du sulfosate, il faut multiplier cette dernière par 0.690
 #' - Endosulfan (1743) = Endosulfan alpha (1178) + Endosulfan bêta (1179)
@@ -50,7 +50,6 @@
 #' - Demeton O+S (1550) = déméton-O (code Sandre n°1150) + déméton-S (code Sandre n°1152)
 #' - Heptachlore époxyde (cis+trans) (1198) = Heptachlore époxyde exo cis (1748) + Heptachlore époxyde endo trans (1749)
 #' - Spinosad (A+D) (spinosyne) (5610) = Spinosad A (7438) + Spinosad D (7439)
-
 #'
 #' @param data tableau de données avec les résultats d'analyse
 #' @param liste_pesticides vecteur qui contient les identifiants des pesticides à prendre en compte. Si NULL, toutes les molécules du tableau sont prises en compte.
@@ -66,9 +65,10 @@
 #'
 #' @return la fonction renvoie une dataframe avec les informations sur la station, la date, l'unité et la valeur de la somme des pesticides ainsi qu'une colonne avec chaque pesticide constituant la somme.
 #'
-#'@examples data<-data.frame(DatePrel=Sys.Date() + rep(sort(sample(1:500, 10)),3), RsAna=c(round(runif(60,0,0.5), 2)), LqAna=c(0.1), CdStationMesureEauxSurface=c("A","B","C"), CdParametre=c("1200","1506"), CdUniteMesure="133")
-#'@examples data$CdRqAna<-ifelse(data$RsAna>=data$LqAna, "1","10")
+#' @examples data<-data.frame(DatePrel=Sys.Date() + rep(sort(sample(1:500, 10)),3), RsAna=c(round(runif(60,0,0.5), 2)), LqAna=c(0.1), CdStationMesureEauxSurface=c("A","B","C"), CdParametre=c("1200","1506"), CdUniteMesure="133")
+#' @examples data$CdRqAna<-ifelse(data$RsAna>=data$LqAna, "1","10")
 #' @examples calcule_somme_pesticides(data)
+#'
 #' @export
 calcule_somme_pesticides <-
   function(data,
@@ -309,7 +309,7 @@ calcule_somme_pesticides <-
     # Sulfosate (2077) = sel du glyphosate (1506). Pour calculer la concentration en glyphosate à partir du sulfosate, il faut multiplier cette dernière par 0.690
     data2 <- f_remplace_inclus_dedans("2077", "1506", 0.690)
 
-    #' propamocarbe HCl (2988) = sel du propamocarbe (6398) (masse molaires respectives 188.271 g/mol et 224.724 g/mol)
+    # propamocarbe HCl (2988) = sel du propamocarbe (6398) (masse molaires respectives 188.271 g/mol et 224.724 g/mol)
     data2 <- f_remplace_inclus_dedans("6398", "2988", 188.271/224.724)
 
     #	Mepiquat chlorure (2089) = sel du mepiquat (1969). Pour calculer la concentration en mepiquat à partir du Mépiquat chlorure, il faut multiplier cette dernière par 0.7631
