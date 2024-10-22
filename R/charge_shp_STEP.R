@@ -150,11 +150,11 @@ charge_shp_STEP <-
         "' target='_blank'>lien SANDRE</a>"
       )
 
-    bel_regions$url_portail_assainissement <-    paste0(
-      "<a href='https://www.assainissement.developpement-durable.gouv.fr/PortailAC/fiche-",
+
+    bel_regions$url_portail_assainissement<-paste0(
+      "<a href='https://assainissement.developpement-durable.gouv.fr/pages/data/fiche-",
       bel_regions$CdOuvrageDepollution,
-      "' target='_blank'>lien portail assainissement</a>"
-    )
+      "' target='_blank'>lien portail assainissement</a>")
 
     # récupération des XY des pts de rejet
 
