@@ -5,7 +5,7 @@
 \alias{supports_sandre}
 \title{supports_sandre}
 \format{
-An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 102 rows and 2 columns.
+An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 114 rows and 2 columns.
 }
 \usage{
 data(supports_sandre)

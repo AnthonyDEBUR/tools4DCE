@@ -60,5 +60,9 @@ P90glissant <- function(analyses,
     subset(!is.na(percentile_glissant))%>%
     select(-Values)
 
+
+  df_monthly$percentile_glissant<-sapply(df_monthly$percentile_glissant, function(x) if (is.null(x)) NA else x)
+  df_monthly$moisannee<-as.POSIXct(df_monthly$moisannee)
+
   return(df_monthly)
 }
