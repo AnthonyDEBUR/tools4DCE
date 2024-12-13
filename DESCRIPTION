@@ -30,4 +30,6 @@ Depends:
     readxl,
     rvest,
     tableHTML,
+    zoo,
+    lubridate,
     R (>= 2.10)
