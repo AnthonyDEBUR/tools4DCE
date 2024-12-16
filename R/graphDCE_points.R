@@ -19,6 +19,7 @@
 #' @param ymini force l'échelle des valeurs (si non précisé, échelle automatique de ggplot2)
 #' @param ymaxi force l'échelle des valeurs (si non précisé, échelle automatique de ggplot2)
 #' @param auto_ymaxi booléen. Si le paramètre vaut TRUE et que ymaxi n'est pas renseigné alors ce dernier est calculé automatiquement de manière à rendre le graph aussi lisible que possible
+#' @param format_date Si le paramètre est renseigné, il indique le format des étiquettes de date ("%Y pour année, "%b%Y)
 #' @param bilan_annuel si le paramètre vaut TRUE : on ajuste le graphique sur les années civiles. S'il vaut FALSE (valeur par défaut) : on laisse l'échelle graphique libre
 #' @param lignes vecteur permettant d'ajouter des lignes horizontales au graphique. ex c(10, 25)
 #' @param echelleLog booléen : si vrai le graphique est affiché en échelle logarithmique (FALSE par défaut)
@@ -59,6 +60,7 @@ graphDCE_points <-
            ymini = NULL,
            ymaxi = NULL,
            auto_ymaxi = TRUE,
+           format_date = NULL,
            lignes = NULL,
            echelleLog = FALSE,
            alpha_points = 1,
@@ -192,49 +194,49 @@ graphDCE_points <-
       # durée <= 1 jour
       if (duree_jours <= 1) {
         break_date_max <- paste0(ceiling(60*coef_axes_date)," minutes")
-        dateformat <- "%d%b%y %Hh"
+        dateformat <- ifelse(!is.null(format_date),format_date,"%d%b%y %Hh")
       }
       # durée <= 15 jours
       else if (duree_jours <= 15) {
         break_date_max <- paste0(ceiling(24*coef_axes_date)," hours")
-        dateformat <- "%d%b%y"
+        dateformat <- ifelse(!is.null(format_date),format_date,"%d%b%y")
       }
       # durée <= 31 jours
       else if (duree_jours <= 31) {
         break_date_max <- paste0(ceiling(48*coef_axes_date)," hours")
-        dateformat <- "%d%b%y"
+        dateformat <- ifelse(!is.null(format_date),format_date,"%d%b%y")
       }
       # durée <= 1 an
       else if (duree_jours <= 365) {
         break_date_max <- ifelse(coef_axes_date>=1, paste0(ceiling(1*coef_axes_date)," months"), paste0(ceiling(4*coef_axes_date)," weeks"))
 
 
-        dateformat <- "%d%b%y"
+        dateformat <- ifelse(!is.null(format_date),format_date,"%d%b%y")
       }
       # durée <= 2 ans
       else if (duree_jours <= 2 * 365) {
         break_date_max <-  paste0(ceiling(3*coef_axes_date)," months")
-        dateformat <- "%d%b%y"
+        dateformat <- ifelse(!is.null(format_date),format_date,"%d%b%y")
       }
       # durée entre 2 et 3 ans
       else if (duree_jours %/% 365 <= 3) {
         break_date_max <-  paste0(ceiling(6*coef_axes_date)," months")
-        dateformat <- "%d%b%y"
+        dateformat <- ifelse(!is.null(format_date),format_date,"%d%b%y")
       }
       # durée entre 4 et 15 ans
       else if (duree_jours %/% 365 <= 14) {
         break_date_max <- ifelse(coef_axes_date>=1, paste0(ceiling(1*coef_axes_date)," year"), paste0(ceiling(12*coef_axes_date)," months"))
-          dateformat <- "%b%Y"
+          dateformat <- ifelse(!is.null(format_date),format_date,"%b%Y")
       }
       # durée entre 15 et 30 ans
       else if (duree_jours %/% 365 <= 29) {
         break_date_max <- paste0(ceiling(5*coef_axes_date)," years")
-        dateformat <- "%b%Y"
+        dateformat <- ifelse(!is.null(format_date),format_date,"%b%Y")
       }
       # durée >30 ans
       else {
         break_date_max <- paste0(ceiling(10*coef_axes_date)," years")
-        dateformat <- "%b%Y"
+        dateformat <- ifelse(!is.null(format_date),format_date,"%b%Y")
       }
 
       # échelle des breaks de dates secondaires

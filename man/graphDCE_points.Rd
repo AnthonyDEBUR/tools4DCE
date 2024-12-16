@@ -10,7 +10,7 @@ graphDCE_points(
   col_valeurs = "RsAna",
   col_LQ = "LqAna",
   seuils = NULL,
-  affiche_legende = T,
+  affiche_legende = TRUE,
   nom_legende = NULL,
   titre = NULL,
   taille_titre = 12,
@@ -23,13 +23,15 @@ graphDCE_points(
   ymini = NULL,
   ymaxi = NULL,
   auto_ymaxi = TRUE,
+  format_date = NULL,
   lignes = NULL,
   echelleLog = FALSE,
+  alpha_points = 1,
   taille_points = 2,
   taille_legende = 12,
   taille_axes = 11,
-  liaison = T,
-  affiche_LQ = F,
+  liaison = TRUE,
+  affiche_LQ = FALSE,
   separ_stations = NULL,
   alpha = 0.8,
   coef_axes_date = 1
@@ -72,6 +74,8 @@ graphDCE_points(
 
 \item{auto_ymaxi}{booléen. Si le paramètre vaut TRUE et que ymaxi n'est pas renseigné alors ce dernier est calculé automatiquement de manière à rendre le graph aussi lisible que possible}
 
+\item{format_date}{Si le paramètre est renseigné, il indique le format des étiquettes de date ("\%Y pour année, "\%b\%Y)}
+
 \item{lignes}{vecteur permettant d'ajouter des lignes horizontales au graphique. ex c(10, 25)}
 
 \item{echelleLog}{booléen : si vrai le graphique est affiché en échelle logarithmique (FALSE par défaut)}
@@ -91,6 +95,8 @@ graphDCE_points(
 \item{alpha}{transparence des applats de couleurs}
 
 \item{coef_axes_date}{coefficient qui détermine le nombre de graduations pour les dates (valeur par défaut : 1). Une valeur 2 correspond au double de repères qu'une valeur de 1}
+
+\item{alpha_poins}{transparence des points (1 par défaut)}
 }
 \value{
 la fonction renvoie un graphique de classe ggplot
