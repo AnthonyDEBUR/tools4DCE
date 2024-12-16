@@ -29,6 +29,7 @@
 #' @param affiche_LQ option qui affiche une zone grisée correspondant à la LqAna (par défaut non affiché)
 #' @param separ_stations nom de la colonne par rapport à laquelle séparer les données avec différents shape (par exemple pour distinguer les résultats de plusieurs stations de mesures)
 #' @param alpha transparence des applats de couleurs
+#' @param alpha_poins transparence des points (1 par défaut)
 #' @param coef_axes_date coefficient qui détermine le nombre de graduations pour les dates (valeur par défaut : 1). Une valeur 2 correspond au double de repères qu'une valeur de 1
 #'
 #' @return la fonction renvoie un graphique de classe ggplot
@@ -45,7 +46,7 @@ graphDCE_points <-
            col_valeurs = "RsAna",
            col_LQ = "LqAna",
            seuils = NULL,
-           affiche_legende = T,
+           affiche_legende = TRUE,
            nom_legende = NULL,
            titre = NULL,
            taille_titre = 12,
@@ -60,11 +61,12 @@ graphDCE_points <-
            auto_ymaxi = TRUE,
            lignes = NULL,
            echelleLog = FALSE,
+           alpha_points = 1,
            taille_points = 2,
            taille_legende = 12,
            taille_axes = 11,
-           liaison = T,
-           affiche_LQ = F,
+           liaison = TRUE,
+           affiche_LQ = FALSE,
            separ_stations = NULL,
            alpha = 0.8,
            coef_axes_date = 1)
@@ -539,7 +541,7 @@ graphDCE_points <-
       if (is.null(separ_stations))
       {
         graph1 <-
-          graph1 + geom_point(data = data1, aes(x = DatePrel, y = RsAna), size=taille_points)
+          graph1 + geom_point(data = data1, aes(x = DatePrel, y = RsAna), size=taille_points, alpha=alpha_points)
       }
       else
       {
@@ -547,7 +549,8 @@ graphDCE_points <-
           text = paste0(
             "graph1<-graph1 + geom_point(data=data1, aes(x=DatePrel, y=RsAna, shape = ",
             separ_stations,
-            "), size=",taille_points,")"
+            "), size=",taille_points,
+            "alpha=",alpha_points,")"
           )
         ))
       }
