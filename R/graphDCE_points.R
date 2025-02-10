@@ -552,7 +552,7 @@ graphDCE_points <-
             "graph1<-graph1 + geom_point(data=data1, aes(x=DatePrel, y=RsAna, shape = ",
             separ_stations,
             "), size=",taille_points,
-            "alpha=",alpha_points,")"
+            ", alpha=",alpha_points,")"
           )
         ))
       }
