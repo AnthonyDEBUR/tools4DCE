@@ -146,7 +146,7 @@ makeSeuils <-
         paste0(
           "Plusieurs seuils différents sont possibles pour un même paramètre (ex. 2 températures différentes). ",
           "Merci de préciser les critères de construction des seuils.\n",
-          "Paramètres concernés : ", paste(parametres_en_doublon, collapse = ", ")
+          "Paramètres concernés : ", paste(parametres_en_doublon$PARAMETRE, collapse = ", ")
         )
       )
     }
