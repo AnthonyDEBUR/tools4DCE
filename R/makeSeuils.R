@@ -135,7 +135,7 @@ makeSeuils <-
       distinct()
 
 
-    if (nrow(base_seuils_paronly) != nrow(seuils_demandes)) {
+    if (nrow(base_seuils_paronly) > nrow(seuils_demandes)) {
       parametres_en_doublon <- base_seuils_paronly %>%
         group_by(id) %>%
         filter(n() > 1) %>%
@@ -146,7 +146,18 @@ makeSeuils <-
         paste0(
           "Plusieurs seuils différents sont possibles pour un même paramètre (ex. 2 températures différentes). ",
           "Merci de préciser les critères de construction des seuils.\n",
-          "Paramètres concernés : ", paste(parametres_en_doublon$PARAMETRE, collapse = ", ")
+          "Paramètres concernés : ", paste(parametres_en_doublon, collapse = ", ")
+        )
+      )
+    }
+
+    if (nrow(base_seuils_paronly) < nrow(seuils_demandes)) {
+      parametres_manquants<-seuils_demandes[!seuils_demandes$PARAMETRE %in% base_seuils_paronly$PARAMETRE,]
+
+      stop(
+        paste0(
+          "Un ou des seuil(s) demandé(s) n'existe(nt) pas dans la base seuils.\n",
+          "Code SANDRE : ", paste(parametres_manquants, collapse = ", ")
         )
       )
     }
