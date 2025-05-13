@@ -3,13 +3,24 @@ library(tools4DCE)
 library(openxlsx)
 
 # creation fichier xlsx à ajouter à la base seuils. Ce fichier contient seulement les seuils AEP
-donnees_oeb<-read_csv2("tables_ref\\oeb_referentiels_substances_actives.csv")%>%
+# donnees_oeb<-read_csv2("tables_ref\\oeb_referentiels_substances_actives.csv")%>%
+#   mutate(CdParametre=SA_CodeSANDRE%>%as.character)%>%ajoute_nom_param()
+
+# Définir l'URL du fichier CSV
+url <- "https://data.bretagne-environnement.fr/data-fair/api/v1/datasets/qa4yo6sypr0x07-mj80iqk7a/data-files/oeb_referentiel_substances_actives-full.csv"
+
+# Charger le fichier CSV dans la variable new_ref_oeb
+donnees_oeb<-read_csv(url, show_col_types =FALSE)
+donnees_oeb<-donnees_oeb%>%subset(!is.na(id) & !is.na(id_sandre))
+donnees_oeb$SA_CodeSANDRE<-donnees_oeb$id_sandre
+donnees_oeb<-donnees_oeb%>%
   mutate(CdParametre=SA_CodeSANDRE%>%as.character)%>%ajoute_nom_param()
+
 
 data("base_seuils")
 
 base_seuils<-base_seuils%>%subset(TYPE=="AEP")
-#donnees_oeb<-donnees_oeb%>%subset(!CdParametre%in%base_seuils$PARAMETRE)
+donnees_oeb<-donnees_oeb%>%subset(!CdParametre%in%base_seuils$PARAMETRE)
 donnees_oeb$TYPE<-"AEP"
 donnees_oeb$SPECIFICITE<-"OEB"
 
