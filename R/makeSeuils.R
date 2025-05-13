@@ -133,12 +133,24 @@ makeSeuils <-
         id
       ) %>%
       distinct()
-    if (nrow(base_seuils_paronly) != nrow(seuils_demandes))
+
+
+    if (nrow(base_seuils_paronly) != nrow(seuils_demandes)) {
+      parametres_en_doublon <- base_seuils_paronly %>%
+        group_by(id) %>%
+        filter(n() > 1) %>%
+        pull(PARAMETRE) %>%
+        unique()
+
       stop(
         paste0(
-          "Plusieurs seuils différents sont possibles pour un même paramètre (ex. 2 températures différentes). Merci de préciser les critères de construction des seuils.\n"
+          "Plusieurs seuils différents sont possibles pour un même paramètre (ex. 2 températures différentes). ",
+          "Merci de préciser les critères de construction des seuils.\n",
+          "Paramètres concernés : ", paste(parametres_en_doublon, collapse = ", ")
         )
       )
+    }
+
 
     # je renomme cet object pour le distinguer de base_seuils, il inclut les couleurs
     base_seuils_color <- base_seuils
