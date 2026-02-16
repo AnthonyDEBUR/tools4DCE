@@ -56,6 +56,7 @@ paramètres incluant d'autres paramètres :
 \item dichlorprop (inclus dichlorprop-P)
 \item Uniconizole (inclus uniconizole-P)
 \item Fluazifop (inclus Fluazifop-P)
+fluazifop-butyl total  inclus fluazifop-P-butyl
 \item Somme des Hexachlorocyclohexanes
 \item Somme Heptachlore époxyde cis/trans
 \item Somme du DDE 44' et de la dieldrine
@@ -95,6 +96,11 @@ Pour calculer la concentration en mepiquat à partir du Mépiquat chlorure, il f
 \item Demeton O+S (1550) = déméton-O (code Sandre n°1150) + déméton-S (code Sandre n°1152)
 \item Heptachlore époxyde (cis+trans) (1198) = Heptachlore époxyde exo cis (1748) + Heptachlore époxyde endo trans (1749)
 \item Spinosad (A+D) (spinosyne) (5610) = Spinosad A (7438) + Spinosad D (7439)
+\item isochloridazone (7734) inclus dans Chloridazone (1133) (c'est une impureté du Cloridazone)
+\item dichlorprop-p (2544) inclus dans dichlorprop total (1169)
+\item meptyldinocap (1677) inclus dans dinocap (5619)
+\item chlorate de sodium (5551) = chlorate (1752). Pour calculer la concentration en chlorate à partir du chlorate de sodium, il faut multiplier cette dernière par 1/1.27
+\item La cyperméthrine (1140) est constituée de 8 isomères. Les paramètres alpha-cyperméthrine (1812) et zétacyperméthrine (7521) correspondent respec�tivement à 2 et 4 de ces isomèr
 }
 }
 \examples{

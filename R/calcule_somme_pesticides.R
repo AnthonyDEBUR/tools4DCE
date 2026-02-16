@@ -11,6 +11,7 @@
 #' - dichlorprop (inclus dichlorprop-P)
 #' - Uniconizole (inclus uniconizole-P)
 #' - Fluazifop (inclus Fluazifop-P)
+#' fluazifop-butyl total  inclus fluazifop-P-butyl
 #' - Somme des Hexachlorocyclohexanes
 #' - Somme Heptachlore époxyde cis/trans
 #' - Somme du DDE 44' et de la dieldrine
@@ -50,6 +51,11 @@
 #' - Demeton O+S (1550) = déméton-O (code Sandre n°1150) + déméton-S (code Sandre n°1152)
 #' - Heptachlore époxyde (cis+trans) (1198) = Heptachlore époxyde exo cis (1748) + Heptachlore époxyde endo trans (1749)
 #' - Spinosad (A+D) (spinosyne) (5610) = Spinosad A (7438) + Spinosad D (7439)
+#' - isochloridazone (7734) inclus dans Chloridazone (1133) (c'est une impureté du Cloridazone)
+#' - dichlorprop-p (2544) inclus dans dichlorprop total (1169)
+#' - meptyldinocap (1677) inclus dans dinocap (5619)
+#' - chlorate de sodium (5551) = chlorate (1752). Pour calculer la concentration en chlorate à partir du chlorate de sodium, il faut multiplier cette dernière par 1/1.27
+#' - La cyperméthrine (1140) est constituée de 8 isomères. Les paramètres alpha-cyperméthrine (1812) et zétacyperméthrine (7521) correspondent respectivement à 2 et 4 de ces isomèr
 #'
 #' @param data tableau de données avec les résultats d'analyse
 #' @param liste_pesticides vecteur qui contient les identifiants des pesticides à prendre en compte. Si NULL, toutes les molécules du tableau sont prises en compte.
@@ -281,7 +287,9 @@ calcule_somme_pesticides <-
       f_remplace_inclus_dedans(cd_sandre_enantiomere = "2974",
                                cd_sandre_molecule_supra = "1221")
 
-
+    # cas du chloridazone
+    #  Chloridazone (1133) > isochloridazone (7734)
+    data2 <- f_remplace_inclus_dedans("7734", "1133")
 
     # cas du mecoprop
     #  Mécoprop (1214) > Mécoprop-P (2084)
@@ -292,6 +300,8 @@ calcule_somme_pesticides <-
     #  Diméthénamide (1678) > Diméthénamide-P (5617)
     data2 <- f_remplace_inclus_dedans("5617", "1678")
 
+    # meptyldinocap (1677) inclus dans dinocap (5619)
+    data2 <- f_remplace_inclus_dedans("1677", "5619")
 
     # cas du Dichlorprop
     #  Dichlorprop (1169) > Dichlorprop-P (2544)
@@ -305,6 +315,15 @@ calcule_somme_pesticides <-
     #  Fluazifop (6545) > Fluazifop-P (5634)
     data2 <- f_remplace_inclus_dedans("5634", "6545")
 
+    #  fluazifop-butyl total  (1825) > fluazifop-P-butyl (1404)
+    data2 <- f_remplace_inclus_dedans("1404", "1825")
+
+    # cas du cyperméthrine (1140)
+    # La cyperméthrine est constituée de 8 isomères. Les paramètres alpha-cyperméthrine (1812)
+    # et zétacyperméthrine (7521) correspondent respectivement à 2 et 4 de ces isomères
+    data2 <- f_remplace_inclus_dedans("1812", "1140")
+    data2 <- f_remplace_inclus_dedans("7521", "1140")
+
     # cas du sulfosate, sel du glyphosate (on converti le résultat en glyphosate si ce dernier n'est pas déjà mesuré)
     # Sulfosate (2077) = sel du glyphosate (1506). Pour calculer la concentration en glyphosate à partir du sulfosate, il faut multiplier cette dernière par 0.690
     data2 <- f_remplace_inclus_dedans("2077", "1506", 0.690)
@@ -315,6 +334,8 @@ calcule_somme_pesticides <-
     #	Mepiquat chlorure (2089) = sel du mepiquat (1969). Pour calculer la concentration en mepiquat à partir du Mépiquat chlorure, il faut multiplier cette dernière par 0.7631
     data2 <- f_remplace_inclus_dedans("2089", "1969", 0.7631)
 
+    #	chlorate de sodium (5551) = chlorate (1752). Pour calculer la concentration en chlorate à partir du chlorate de sodium, il faut diviser cette dernière par 1.27
+    data2 <- f_remplace_inclus_dedans("5551", "1752", 1/1.27)
 
     # Somme des Hexachlorocyclohexanes (5537) = Hexachlorocyclohexane alpha (1200)
     # + bêta (1201) + delta (1202) + gamma (1203)
