@@ -38,75 +38,97 @@ graphDCE_points(
 )
 }
 \arguments{
-\item{data}{tableau de données (dataframe)}
+\item{data}{Tableau de données (data.frame ou tibble).}
 
-\item{col_dates}{nom de la colonne qui contient les dates de prélèvements. Par défaut : "DatePrel" formats Date ou POSIXct}
+\item{col_dates}{Nom de la colonne contenant les dates de prélèvements
+(formats Date ou POSIXct). Par défaut : \code{"DatePrel"}.}
 
-\item{col_valeurs}{nom de la colonne qui contient les valeurs d'analyses.Par défaut : "RsAna"}
+\item{col_valeurs}{Nom de la colonne contenant les valeurs d'analyses.
+Par défaut : \code{"RsAna"}.}
 
-\item{col_LQ}{nom de la colonne qui contient la valeur de LqAna. Par défaut : "LqAna"}
+\item{col_LQ}{Nom de la colonne contenant la limite de quantification.
+Par défaut : \code{"LqAna"}.}
 
-\item{seuils}{objet de classe seuil (factultatif)}
+\item{seuils}{Objet de classe \code{seuil} (facultatif).}
 
-\item{affiche_legende}{booléen indiquant s'il faut afficher la légende (par défaut TRUE)}
+\item{affiche_legende}{Booléen : afficher la légende ? (par défaut \code{TRUE}).}
 
-\item{nom_legende}{titre de la légende (si absent et si seuils et renseigné, la légende par défaut sera le slot nom_seuil de la légende, si seuil n'est pas renseigné, la légende sera "Légende")}
+\item{nom_legende}{Titre de la légende. Si absent et si \code{seuils} est renseigné,
+le slot \code{nom_seuil} est utilisé par défaut.}
 
-\item{titre}{titre du graphique (si absent et si seuils et renseigné, la légende par défaut sera le slot nom_parametre)}
+\item{titre}{Titre du graphique. Si absent et si \code{seuils} est renseigné,
+le slot \code{nom_parametre} est utilisé par défaut.}
 
-\item{taille_titre}{taille police du titre (par défaut 12)}
+\item{taille_titre}{Taille de la police du titre (par défaut : 12).}
 
-\item{sous_titre}{sous titre du graphique}
+\item{sous_titre}{Sous-titre du graphique.}
 
-\item{taille_sous_titre}{taille police du sous titre (par défaut 10)}
+\item{taille_sous_titre}{Taille de la police du sous-titre (par défaut : 11).}
 
-\item{unite}{unité du paramètre (par défaut si seuils est renseigné : le label SANDRE correspondant au slot code_unite du paramètre seuils)}
+\item{unite}{Unité du paramètre. Par défaut, si \code{seuils} est renseigné :
+le symbole SANDRE correspondant au slot \code{code_unite}.}
 
-\item{bilan_annuel}{si le paramètre vaut TRUE : on ajuste le graphique sur les années civiles. S'il vaut FALSE (valeur par défaut) : on laisse l'échelle graphique libre}
+\item{bilan_annuel}{Booléen : cadrer le graphique sur des années civiles complètes ?
+(par défaut \code{FALSE}).}
 
-\item{xmini}{année mini (si non précisé, sera calculé automatiquement comme étant le 1er janvier de l'année correspondant au minimum des dates du jeu de données). Format : "2010"}
+\item{xmini}{Année minimale de l'axe X (format \code{"2010"}). Calculée
+automatiquement si absente.}
 
-\item{xmaxi}{année maxi (si non précisé, sera calculé automatiquement comme étant le 31 décembre de l'année correspondant au maximum des dates du jeu de données). Format : "2010"}
+\item{xmaxi}{Année maximale de l'axe X (format \code{"2024"}). Calculée
+automatiquement si absente.}
 
-\item{ymini}{force l'échelle des valeurs (si non précisé, échelle automatique de ggplot2)}
+\item{ymini}{Borne inférieure forcée de l'axe Y (numérique).}
 
-\item{ymaxi}{force l'échelle des valeurs (si non précisé, échelle automatique de ggplot2)}
+\item{ymaxi}{Borne supérieure forcée de l'axe Y (numérique).}
 
-\item{auto_ymaxi}{booléen. Si le paramètre vaut TRUE et que ymaxi n'est pas renseigné alors ce dernier est calculé automatiquement de manière à rendre le graph aussi lisible que possible}
+\item{auto_ymaxi}{Booléen : si \code{TRUE} et que \code{ymaxi} n'est pas renseigné,
+calcule automatiquement un \code{ymaxi} lisible (par défaut \code{TRUE}).}
 
-\item{format_date}{Si le paramètre est renseigné, il indique le format des étiquettes de date ("\%Y pour année, "\%b\%Y)}
+\item{format_date}{Format des étiquettes de dates (ex. \code{"\%Y"}, \code{"\%b\%Y"}).
+Si absent, format adapté automatiquement à la durée de la chronique.}
 
-\item{lignes}{vecteur permettant d'ajouter des lignes horizontales au graphique. ex c(10, 25)}
+\item{lignes}{Vecteur de valeurs pour ajouter des lignes horizontales
+(ex. \code{c(10, 25)}).}
 
-\item{echelleLog}{booléen : si vrai le graphique est affiché en échelle logarithmique (FALSE par défaut)}
+\item{echelleLog}{Booléen : afficher en échelle logarithmique ? (par défaut \code{FALSE}).}
 
-\item{taille_points}{numerique avec la taille des points (2 par défaut)}
+\item{alpha_points}{Transparence des points (entre 0 et 1 ; par défaut : 1).}
 
-\item{taille_legende}{taille police caractères de la légende}
+\item{taille_points}{Taille des points (par défaut : 2).}
 
-\item{taille_axes}{taille police de caractères des axes}
+\item{taille_legende}{Taille de la police de la légende (par défaut : 12).}
 
-\item{liaison}{option faisant afficher ou pas des lignes pointillées entre les points (défaut = TRUE)}
+\item{taille_axes}{Taille de la police des axes (par défaut : 11).}
 
-\item{affiche_LQ}{option qui affiche une zone grisée correspondant à la LqAna (par défaut non affiché)}
+\item{liaison}{Booléen : tracer des lignes pointillées entre les points ?
+(par défaut \code{TRUE}).}
 
-\item{separ_stations}{nom de la colonne par rapport à laquelle séparer les données avec différents shape (par exemple pour distinguer les résultats de plusieurs stations de mesures)}
+\item{affiche_LQ}{Booléen : afficher une zone grisée pour la LQ ?
+(par défaut \code{FALSE}).}
 
-\item{alpha}{transparence des applats de couleurs}
+\item{separ_stations}{Nom de la colonne utilisée pour distinguer les stations par
+des formes de points différentes (ex. \code{"CdStationMesureEauxSurface"}).}
 
-\item{coef_axes_date}{coefficient qui détermine le nombre de graduations pour les dates (valeur par défaut : 1). Une valeur 2 correspond au double de repères qu'une valeur de 1}
+\item{alpha}{Transparence des aplats de couleurs de fond (par défaut : 0.8).}
 
-\item{alpha_poins}{transparence des points (1 par défaut)}
+\item{coef_axes_date}{Coefficient pour le nombre de graduations de l'axe des dates
+(par défaut : 1 ; une valeur de 2 double le nombre de repères).}
 }
 \value{
-la fonction renvoie un graphique de classe ggplot
+Un objet \code{ggplot}.
 }
 \description{
-fonction pour afficher les graphiques des paramètres en couleurs (mode point)
+Affiche les graphiques des paramètres physico-chimiques en couleurs (mode point),
+avec fond coloré selon les classes de qualité DCE.
 }
 \examples{
-data<-data.frame(DatePrel=c("2020-01-01", "2020-05-03","2020-10-25", "2021-03-25")\%>\%as.Date, RsAna=c(12,15.5,67,18.3))
-graphDCE_points(data, seuils=makeSeuils(CdParametre = "1340", type_seuil="DCE"), taille_points=5)
-graphDCE_points(data, seuils=makeSeuils(CdParametre = "1340", type_seuil="DCE"), ymaxi=51)
+data <- data.frame(
+  DatePrel = as.Date(c("2020-01-01", "2020-05-03", "2020-10-25", "2021-03-25")),
+  RsAna    = c(12, 15.5, 67, 18.3)
+)
+graphDCE_points(data, seuils = makeSeuils(CdParametre = "1340", type_seuil = "DCE"),
+                taille_points = 5)
+graphDCE_points(data, seuils = makeSeuils(CdParametre = "1340", type_seuil = "DCE"),
+                ymaxi = 51)
 
 }
