@@ -215,7 +215,7 @@ graphDCE_points <- function(
         seuils[[1]]@seuils %>% dplyr::select(CLASSE, NOM_COULEUR),
         by = c("classe_pt" = "CLASSE")
       ) %>%
-      rename(couleur_pt = NOM_COULEUR) %>%
+      dplyr::rename(couleur_pt = NOM_COULEUR) %>%
       mutate(couleur_pt = replace_na(couleur_pt, "white"))
   } else {
     data1$couleur_pt <- "white"
