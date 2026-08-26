@@ -5,7 +5,7 @@
 \alias{ref_taxo_sandre}
 \title{ref_taxo_sandre}
 \format{
-An object of class \code{data.frame} with 66398 rows and 18 columns.
+An object of class \code{data.frame} with 68796 rows and 18 columns.
 }
 \usage{
 data(ref_taxo_sandre)
