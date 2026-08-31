@@ -15,7 +15,7 @@
 #' fraction = Code SANDRE de la fraction (optionnel)
 #' code_unite = Code SANDRE de l'unité (optionnel)
 #' seuils = data.frame avec les colonnes suivantes : CLASSE (character), SEUILMIN (numeric), SEUILMAX (numeric), NOM_COULEUR (un nom ou code hexa de couleur valide)
-#' bornesinfinclue = booléen. Si vrai la classe de qualité couvrira l'intervalle [SEUILMIN, SEUILMAX[, si faux elle couvrira ]SEUIL_MIN,SEUIL_MAX]
+#' bornesinfinclue = booléen. Si vrai la classe de qualité couvrira l'intervalle \[SEUILMIN, SEUILMAX\[, si faux elle couvrira \]SEUIL_MIN,SEUIL_MAX\]
 #' specificites = typologie particulière à laquelle s'applique le seuil
 #'
 #'

@@ -10,9 +10,23 @@
 #' @return la fonction renvoie un dataframe avec une colonne date avec les mois et une colonne P90 avec
 #' le percentile DCE 90 sur la période entre la date et la date - nb_mois
 #'
-#' @example set.seed(123)
-#' @example df <- data.frame(DatePrel = sample(seq(as.Date("2015-01-01"), as.Date("2023-12-31"), by = "day"), 500), RsAna = runif(500, 0, 100)) %>% dplyr::arrange(DatePrel)
-#' @example P90glissant(df, nb_mois=36)
+#' @examples
+#' set.seed(123)
+#'
+#' df <- data.frame(
+#'   DatePrel = sample(
+#'     seq(
+#'       as.Date("2015-01-01"),
+#'       as.Date("2023-12-31"),
+#'       by = "day"
+#'     ),
+#'     500
+#'   ),
+#'   RsAna = runif(500, 0, 100)
+#' ) |>
+#'   dplyr::arrange(DatePrel)
+#'
+#' P90glissant(df, nb_mois = 36)
 #' @export
 P90glissant <- function(analyses,
                         col_date="DatePrel",

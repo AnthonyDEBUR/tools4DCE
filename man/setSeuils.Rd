@@ -36,7 +36,7 @@ setSeuils(
 
 \item{code_unite}{= Code SANDRE de l'unité (optionnel)}
 
-\item{bornesinfinclue}{= booléen. Si vrai la classe de qualité couvrira l'intervalle [SEUILMIN, SEUILMAX\link{, si faux elle couvrira }SEUIL_MIN,SEUIL_MAX]}
+\item{bornesinfinclue}{= booléen. Si vrai la classe de qualité couvrira l'intervalle [SEUILMIN, SEUILMAX[, si faux elle couvrira ]SEUIL_MIN,SEUIL_MAX]}
 
 \item{specificites}{= typologie particulière à laquelle s'applique le seuil}
 

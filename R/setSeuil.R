@@ -10,7 +10,7 @@
 #' @param support = Code SANDRE du support (optionnel)
 #' @param fraction = Code SANDRE de la fraction (optionnel)
 #' @param code_unite = Code SANDRE de l'unité (optionnel)
-#' @param bornesinfinclue = booléen. Si vrai la classe de qualité couvrira l'intervalle [SEUILMIN, SEUILMAX[, si faux elle couvrira ]SEUIL_MIN,SEUIL_MAX]
+#' @param bornesinfinclue = booléen. Si vrai la classe de qualité couvrira l'intervalle \[SEUILMIN, SEUILMAX\[, si faux elle couvrira \]SEUIL_MIN,SEUIL_MAX\]
 #' @param specificites = typologie particulière à laquelle s'applique le seuil
 #' @param base_seuils_color = data.frame avec les colonnes suivantes : CLASSE (character), SEUILMIN (numeric), SEUILMAX (numeric), NOM_COULEUR (un nom ou code hexa de couleur valide)
 #' @param id_ = l'identifiant unique de la combinaison PARAMETRE TYPE  SPECIFICITE dans base_seuils_color
